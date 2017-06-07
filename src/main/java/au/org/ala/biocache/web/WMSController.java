@@ -352,6 +352,8 @@ public class WMSController {
             SpatialSearchRequestParams requestParams,
             @RequestParam(value = "cm", required = false, defaultValue = "") String colourMode,
             @RequestParam(value = "type", required = false, defaultValue = "application/csv") String returnType,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "0") int pageSize,
+            @RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
             HttpServletRequest request,
             HttpServletResponse response)
             throws Exception {
@@ -374,6 +376,7 @@ public class WMSController {
             System.arraycopy(s, 1, cutpoints, 0, cutpoints.length);
         }
         List<LegendItem> legend = searchDAO.getLegend(requestParams, s[0], cutpoints);
+
         if (cutpoints == null) {
             java.util.Collections.sort(legend);
         }
@@ -381,16 +384,31 @@ public class WMSController {
         if (isCsv) {
             sb.append("name,red,green,blue,count");
         }
-        int i = 0;
+
         //add legend entries.
+        int start = 0;
+        int end = legend.size();
+
+        // Paginate if needed
+        boolean paginate = pageSize > 0 && pageNum > 0;
+
+        if (paginate) {
+            start = Math.min(pageSize * (pageNum - 1), legend.size()); // pages are 1-based
+            end = Math.min(pageSize * pageNum, legend.size());
+        }
+
         int offset = 0;
-        for (i = 0; i < legend.size(); i++) {
+
+        for (int i = start; i < end; i++) {
             LegendItem li = legend.get(i);
             String name = li.getName();
+
             if (StringUtils.isEmpty(name)) {
                 name = NULL_NAME;
             }
+
             int colour = DEFAULT_COLOUR;
+
             if (cutpoints == null) {
                 colour = ColorUtil.colourList[Math.min(i, ColorUtil.colourList.length - 1)];
             } else if (cutpoints != null && i - offset < cutpoints.length) {
@@ -401,7 +419,9 @@ public class WMSController {
                     colour = ColorUtil.getRangedColour(i - offset, cutpoints.length / 2);
                 }
             }
+
             li.setRGB(colour);
+
             if (isCsv) {
                 sb.append("\n\"").append(name.replace("\"", "\"\"")).append("\",").append(ColorUtil.getRGB(colour)) //repeat last colour if required
                         .append(",").append(legend.get(i).getCount());
@@ -410,7 +430,11 @@ public class WMSController {
 
         //now generate the JSON if necessary
         if (returnType.equals("application/json")) {
-            return legend;
+            if (paginate) {
+                return legend.subList(start, end);
+            } else {
+                return legend;
+            }
         } else {
             writeBytes(response, sb.toString().getBytes("UTF-8"));
             return null;
