@@ -298,7 +298,7 @@
 							<gmd:address>
 								<gmd:CI_Address>
 									<gmd:electronicMailAddress>
-										<gco:CharacterString>support@ala.org.au</gco:CharacterString>
+										<gco:CharacterString>info@elurikkus.ut.ee</gco:CharacterString>
 									</gmd:electronicMailAddress>
 								</gmd:CI_Address>
 							</gmd:address>

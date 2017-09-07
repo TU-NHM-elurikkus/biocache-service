@@ -140,7 +140,7 @@ public class WMSController {
     protected String orgPhone;
     @Value("${orgFax:+61 (0) 2 6246 4400}")
     protected String orgFax;
-    @Value("${orgEmail:support@ala.org.au}")
+    @Value("${orgEmail:info@elurikkus.ut.ee}")
     protected String orgEmail;
 
     @Value("${service.bie.ws.url:http://bie.ala.org.au/ws}")
