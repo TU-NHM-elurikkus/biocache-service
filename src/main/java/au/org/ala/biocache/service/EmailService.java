@@ -61,8 +61,6 @@ public class EmailService {
      */
     public void sendEmail(String recipient, String subject, String content, String sender){
 
-        logger.debug("Send email to : " + recipient);
-        logger.debug("Body: " + content);
         Session session = Session.getDefaultInstance(properties);
 
         try {

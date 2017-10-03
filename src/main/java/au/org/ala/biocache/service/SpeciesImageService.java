@@ -58,7 +58,6 @@ public class SpeciesImageService {
         public void run() {
             try {
                 long startTime = System.currentTimeMillis();
-                logger.debug("start refresh");
 
                 //lft counts for the query
                 SpatialSearchRequestParams params = new SpatialSearchRequestParams();
@@ -112,8 +111,6 @@ public class SpeciesImageService {
                         cache = speciesImages;
                     }
                 }
-
-                logger.debug("time to refresh SpeciesImageService: " + (System.currentTimeMillis() - startTime) + "ms");
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }

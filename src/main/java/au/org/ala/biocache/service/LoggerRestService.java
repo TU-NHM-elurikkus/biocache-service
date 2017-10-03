@@ -30,10 +30,10 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Implementation of @see au.org.ala.biocache.service.LoggerService that
- * performs lookup via HTTP GET to webservice. 
+ * performs lookup via HTTP GET to webservice.
  *
  * NC: 20130924 - Instead of caching on request. The cache reloaded based on a schedule
- * 
+ *
  * @author Nick dos Remedios (nick.dosremedios@csiro.au)
  */
 @Component("loggerRestService")
@@ -57,27 +57,27 @@ public class LoggerRestService implements LoggerService {
     @Inject
     private RestOperations restTemplate; // NB MappingJacksonHttpMessageConverter() injected by Spring
 
-    @Override    
+    @Override
     public List<Map<String,Object>> getReasons() {
         isReady();
 
         return loggerReasons;
     }
 
-    @Override    
+    @Override
     public List<Map<String,Object>> getSources() {
         isReady();
 
         return loggerSources;
     }
-    
-    @Override 
+
+    @Override
     public List<Integer> getReasonIds(){
         isReady();
 
-        return reasonIds; 
+        return reasonIds;
     }
-    
+
     @Override
     public List<Integer> getSourceIds(){
         isReady();
@@ -112,7 +112,6 @@ public class LoggerRestService implements LoggerService {
             initialised.countDown();
         }
         if (enabled) {
-            logger.info("Refreshing the log sources and reasons");
             List list;
 
             list = getEntities(LoggerType.reasons);
@@ -129,7 +128,6 @@ public class LoggerRestService implements LoggerService {
             if (list.size() > 0) sourceIds = list;
         } else {
             if (reasonIds == null) {
-                logger.info("Providing some sensible default values for the log cache");
                 reasonIds = new ArrayList<Integer>();
                 sourceIds = new ArrayList<Integer>();
                 //provide sensible defaults for the ID lists
@@ -156,7 +154,7 @@ public class LoggerRestService implements LoggerService {
         }
         return returnList;
     }
-    
+
     /**
      * Get a list of entities for the given LoggerType
      *
@@ -168,9 +166,7 @@ public class LoggerRestService implements LoggerService {
 
         try {
             final String jsonUri = loggerUriPrefix + type.name();
-            logger.info("Requesting " + type.name() + " via: " + jsonUri);
             entities = restTemplate.getForObject(jsonUri, List.class);
-            logger.info("The values : " + entities);
         } catch (Exception ex) {
             logger.error("RestTemplate error: " + ex.getMessage(), ex);
         }

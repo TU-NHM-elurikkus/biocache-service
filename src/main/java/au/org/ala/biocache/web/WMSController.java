@@ -506,10 +506,6 @@ public class WMSController {
         searchResult = searchDAO.findByFulltextSpatialQuery(requestParams, null);
         model.addAttribute("searchResult", searchResult);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Returning results set with: " + searchResult.getTotalRecords());
-        }
-
         return searchResult;
     }
 
@@ -892,20 +888,17 @@ public class WMSController {
             JsonNode leftNode = tc.get("left");
             JsonNode rightNode = tc.get("right");
             newQuery = leftNode != null && rightNode != null ? "lft:[" + leftNode.asText() + " TO " + rightNode.asText() + "]" : "taxon_concept_lsid:" + guid;
-            logger.debug("The new query : " + newQuery);
 
             //common name
             JsonNode commonNameNode = tc.get("commonNameSingle");
             if (commonNameNode != null) {
                 model.addAttribute("commonName", commonNameNode.asText());
-                logger.debug("retrieved name: " + commonNameNode.asText());
             }
 
             //name
             JsonNode nameNode = tc.get("nameComplete");
             if (nameNode != null) {
                 model.addAttribute("name", nameNode.asText());
-                logger.debug("retrieved name: " + nameNode.asText());
             }
 
             //authorship
@@ -954,8 +947,6 @@ public class WMSController {
             HttpServletResponse response,
             Model model) throws Exception {
 
-        logger.debug("WMS - GetFeatureInfo requested for: " + queryLayers);
-
         if ("EPSG:4326".equals(srs))
             bboxString = convertBBox4326To900913(bboxString);    // to work around a UDIG bug
 
@@ -989,7 +980,6 @@ public class WMSController {
         SpatialSearchRequestParams requestParams = new SpatialSearchRequestParams();
         String q = convertLayersParamToQ(queryLayers);
         requestParams.setQ(convertLayersParamToQ(queryLayers));  //need to derive this from the layer name
-        logger.debug("WMS GetFeatureInfo for " + queryLayers + ", longitude:[" + minLng + " TO " + maxLng + "],  latitude:[" + minLat + " TO " + maxLat + "]");
 
         String[] fqs = new String[]{"longitude:[" + minLng + " TO " + maxLng + "]", "latitude:[" + minLat + " TO " + maxLat + "]"};
         requestParams.setFq(fqs);
@@ -1067,7 +1057,6 @@ public class WMSController {
             g.setPaint(fill);
             g.fillOval(0, 0, size, size);
             OutputStream out = response.getOutputStream();
-            logger.debug("WMS - GetLegendGraphic requested : " + request.getQueryString());
             response.setContentType("image/png");
             ImageIO.write(img, "png", out);
             out.close();
@@ -1311,7 +1300,6 @@ public class WMSController {
             }
 
             query = searchUtils.convertRankAndName(query);
-            logger.debug("GetCapabilities query in use: " + query);
 
             if (useSpeciesGroups) {
                 taxonDAO.extractBySpeciesGroups(baseWsUrl + "/ogc/getMetadata", query, filterQueries, writer);
@@ -1406,8 +1394,6 @@ public class WMSController {
             }
         }
 
-        logger.debug("WMS tile: " + request.getQueryString());
-
         response.setHeader("Cache-Control", "max-age=86400"); //age == 1 day
         response.setContentType("image/png"); //only png images generated
 
@@ -1433,7 +1419,6 @@ public class WMSController {
         }
 
         PointType pointType = getPointTypeForDegreesPerPixel(resolution);
-        logger.debug("Rendering: " + pointType.name());
 
         String q = "";
 
@@ -1501,7 +1486,7 @@ public class WMSController {
                 outStream.flush();
                 outStream.close();
             } catch (Exception e) {
-                logger.debug("Unable to write image", e);
+                logger.error("Unable to write image", e);
             }
         } else {
             displayBlankImage(response);
@@ -2029,7 +2014,7 @@ public class WMSController {
         String qfull = qparam + StringUtils.join(requestParams.getFq(), ",") + requestParams.getQc() +
                 requestParams.getWkt() + requestParams.getRadius() + requestParams.getLat() + requestParams.getLon();
 
-        //qfull can be long if there is WKT 
+        //qfull can be long if there is WKT
         String q = String.valueOf(qfull.hashCode());
 
         //grid and -1 colour modes have the same data
@@ -2107,7 +2092,7 @@ public class WMSController {
                 return wco;
             }
 
-            // when there is only one colour, return the result for colourMode=="-1" 
+            // when there is only one colour, return the result for colourMode=="-1"
             if ((colours == null || colours.size() == 1) && !cm.equals("-1")) {
                 String prevColourMode = vars.colourMode;
                 vars.colourMode = "-1";
@@ -2321,28 +2306,6 @@ public class WMSController {
                     }
                 }
             }
-
-            long t3 = System.currentTimeMillis();
-
-            if (logger.isDebugEnabled()) {
-                int occurrences = 0;
-                int points = 0;
-                int colourMatches = pointsArrays.size();
-                for (int i = 0; i < pointsArrays.size(); i++) {
-                    points += pointsArrays.get(i).length;
-                    if (countsArrays != null) {
-                        for (int j = 0; j < pointsArrays.get(i).length; j++) {
-                            occurrences += countsArrays.get(i)[j];
-                        }
-                    }
-                }
-
-                logger.debug("wms timings: many queries=" + (t2 - t1) + "ms, pivot=" + (t3 - t2) + "ms, " +
-                        "colours=" + colours.size() + ", points=" + points + ", occurrences=" + occurrences + ", " +
-                        "matchedColours=" + colourMatches + ", max colour idx=" + colrmax + ", " +
-                        "max colour request time=" + colrmaxtime + "ms, query docCount=" + docCount);
-            }
-
         }
         //get points for occurrences not in colours.
         if (colours == null || colours.isEmpty() || colours.size() == 1) {
@@ -2517,4 +2480,3 @@ public class WMSController {
         this.orgEmail = orgEmail;
     }
 }
-

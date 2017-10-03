@@ -177,10 +177,6 @@ public class ShapeFileRecordWriter implements RecordWriterError {
 
         // build the type
         final SimpleFeatureType LOCATION = builder.buildFeatureType();
-        if (logger.isDebugEnabled()) {
-            logger.debug("FEATURES IN HEADER::: " + StringUtils.join(features, "|"));
-            logger.debug("LOCATION INFO:::" + LOCATION.getAttributeCount() + " " + i + " " + LOCATION.getAttributeDescriptors());
-        }
         return LOCATION;
     }
 
@@ -219,7 +215,6 @@ public class ShapeFileRecordWriter implements RecordWriterError {
                 AlaFileUtils.createZip(temporaryShapeFile.getParent(), targetZipFile);
                 try (java.io.FileInputStream inputStream = new java.io.FileInputStream(targetZipFile);) {
                     //write the shapefile to the supplied output stream
-                    logger.info("Copying Shape zip file to outputstream");
                     IOUtils.copy(inputStream, outputStream);
                     //now remove the temporary directory
                     FileUtils.deleteDirectory(temporaryShapeFile.getParentFile().getParentFile());
@@ -280,8 +275,6 @@ public class ShapeFileRecordWriter implements RecordWriterError {
                 }
             }
 
-        } else {
-            logger.debug("Not adding record with missing lat/long: " + record[0]);
         }
     }
 

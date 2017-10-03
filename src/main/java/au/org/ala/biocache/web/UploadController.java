@@ -268,7 +268,6 @@ public class UploadController extends AbstractSecureController {
         }
         List<String> filterList = new ArrayList<String>();
         for(int k = 0; k < columnLengths.length; k++){
-            logger.debug("Column length: " + headers[k] + " = " + columnLengths[k]);
             if(columnLengths[k] <= maxColumnLength ){
                 filterList.add(headers[k]);
             }
@@ -390,7 +389,6 @@ public class UploadController extends AbstractSecureController {
 
                 //do a line count
                 lineCount = doLineCount(csvFile);
-                logger.debug("Line count: " + lineCount);
 
                 //derive a list of custom index field
                 try(CSVReader readerForCol = new CSVReader(new FileReader(csvFile), ',', '"');) {
@@ -422,14 +420,11 @@ public class UploadController extends AbstractSecureController {
 
             boolean reload = false;
             if(StringUtils.isNotBlank(dataResourceUid)){
-                logger.info("Data resource UID supplied, will attempt reload...");
                 //we are reloading.....
                 updateTempResource(dataResourceUid, datasetName, lineCount, alaId, uiUrl);
                 reload = true;
             } else {
-                logger.info("Data resource UID NOT supplied, will create a temp resource....");
                 dataResourceUid = createTempResource(datasetName, lineCount, alaId, uiUrl);
-                logger.info("Temp data resource created with UID: " + dataResourceUid);
             }
 
             //do the upload asynchronously
@@ -448,7 +443,6 @@ public class UploadController extends AbstractSecureController {
             ut.alaId = alaId;
             new Thread(ut).start();
 
-            logger.debug("Temporary UID being returned...." + dataResourceUid);
             Map<String,String> details = new HashMap<String,String>();
             details.put("uid", dataResourceUid);
             return details;
@@ -549,7 +543,6 @@ public class UploadController extends AbstractSecureController {
         try {
             httpClient.executeMethod(post);
 
-            logger.info("Retrieved: " + post.getResponseHeader("location").getValue());
             String collectoryUrl = post.getResponseHeader("location").getValue();
             return collectoryUrl.substring(collectoryUrl.lastIndexOf('/') + 1);
         } finally {
@@ -677,14 +670,12 @@ class UploaderThread implements Runnable {
             au.org.ala.biocache.Store.sample(tempUid, u);
 
             status = "PROCESSING";
-            logger.debug("Processing " + tempUid);
             FileUtils.writeStringToFile(statusFile, om.writeValueAsString(new UploadStatus("PROCESSING","Starting",50)));
             DefaultObserverCallback processingCallback = new DefaultObserverCallback("PROCESSING", recordCount, statusFile, 50, "processed");
             au.org.ala.biocache.Store.process(tempUid, threads, processingCallback);
 
             status = "INDEXING";
             Set<String> suffixedCustIndexFields = getSuffixedCustomIndexFields(intList, floatList, dateList, stringList);
-            logger.debug("Indexing " + tempUid + " " + suffixedCustIndexFields);
             FileUtils.writeStringToFile(statusFile, om.writeValueAsString(new UploadStatus("INDEXING","Starting",75)));
             DefaultObserverCallback indexingCallback = new DefaultObserverCallback("INDEXING", recordCount, statusFile, 75, "indexed");
             au.org.ala.biocache.Store.index(tempUid, suffixedCustIndexFields.toArray(new String[0]),
@@ -884,7 +875,7 @@ class UploaderThread implements Runnable {
                                     startingPercentage + percentageComplete)));
                 }
             } catch(Exception e){
-                logger.debug(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
             }
         }
     }
@@ -936,7 +927,7 @@ class UploaderThread implements Runnable {
                                 intersectionFile.getLayerName()), 25 + percentageComplete)));
                 }
             } catch(Exception e){
-                logger.debug(e.getMessage(),e);
+                logger.error(e.getMessage(), e);
             }
         }
     }

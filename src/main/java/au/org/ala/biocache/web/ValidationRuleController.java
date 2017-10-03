@@ -109,13 +109,12 @@ public class ValidationRuleController extends AbstractSecureController {
                             //now update it in the store
                             Store.addValidationRule(vr);
                         }
-                    }   else{
+                    } else{
                         logger.warn("Unable to find species " + validationRuleDTO.getSpecies());
                         notfound++;
                     }
                 }
             }
-            logger.info("Finished rematching the validation rules to species. Total records checked: " + count + ". Changed: " + changed + " . Not found: " + notfound);
         }
     }
 
@@ -148,7 +147,6 @@ public class ValidationRuleController extends AbstractSecureController {
 
         try {
             String rawValue = org.apache.commons.io.IOUtils.toString(request.getInputStream(), "UTF-8");
-            logger.debug("The raw value :" + rawValue);
 
             try {
                 ObjectMapper om = new ObjectMapper();
@@ -173,7 +171,6 @@ public class ValidationRuleController extends AbstractSecureController {
                             try {
                                 SolrDocumentList list = searchDAO.findByFulltext(ssr);
                                 Long recordCount = list.getNumFound();
-                                logger.debug("Validation rule should apply to records: " + recordCount);
                                 //now create the query assertion
                                 ValidationRule validationRule = new ValidationRule();
                                 //NQ: need the id to be populated to construct the correct validation rowkey to allow for updates

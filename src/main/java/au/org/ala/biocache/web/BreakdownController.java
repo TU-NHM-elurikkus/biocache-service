@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * A simple controller for providing breakdowns on top of the biocache.
- *  
+ *
  * @author Dave Martin (David.Martin@csiro.au)
  * @author Natasha Carter (Natasha.Carter@csiro.au)
  */
@@ -41,7 +41,7 @@ public class BreakdownController {
 
 	@Inject
 	protected SearchDAO searchDAO;
-	
+
 	/**
 	 * Performs a breakdown based on a collection
 	 * @param requestParams
@@ -102,10 +102,9 @@ public class BreakdownController {
                 @PathVariable("uid") String uid, HttpServletResponse response) throws Exception{
         return performBreakdown("data_hub_uid", uid, requestParams, response);
     }
-	
+
 	@RequestMapping(value= "/breakdown*", method = RequestMethod.GET)
 	public @ResponseBody TaxaRankCountDTO breakdownByQuery(BreakdownRequestParams  breakdownParams,HttpServletResponse response) throws Exception {
-        logger.debug(breakdownParams);
 	    if(StringUtils.isNotEmpty(breakdownParams.getQ())){
 	        if(breakdownParams.getMax() != null || StringUtils.isNotEmpty(breakdownParams.getRank()) || StringUtils.isNotEmpty(breakdownParams.getLevel()))
 	            return searchDAO.calculateBreakdown(breakdownParams);
@@ -134,7 +133,7 @@ public class BreakdownController {
 	        sb.append(source).append(":").append(u);
 	    }
 	    sb.append(")");
-	    
+
 	    requestParams.setQ(sb.toString());
 	    return breakdownByQuery(requestParams, response);
 	}
@@ -146,7 +145,7 @@ public class BreakdownController {
      */
     @RequestMapping(value = {"/breakdown/institutions*","/breakdown/collections*", "/breakdown/data-resources*","/breakdowns/data-providers*","/breakdowns/data-hubs*"}, method = RequestMethod.GET)
     public @ResponseBody TaxaRankCountDTO limitBreakdown(BreakdownRequestParams requestParams, HttpServletResponse response) throws Exception {
-        return performBreakdown("*", "*", requestParams, response);                
+        return performBreakdown("*", "*", requestParams, response);
     }
 
 	/**

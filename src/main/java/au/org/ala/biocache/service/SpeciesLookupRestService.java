@@ -68,7 +68,6 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
             try {
                 // Use link identifier to see if we can get a unqique name
                 jsonUri = bieUriPrefix + "/species/" + URLEncoder.encode(name, "UTF-8");
-                logger.debug("Requesting: " + jsonUri);
                 Map<String, Object> json = restTemplate.getForObject(jsonUri, Map.class);
                 Map<String, String> tc = (Map<String, String>) json.get("taxonConcept");
                 if (tc != null)
@@ -96,7 +95,6 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
         String acceptedName = "";
         if(enabled){
             try {
-                logger.info("Requesting: " + jsonUri);
                 Map<String, String> jsonMap = restTemplate.getForObject(jsonUri, Map.class);
 
                 if (jsonMap.containsKey("scientificName")) {
@@ -387,7 +385,6 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
         }
 
         String url = bieUriPrefix + "/guid/batch?q=" + encodedQueries.toString();
-        logger.info("Requesting: " + url);
         Map<String, Object> jsonMap = restTemplate.getForObject(url, Map.class);
 
         for (Object o : jsonMap.values()) {
@@ -408,7 +405,6 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
 
     public Map search(String query, String [] filterQuery, int max, boolean includeSynonyms, boolean includeAll, boolean counts) {
         String url = bieUriPrefix + "/search.json?q=" + query + "&pageSize=" + max;
-        logger.info("Requesting: " + url);
         Map<String, Object> jsonMap = restTemplate.getForObject(url, Map.class);
 
         return jsonMap;
