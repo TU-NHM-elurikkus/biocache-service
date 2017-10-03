@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -59,7 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Services to perform the downloads.
- * 
+ *
  * Can configure the number of off-line download processors
  *
  * @author Natasha Carter (natasha.carter@csiro.au)
@@ -375,7 +375,7 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
     /**
      * Writes the supplied download to the supplied output stream. It will
      * include all the appropriate citations etc.
-     * 
+     *
      * @param dd
      * @param requestParams
      * @param ip
@@ -463,10 +463,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                         logger.error(e.getMessage(), e);
                     }
                     sp.closeEntry();
-                } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Not adding citation. Enabled: " + citationsEnabled + " uids: " + uidStats);
-                    }
                 }
 
                 // online downloads will not have a file location or request params set
@@ -487,9 +483,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                         .replace("[date]", dd.getStartDateString())
                         .replace("[searchUrl]", generateSearchUrl(dd.getRequestParams()))
                         .replace("[dataProviders]", dataProviders);
-                if (logger.isDebugEnabled()) {
-                    logger.debug(readmeContent);
-                }
                 sp.write((readmeContent).getBytes());
                 sp.write(("For more information about the fields that are being downloaded please consult <a href='"
                         + dataFieldDescriptionURL + "'>Download Fields</a>.").getBytes());
@@ -505,10 +498,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                         logger.error(e.getMessage(), e);
                     }
                     sp.closeEntry();
-                } else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Not adding header. Enabled: " + headingsEnabled + " uids: " + uidStats);
-                    }
                 }
 
                 sp.flush();
@@ -591,7 +580,7 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
     /**
      * get citation info from citation web service and write it into
      * citation.txt file.
-     * 
+     *
      * @param uidStats
      * @param out
      * @throws HttpException
@@ -658,7 +647,7 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
     /**
      * get headings info from index/fields web service and write it into
      * headings.csv file.
-     * 
+     *
      * output columns: column name field requested dwc description info field
      *
      * @param out
@@ -908,9 +897,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                 @Override
                 public DownloadDetailsDTO call() throws Exception {
                     try {
-                        if(logger.isInfoEnabled()) {
-                            logger.info("Starting to download the offline request: " + currentDownload);
-                        }
                         Thread.sleep(executionDelay);
                         // we are now ready to start the download
                         // we need to create an output stream to the file system

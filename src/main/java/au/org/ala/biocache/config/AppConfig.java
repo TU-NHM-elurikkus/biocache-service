@@ -57,7 +57,7 @@ public class AppConfig {
     //Set RestartDataService.dir before classes using RestartDataService are instantiated.
     @Value("${restart.data.dir:/tmp}")
     public void setDatabase(String dir) {
-        logger.debug("setting RestartDataService.dir: " + dir);
+        ("setting RestartDataService.dir: " + dir);
         RestartDataService.dir = dir;
     }
 

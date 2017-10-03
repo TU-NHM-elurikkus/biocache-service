@@ -241,10 +241,6 @@ public class QueryFormatUtils {
 
             while (matcher.find()) {
                 String value = matcher.group();
-                if (logger.isDebugEnabled()) {
-                    logger.debug("term query: " + value);
-                    logger.debug("groups: " + matcher.group(1) + "|" + matcher.group(2));
-                }
 
                 if ("matched_name".equals(matcher.group(1))) {
                     // name -> accepted taxon name (taxon_name:)
@@ -253,15 +249,9 @@ public class QueryFormatUtils {
 
                     if (queryText != null && !queryText.isEmpty()) {
                         String guid = speciesLookupService.getGuidForName(queryText.replaceAll("\"", "")); // strip any quotes
-                        if (logger.isInfoEnabled()) {
-                            logger.info("GUID for " + queryText + " = " + guid);
-                        }
 
                         if (guid != null && !guid.isEmpty()) {
                             String acceptedName = speciesLookupService.getAcceptedNameForGuid(guid); // strip any quotes
-                            if (logger.isInfoEnabled()) {
-                                logger.info("acceptedName for " + queryText + " = " + acceptedName);
-                            }
 
                             if (acceptedName != null && !acceptedName.isEmpty()) {
                                 field = "taxon_name";
@@ -280,10 +270,6 @@ public class QueryFormatUtils {
                         queryText = QUOTE + queryText + QUOTE;
                     }
 
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("queryText: " + queryText);
-                    }
-
                     matcher.appendReplacement(queryString, matcher.quoteReplacement(field + ":" + queryText));
 
                 } else if ("matched_name_children".equals(matcher.group(1))) {
@@ -292,9 +278,6 @@ public class QueryFormatUtils {
 
                     if (queryText != null && !queryText.isEmpty()) {
                         String guid = speciesLookupService.getGuidForName(queryText.replaceAll("\"", "")); // strip any quotes
-                        if (logger.isInfoEnabled()) {
-                            logger.info("GUID for " + queryText + " = " + guid);
-                        }
 
                         if (guid != null && !guid.isEmpty()) {
                             field = "lsid";
@@ -337,10 +320,6 @@ public class QueryFormatUtils {
                 String value = matcher.group();
                 String taxa = matcher.group(2);
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("found taxa " + taxa);
-                }
-
                 List<String> taxaQueries = new ArrayList<>();
                 taxaQueries.add(taxa);
                 List<String> guidsForTaxa = speciesLookupService.getGuidsForTaxa(taxaQueries);
@@ -372,10 +351,6 @@ public class QueryFormatUtils {
             Matcher matcher = speciesListPattern.matcher(current[1]);
             while (matcher.find()) {
                 String speciesList = matcher.group(2);
-
-                if (logger.isDebugEnabled()) {
-                    logger.debug("found speciesList " + speciesList);
-                }
 
                 try {
                     List<String> lsids = listsService.getListItems(speciesList);
@@ -441,9 +416,6 @@ public class QueryFormatUtils {
                 //only want to process the "lsid" if it does not represent taxon_concept_lsid etc...
                 if ((matcher.start() > 0 && current[1].charAt(matcher.start() - 1) != '_') || matcher.start() == 0) {
                     String value = matcher.group();
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("pre-processing " + value);
-                    }
                     String lsid = matcher.group(2);
                     if (lsid.contains("\"")) {
                         //remove surrounding quotes, if present
@@ -453,9 +425,6 @@ public class QueryFormatUtils {
                         //remove internal \ chars, if present
                         //noinspection MalformedRegex
                         lsid = lsid.replaceAll("\\\\", "");
-                    }
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("lsid = " + lsid);
                     }
                     String[] values = searchUtils.getTaxonSearch(lsid);
                     String lsidHeader = matcher.groupCount() > 1 && matcher.group(1).length() > 0 ? matcher.group(1) : "";
@@ -493,9 +462,6 @@ public class QueryFormatUtils {
             queryString.setLength(0);
             while (matcher.find()) {
                 String value = matcher.group();
-                if (logger.isDebugEnabled()) {
-                    logger.debug("escaping lsid urns  " + value);
-                }
                 matcher.appendReplacement(queryString, prepareSolrStringForReplacement(value, true));
 
                 //this lsid->name replacement is too slow
@@ -523,9 +489,6 @@ public class QueryFormatUtils {
             while (matcher.find()) {
                 String value = matcher.group();
 
-                if (logger.isDebugEnabled()) {
-                    logger.debug("escaping lsid http uris  " + value);
-                }
                 matcher.appendReplacement(queryString, prepareSolrStringForReplacement(value, true));
 
                 //this lsid->name replacement is too slow
@@ -558,9 +521,6 @@ public class QueryFormatUtils {
             if (matcher.find()) {
                 String spatial = matcher.group();
                 SpatialSearchRequestParams subQuery = new SpatialSearchRequestParams();
-                if (logger.isDebugEnabled()) {
-                    logger.debug("region Start : " + matcher.regionStart() + " start :  " + matcher.start() + " spatial length " + spatial.length() + " query length " + current[1].length());
-                }
                 //format the search query of the remaining text only
                 subQuery.setQ(current[1].substring(matcher.start() + spatial.length(), current[1].length()));
                 //format the remaining query
@@ -802,9 +762,7 @@ public class QueryFormatUtils {
             return formatted;
 
         } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(e.getMessage(), e);
-            }
+            logger.error(e.getMessage(), e);
             return text;
         }
     }

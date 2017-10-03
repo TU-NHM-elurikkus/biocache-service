@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -190,7 +190,6 @@ public class ExploreController {
         String kingdom = null;
         //set the counts an indent levels for all the species groups
         for(au.org.ala.biocache.vocab.SpeciesGroup sg : sgs){
-            logger.debug("name: " + sg.name() + " parent: " +sg.parent());
             int level =3;
             SpeciesGroupDTO sdto = new SpeciesGroupDTO();
             sdto.setName(sg.name());
@@ -198,7 +197,7 @@ public class ExploreController {
             if(oldName!= null && sg.parent()!= null && sg.parent().equals(kingdom)) {
                 level = 2;
             }
-            
+
             oldName = sg.name();
             if(sg.parent() == null){
                 level = 1;
@@ -215,10 +214,10 @@ public class ExploreController {
         }
         return speciesGroups;
 	}
-    
+
     /**
      * Returns the number of records and distinct species in a particular species group
-     * 
+     *
      * @param requestParams
      * @param group
      * @return
@@ -236,7 +235,7 @@ public class ExploreController {
         if(results.getFacetResults().size() > 0){
             speciesCount = results.getFacetResults().iterator().next().getFieldResult().size();
         }
-        
+
         return new Integer[]{(int) results.getTotalRecords(), speciesCount};
     }
 
@@ -286,13 +285,11 @@ public class ExploreController {
         addGroupFilterToQuery(requestParams, speciesGroup);
         PointType pointType = PointType.POINT_00001; // default value for when zoom is null
         pointType = getPointTypeForZoomLevel(zoomLevel);
-        logger.info("PointType for zoomLevel ("+zoomLevel+") = "+pointType.getLabel());
         List<OccurrencePoint> points = searchDao.findRecordsForLocation(requestParams, pointType);
-        logger.info("Points search for "+pointType.getLabel()+" - found: " + points.size());
         model.addAttribute("points", points);
         return POINTS_GEOJSON;
     }
-    
+
     /**
      * Map a zoom level to a coordinate accuracy level
      *
@@ -325,7 +322,7 @@ public class ExploreController {
         }
         return pointType;
     }
- 
+
     private void applyFacetForCounts(SpatialSearchRequestParams requestParams, boolean useCommonName){
     	if(useCommonName)
     		requestParams.setFacets(new String[]{SearchDAOImpl.COMMON_NAME_AND_LSID});
@@ -346,29 +343,27 @@ public class ExploreController {
             @RequestParam(value="common", required=false, defaultValue="false") boolean common,
             HttpServletResponse response)
             throws Exception {
-	    String filename = requestParams.getFile() != null ? requestParams.getFile():"data"; 
-        logger.debug("Downloading the species in your area... ");
+	    String filename = requestParams.getFile() != null ? requestParams.getFile():"data";
         response.setHeader("Cache-Control", "must-revalidate");
         response.setHeader("Pragma", "must-revalidate");
         response.setHeader("Content-Disposition", "attachment;filename="+filename);
         response.setContentType("application/vnd.ms-excel");
-       
+
         addGroupFilterToQuery(requestParams, group);
         applyFacetForCounts(requestParams, common);
 
         try {
             ServletOutputStream out = response.getOutputStream();
             int count = searchDao.writeSpeciesCountByCircleToStream(requestParams, group, out);
-            logger.debug("Exported " + count + " species records in the requested area");
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        
+
 	}
 
     /**
      * JSON web service that returns a list of species and record counts for a given location search
-     * and a higher taxa with rank. 
+     * and a higher taxa with rank.
      *
      * @param model
      * @throws Exception
@@ -377,13 +372,13 @@ public class ExploreController {
 	public @ResponseBody List<TaxaCountDTO> listSpeciesForHigherTaxa(
             SpatialSearchRequestParams requestParams,
             @PathVariable(value="group") String group,
-            @RequestParam(value="common", required=false, defaultValue="false") boolean common,           
+            @RequestParam(value="common", required=false, defaultValue="false") boolean common,
             Model model) throws Exception {
 
-       
+
         addGroupFilterToQuery(requestParams, group);
         applyFacetForCounts(requestParams, common);
-        
+
         return searchDao.findAllSpeciesByCircleAreaAndHigherTaxa(requestParams, group);
     }
 	// The Endemism Web Services - Move these if they get too large...
@@ -395,22 +390,22 @@ public class ExploreController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/explore/counts/endemic*", method = RequestMethod.GET)
-	public @ResponseBody int getSpeciesCountOnlyInWKT(SpatialSearchRequestParams requestParams, 
-	          HttpServletResponse response) 
-	          throws Exception{  
+	public @ResponseBody int getSpeciesCountOnlyInWKT(SpatialSearchRequestParams requestParams,
+	          HttpServletResponse response)
+	          throws Exception{
 	    List list = getSpeciesOnlyInWKT(requestParams,response);
 	    if(list != null)
 	        return list.size();
 	    return 0;
 	}
-		
+
 	/**
 	 * Returns the species that only have occurrences in the supplied WKT.
 	 * @return
 	 */
 	@RequestMapping(value = "/explore/endemic/species*", method = RequestMethod.GET)
 	public @ResponseBody List<FieldResultDTO> getSpeciesOnlyInWKT(SpatialSearchRequestParams requestParams,
-	          HttpServletResponse response) 
+	          HttpServletResponse response)
 	              throws Exception{
 	    Qid qid = qidCacheDao.getQidFromQuery(requestParams.getQ());
 	    String wkt =StringUtils.isNotBlank(requestParams.getWkt())?requestParams.getWkt():qid.getWkt();
@@ -419,7 +414,7 @@ public class ExploreController {
 	        requestParams.setWkt(qid.getWkt());
             requestParams.setFq(qid.getFqs());
 	    }
-	    
+
 	    if(StringUtils.isNotBlank(wkt) ){
 	        if(requestParams.getFacets() != null && requestParams.getFacets().length ==1){
                 return searchDao.getEndemicSpecies(requestParams);

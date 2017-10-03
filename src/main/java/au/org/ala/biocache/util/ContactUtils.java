@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -60,7 +60,6 @@ public class ContactUtils {
         final String jsonUri = collectionContactsUrl + "/" + collectionUid + "/contacts.json";
 
         List<Map<String, Object>> contacts = restTemplate.getForObject(jsonUri, List.class);
-        logger.debug("number of contacts = " + contacts.size());
 
         for (Map<String, Object> contact : contacts) {
             Map<String, String> details = (Map<String, String>) contact.get("contact");
@@ -70,8 +69,6 @@ public class ContactUtils {
             String firstName = details.get("firstName");
             String lastName = details.get("lastName");
             String phone = details.get("phone");
-
-            logger.debug("email = " + email);
 
             ContactDTO c = new ContactDTO();
             c.setEmail(email);
@@ -98,16 +95,12 @@ public class ContactUtils {
 
     public boolean isCollectionsAdmin(String collectionUid, String userId){
         final String jsonUri = collectionContactsUrl + "/" + collectionUid + "/contacts.json";
-        logger.debug("Requesting: " + jsonUri);
         List<Map<String, Object>> contacts = restTemplate.getForObject(jsonUri, List.class);
-        logger.debug("number of contacts = " + contacts.size());
 
         for (Map<String, Object> contact : contacts) {
             Map<String, String> details = (Map<String, String>) contact.get("contact");
             String email = details.get("email");
-            logger.debug("email = " + email);
             if (userId.equalsIgnoreCase(email)) {
-                logger.info("Logged in user has collection admin rights: " + email);
                 return true;
             }
         }

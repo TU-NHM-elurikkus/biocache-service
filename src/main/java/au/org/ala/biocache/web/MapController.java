@@ -54,8 +54,8 @@ import java.util.List;
 
 /**
  * WMS and static map controller. This controller generates static PNG image files
- * that provide a heatmap of occurrences. 
- * 
+ * that provide a heatmap of occurrences.
+ *
  * TODO: This functionality is currently only supporting
  * overview maps for Australia but could be extended to support other regions.
  *
@@ -80,7 +80,7 @@ public class MapController implements ServletConfigAware {
     @Inject
     protected QueryFormatUtils queryFormatUtils;
     private ServletConfig cfg;
-    
+
     private static final int map_offset = 268435456; // half the Earth's circumference at zoom level 21
     private static final double map_radius = map_offset / Math.PI;
 
@@ -118,7 +118,7 @@ public class MapController implements ServletConfigAware {
             return;
         }
 
-        // let's force it to PNG's for now 
+        // let's force it to PNG's for now
         response.setContentType("image/png");
 
         // Convert array to list so we append more values onto it
@@ -185,7 +185,6 @@ public class MapController implements ServletConfigAware {
         requestParams.setFq(newFilterQuery);
 
         List<OccurrencePoint> points = searchDAO.getFacetPoints(requestParams, pointType);
-        logger.debug("Points search for " + pointType.getLabel() + " - found: " + points.size());
 
         if (points.size() == 0) {
             displayBlankImage(width, height, false, response);
@@ -273,7 +272,6 @@ public class MapController implements ServletConfigAware {
         PointType pointType = getPointTypeForZoomLevel(zoomLevel);
 
         List<OccurrencePoint> points = searchDAO.getOccurrences(requestParams, pointType, "");
-        logger.info("Points search for " + pointType.getLabel() + " - found: " + points.size());
         model.addAttribute("points", points);
         model.addAttribute("count", points.size());
 
@@ -420,7 +418,7 @@ public class MapController implements ServletConfigAware {
 
     /**
      * Create a buffered image for the static map.
-     * 
+     *
      * @return
      * @throws IOException
      */
@@ -431,13 +429,13 @@ public class MapController implements ServletConfigAware {
 
     /**
      * This method creates and renders a density map for a species.
-     * 
+     *
      * @throws Exception
      */
     @RequestMapping(value = {"/density/map", "/occurrences/static"}, method = RequestMethod.GET)
     public @ResponseBody void speciesDensityMap(SpatialSearchRequestParams requestParams,
             @RequestParam(value = "forceRefresh", required = false, defaultValue = "false") boolean forceRefresh,
-            @RequestParam(value = "forcePointsDisplay", required = false, defaultValue = "false") boolean forcePointsDisplay,            
+            @RequestParam(value = "forcePointsDisplay", required = false, defaultValue = "false") boolean forcePointsDisplay,
             @RequestParam(value = "pointColour", required = false, defaultValue = "0000ff") String pointColour,
             @RequestParam(value = "colourByFq", required = false, defaultValue = "") String colourByFqCSV,
             @RequestParam(value = "colours", required = false, defaultValue = "") String coloursCSV,
@@ -464,16 +462,13 @@ public class MapController implements ServletConfigAware {
                 throw new IllegalArgumentException(String.format("Mismatch in facet values and colours. Values: %d, Colours: %d", facetValues.length, facetColours.length));
             }
         }
-               
+
         //Does file exist on disk?
         File f = new File(outputDir + "/" + outputHMFile);
 
         if (!f.isFile() || !f.exists() || forceRefresh) {
-            logger.debug("Regenerating heatmap image");
             //If not, generate
             generateStaticHeatmapImages(requestParams,  false, forcePointsDisplay, pointHeatMapThreshold, pointColour, facetValues, facetColours, opacity, request);
-        } else {
-            logger.debug("Heatmap file already exists on disk, sending file back to user");
         }
 
         try {
@@ -507,7 +502,7 @@ public class MapController implements ServletConfigAware {
 
     /**
      * This method creates and renders a density map legend for a species.
-     * 
+     *
      * @throws Exception
      */
     @RequestMapping(value = "/density/legend", method = RequestMethod.GET)
@@ -523,13 +518,10 @@ public class MapController implements ServletConfigAware {
 
         //Does file exist on disk?
         File f = new File(baseDir + "/" + "legend_" + outputHMFile);
-        
+
         if (!f.isFile() || !f.exists() || forceRefresh) {
             //If not, generate
-            logger.debug("regenerating heatmap legend");
             generateStaticHeatmapImages(requestParams, true, false,  0, "0000ff", null, null, 1.0f, request);
-        } else {
-            logger.debug("legend file already exists on disk, sending file back to user");
         }
 
         //read file off disk and send back to user
@@ -560,7 +552,7 @@ public class MapController implements ServletConfigAware {
      * @param requestParams
      */
     public void generateStaticHeatmapImages(
-            SpatialSearchRequestParams requestParams, 
+            SpatialSearchRequestParams requestParams,
             boolean generateLegend,
             boolean forcePointsDisplay,
             Integer pointHeatMapThreshold,
@@ -569,15 +561,14 @@ public class MapController implements ServletConfigAware {
             String[] colours,
             Float opacity,
             HttpServletRequest request) throws Exception {
-        
+
         File baseDir = new File(heatmapOutputDir);
-        logger.debug("Heatmap output directory is " + heatmapOutputDir);
         String outputHMFile = getOutputFile(request);
 
         PointType pointType = PointType.POINT_001;
 
         double[] points = retrievePoints(requestParams, pointType);
-        
+
         HeatMap hm = new HeatMap();
 
         //heatmap versus points
@@ -629,17 +620,12 @@ public class MapController implements ServletConfigAware {
         try {
             requestParams.setQ(requestParams.getQ());
             List<OccurrencePoint> occ_points = searchDAO.getFacetPoints(requestParams, pointType);
-            if(logger.isDebugEnabled()){
-                logger.debug("Points search for " + pointType.getLabel() + " - found: " + occ_points.size());
-            }
 
             int totalItems = 0;
             for (int i = 0; i < occ_points.size(); i++) {
                 OccurrencePoint pt = occ_points.get(i);
                 totalItems = (int) (totalItems + pt.getCount());
             }
-
-            logger.debug("total number of occurrence points is " + totalItems);
 
             points = new double[totalItems * 2];
 

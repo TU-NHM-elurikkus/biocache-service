@@ -58,7 +58,6 @@ public class AlaImageMetadataService implements ImageMetadataService {
             return new HashMap<String, List<Map<String, Object>>>();
         }
 
-        logger.debug("Retrieving the image metadata for " + occurrenceIDs.size() + " records");
         Map<String, Object> payload = new HashMap<String, Object>();
         payload.put("key", "occurrenceid");
         payload.put("values", occurrenceIDs);
@@ -74,7 +73,6 @@ public class AlaImageMetadataService implements ImageMetadataService {
 
                 Map<String, Object> jsonResponse = om.readValue(jsonResponseString, Map.class);
                 Map<String, List<Map<String, Object>>> imageMetadata = (Map<String, List<Map<String, Object>>>) jsonResponse.get("images");
-                logger.debug("Obtained image metadata for " + imageMetadata.size() + " records");
                 return imageMetadata;
             }
         }

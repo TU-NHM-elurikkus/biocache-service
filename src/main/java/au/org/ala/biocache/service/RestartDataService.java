@@ -59,10 +59,6 @@ public class RestartDataService {
     public void init() {
 
         if (enabled) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("RestartDataService dir: " + dir);
-            }
-
             new File(dir).mkdirs();
 
             jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -157,9 +153,6 @@ public class RestartDataService {
                 }
                 jsonMapper.writeValue(file, value);
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("writing " + path + " to disk");
-            }
         } catch (Exception e) {
             logger.error("failed to save to disk: " + path, e);
         }
@@ -185,8 +178,6 @@ public class RestartDataService {
             value = (T) loadFromDisk(key, typeRef);
             if (value == null) {
                 value = defaultValue.newInstance();
-            } else {
-                logger.debug("reading " + parent.getClass().toString() + " " + name + " from disk cache");
             }
             values.put(key, value);
         } catch (Exception e) {

@@ -104,9 +104,6 @@ public class QidCacheDAOImpl implements QidCacheDAO {
 
         try {
             updateTriggerCleanSize();
-
-            logger.info("maxCacheSize > " + maxCacheSize);
-            logger.info("minCacheSize > " + minCacheSize);
         } catch (Exception e) {
             logger.error("cannot load qid.properties", e);
         }
@@ -149,25 +146,21 @@ public class QidCacheDAOImpl implements QidCacheDAO {
     boolean put(Qid qid) {
         boolean runCleaner = false;
         synchronized (counterLock) {
-            logger.debug("new cache size: " + cacheSize);
             if (cacheSize + qid.size() > maxCacheSize) {
                 //run outside of counterLock
                 runCleaner = true;
-                logger.debug("not putting qid");
             } else {
                 if (cacheSize + qid.size() > triggerCleanSize) {
                     counter.countDown();
                 }
-
                 cacheSize += qid.size();
-                logger.debug("putting qid");
+
                 cache.put(qid.getRowKey(), qid);
             }
         }
 
         if (runCleaner) {
-            logger.debug("cleaning qid cache");
-            cleanCache();
+                        cleanCache();
             return false;
         }
 
@@ -255,7 +248,7 @@ public class QidCacheDAOImpl implements QidCacheDAO {
      */
     synchronized void cleanCache() {
         updateTriggerCleanSize();
-                
+
         if (cacheSize < triggerCleanSize) {
             return;
         }
@@ -289,7 +282,6 @@ public class QidCacheDAOImpl implements QidCacheDAO {
             cacheSize = cacheSize - (minCacheSize - size);
             size = cacheSize;
         }
-        logger.debug("removed " + numberRemoved + " cached qids, new cache size " + size);
     }
 
     /**
@@ -360,7 +352,7 @@ public class QidCacheDAOImpl implements QidCacheDAO {
      */
     void updateTriggerCleanSize() {
         triggerCleanSize = minCacheSize + (maxCacheSize - minCacheSize) / 2;
-        logger.debug("triggerCleanSize=" + triggerCleanSize + " minCacheSize=" + minCacheSize + " maxCacheSize=" + maxCacheSize);
+
     }
 
     public String[] getFq(SpatialSearchRequestParams requestParams) {

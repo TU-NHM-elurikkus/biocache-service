@@ -303,7 +303,6 @@ public class SearchUtils {
     public List<OccurrenceSourceDTO> getSourceInformation(Map<String, Integer> sources) {
 
         Set<String> keys = sources.keySet();
-        logger.debug("Listing the source information for : " + keys);
         List<OccurrenceSourceDTO> lsources = new ArrayList<OccurrenceSourceDTO>();
         try {
             for (String key : keys) {
@@ -346,7 +345,6 @@ public class SearchUtils {
      */
     public static void setDefaultParams(SearchRequestParams requestParams) {
         SearchRequestParams blankRequestParams = new SearchRequestParams(); // use for default values
-        logger.debug("requestParams = " + requestParams);
 
         if (requestParams.getStart() == null) {
             requestParams.setStart(blankRequestParams.getStart());
@@ -369,7 +367,7 @@ public class SearchUtils {
         if (requestParams.getFacets() == null)
             requestParams.setFacets(blankRequestParams.getFacets());
     }
-    
+
     public static Map<String, String[]> getExtraParams(Map map){
         Map<String, String[]> extraParams = new java.util.HashMap<String, String[]>(map);
         for(String field : defaultParams)
@@ -399,7 +397,7 @@ public class SearchUtils {
         List<String> guids = new ArrayList<String>();
         guids.add(fieldValue);
         List<String> names = speciesLookupService.getNamesForGuids(guids);
-        
+
         if (names != null && names.size() >= 1) {
             name = names.get(0);
         }
@@ -431,7 +429,7 @@ public class SearchUtils {
      * E.g. [1940-01-01T00:00:00Z TO 1949-12-31T00:00:00Z]
      * to
      * 1940-1949
-     * 
+     *
      * @param fieldValue
      * @return
      */
@@ -439,7 +437,7 @@ public class SearchUtils {
         String dateRange = URLDecoder.decode(fieldValue);
         String formattedDate = StringUtils.replaceChars(dateRange, "[]\\", "");
         String[] dates =  formattedDate.split(" TO ");
-        
+
         if (dates != null && dates.length > 1) {
             // grab just the year portions
             dateRange = StringUtils.substring(dates[0], 0, 4) + "-" + StringUtils.substring(dates[1], 0, 4);
@@ -447,7 +445,7 @@ public class SearchUtils {
 
         return dateRange;
     }
-    
+
     /**
      * Enum for months lookup
      */
@@ -461,9 +459,6 @@ public class SearchUtils {
     public Set<String> getAuthIndexFields() {
         if (authIndexFields.size() == 0) {
             //set up the hash set of the fields that need to have the authentication service substitute
-            if (logger.isDebugEnabled()) {
-                logger.debug("Auth substitution fields to use: " + authServiceFields);
-            }
             Set set = new java.util.HashSet<String>();
             CollectionUtils.mergeArrayIntoCollection(authServiceFields.split(","), set);
             authIndexFields = set;

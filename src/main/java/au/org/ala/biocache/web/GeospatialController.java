@@ -46,13 +46,12 @@ public class GeospatialController {
     @RequestMapping(value = {"/occurrences/spatial*"}, method = RequestMethod.GET)
     public @ResponseBody SearchResultDTO listWktOccurrences(SpatialSearchRequestParams requestParams,
                                     @RequestParam(value = "url", required = false) String url) throws Exception {
-        
-        requestParams.setQ("*:*");       
+
+        requestParams.setQ("*:*");
         //don't limit the facets
         requestParams.setFlimit(-1);
         //check to see if a url has been provided
         if(url != null && url.length() > 0){
-            logger.info("Loading the WKT from " + url);
             //get the info from the url it should be XML data
             URL xmlUrl = new URL(url);
             InputStream in = xmlUrl.openStream();
@@ -61,7 +60,7 @@ public class GeospatialController {
                 String geoJson =doc.getElementsByTagName("entry").item(0).getChildNodes().item(0).getNodeValue();
                 requestParams.setWkt(wktFromJSON(geoJson));
             } catch(Exception e) {
-                logger.warn("Unable to parse the supplied URL for a WKT", e);
+                logger.error("Unable to parse the supplied URL for a WKT", e);
             }
         }
         return searchDAO.findByFulltextSpatialQuery(requestParams,null);
@@ -69,7 +68,6 @@ public class GeospatialController {
 
     private static String wktFromJSON(String json) {
         try {
-            logger.info("The json:" + json);
             JSONObject obj = JSONObject.fromObject(json);
 
             //String coords = obj.getJSONArray("geometries").getJSONObject(0).getString("coordinates");
@@ -92,7 +90,7 @@ public class GeospatialController {
                 		.replace("],[", "),(");
             }
         } catch (Exception e) {
-            logger.warn("Unable to get JSON", e);
+            logger.error("Unable to get JSON", e);
             return "none";
         }
     }

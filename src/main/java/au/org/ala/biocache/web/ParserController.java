@@ -93,13 +93,10 @@ public class ParserController {
         try {
             InputStream input = request.getInputStream();
             String json = IOUtils.toString(input);
-            logger.debug(json);
             String utf8String = new String(json.getBytes(), "UTF-8");
             LinkedHashMap<String,String> record = om.readValue(utf8String, new TypeReference<LinkedHashMap<String,String>>() {});
             input.close();
-            logger.debug("Mapping column headers...");
             String[] headers = AdHocParser.mapOrReturnColumnHeadersArray(record.keySet().toArray(new String[]{}));
-            logger.debug("Processing line...");
             return AdHocParser.processLineArrays(headers, record.values().toArray(new String[]{}));
         } catch(Exception e) {
             logger.error(e.getMessage(),e);

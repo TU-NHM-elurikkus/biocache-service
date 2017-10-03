@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -59,7 +59,7 @@ public class AssertionController extends AbstractSecureController {
     protected AuthService authService;
     @Inject
     private AbstractMessageSource messageSource;
-   
+
     /**
      * Retrieve an array of the assertion codes in use by the processing system
      *
@@ -98,7 +98,7 @@ public class AssertionController extends AbstractSecureController {
 
     /**
      * Add assertion.
-     * 
+     *
      * @param recordUuid
      * @param request
      * @param response
@@ -120,13 +120,13 @@ public class AssertionController extends AbstractSecureController {
     }
     /**
      * Adds a bulk list of assertions.
-     * 
+     *
      * This method expects certain request params to be provided
      * apiKey
      * userId
      * userDisplayName
      * assertions - a json list of assertion maps to be applied.
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
@@ -144,7 +144,6 @@ public class AssertionController extends AbstractSecureController {
             if (shouldPerformOperation(request, response)) {
                 List<java.util.Map<String, String>> assertions = om.readValue(json, new TypeReference<List<Map<String, String>>>() {
                 });
-                logger.debug("The assertions in a list of maps: " + assertions);
                 java.util.HashMap<String,QualityAssertion> qas = new java.util.HashMap<String,QualityAssertion>(assertions.size());
                 for(java.util.Map<String,String> assertion : assertions){
                     String code = assertion.get("code");
@@ -185,10 +184,6 @@ public class AssertionController extends AbstractSecureController {
 
         if (shouldPerformOperation(request, response)) {
             try {
-                logger.debug("Adding assertion to:" + recordUuid + ", code:" + code + ", comment:" + comment
-                        + ",userAssertionStatus: " + userAssertionStatus + ", assertionUuid: " + assertionUuid
-                        + ", userId:" +userId + ", userDisplayName:" + userDisplayName);
-    
                 QualityAssertion qa = au.org.ala.biocache.model.QualityAssertion.apply(Integer.parseInt(code));
                 qa.setComment(comment);
                 qa.setUserId(userId);
@@ -214,10 +209,10 @@ public class AssertionController extends AbstractSecureController {
 
     /**
      * Removes an assertion
-     * 
+     *
      * This version of the method can handle the situation where we use rowKeys as Uuids. Thus
      * URL style rowKeys can be correctly supported.
-     * 
+     *
      * @param recordUuid
      * @param assertionUuid
      * @param request
@@ -277,13 +272,9 @@ public class AssertionController extends AbstractSecureController {
             try {
                 m.setRequestEntity(new StringRequestEntity("{ event: 'user annotation', id: '" + id + "', uid: '" + uid + "', type:'" + type + "' }", "text/json", "UTF-8"));
 
-                logger.debug("Adding notification: " + type + ":" + uid + " - " + id);
                 int status = h.executeMethod(m);
-                logger.debug("STATUS: " + status);
-                if (status == 200) {
-                    logger.debug("Successfully posted an event to the notification service");
-                } else {
-                    logger.info("Failed to post an event to the notification service");
+                if (status >= 500) {
+                    logger.warn("Failed to post an event to the notification service. Code: " + status);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -338,7 +329,7 @@ public class AssertionController extends AbstractSecureController {
     public void setAssertionUtils(AssertionUtils assertionUtils) {
         this.assertionUtils = assertionUtils;
     }
-    
+
     private ErrorCode[] applyi18n(ErrorCode[] errorCodes) {
         //use i18n descriptions
         ErrorCode[] formattedErrorCodes = new ErrorCode[errorCodes.length];

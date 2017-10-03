@@ -88,10 +88,6 @@ public class WMSCache {
             }
         };
         cacheCleaner.start();
-
-        logger.info("maxCacheSize > " + maxCacheSize);
-        logger.info("minCacheSize > " + minCacheSize);
-        logger.info("maxAge > " + maxAge);
     }
 
     /**
@@ -101,7 +97,7 @@ public class WMSCache {
      * @param colourMode to store as String
      * @param pointType resolution of data to store as PointType
      * @param wco data to store as WMSTile
-     * @return true when successfully added to the cache.  WMSCache must be 
+     * @return true when successfully added to the cache.  WMSCache must be
      * enabled, not full.  wco must be not too large and not cause the cache
      * to exceed max size when added.
      */
@@ -118,7 +114,6 @@ public class WMSCache {
             }
             cache.put(getKey(q, colourMode, pointType), wco);
             cacheSize += wco.getSize();
-            logger.debug("new cache size: " + cacheSize);
             updateTriggerCleanSize();
             if (cacheSize > triggerCleanSize) {
                 counter.countDown();
@@ -178,7 +173,7 @@ public class WMSCache {
     }
 
     /**
-     * Get a WMSTile without returning an empty, lockable WMSTile. 
+     * Get a WMSTile without returning an empty, lockable WMSTile.
      *
      * @param query
      * @param colourmode
@@ -196,7 +191,7 @@ public class WMSCache {
      */
     void cleanCache() {
         updateTriggerCleanSize();
-                
+
         List<Entry<String, WMSTile>> entries = new ArrayList(cache.entrySet());
 
         //sort ascending by last use time
@@ -225,7 +220,6 @@ public class WMSCache {
             cacheSize -= (minCacheSize - size);
             size = cacheSize;
         }
-        logger.debug("removed " + numberRemoved + " cached wms points, new cache size " + size);
     }
 
     /**
@@ -307,6 +301,5 @@ public class WMSCache {
      */
     void updateTriggerCleanSize() {
         triggerCleanSize = minCacheSize + (maxCacheSize - minCacheSize) / 2;
-        logger.debug("triggerCleanSize=" + triggerCleanSize + " minCacheSize=" + minCacheSize + " maxCacheSize=" + maxCacheSize);
     }
 }
