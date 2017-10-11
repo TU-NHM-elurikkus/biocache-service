@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -27,12 +27,12 @@ import java.util.concurrent.CountDownLatch;
  * @author Natasha Carter
  */
 public class FacetThemes {
-	
+
     private static String[] allFacets = new String[]{};
     private static String[] allFacetsLimited = new String[]{};
     private static java.util.List<FacetTheme> allThemes = new java.util.ArrayList<FacetTheme>();
     private static LinkedHashMap<String, Facet> facetsMap = new LinkedHashMap<String, Facet>();
-    
+
     private static Integer facetsMax = 4;
     private static Integer facetsDefaultMax = 0;
     private static Boolean facetDefault = true;
@@ -52,7 +52,7 @@ public class FacetThemes {
             FacetThemes.facetsMax = facetsMax;
             FacetThemes.facetsDefaultMax = facetsDefaultMax;
             FacetThemes.facetDefault = facetDefault;
-            
+
             if(configFilePath != null && new File(configFilePath).exists()){
                 FacetThemes.allThemes.clear();
                 ObjectMapper om = new ObjectMapper();
@@ -72,7 +72,7 @@ public class FacetThemes {
                                     description = field.getDescription();
                                     dwcTerm = field.getDwcTerm();
                                     i18nValues = field.isI18nValues();
-                                    
+
                                     //only add this facet if there is an associated SOLR field
                                     facets.add(new Facet(name, facetsMap.get("sort"), description, dwcTerm, i18nValues));
                                     break;
@@ -92,7 +92,7 @@ public class FacetThemes {
     }
 
     /**
-     * This method works around the static variable pattern used here, by ensuring that operations 
+     * This method works around the static variable pattern used here, by ensuring that operations
      * do not continue until after the static fields have been initialised.
      */
     private static void afterInitialisation() {
@@ -206,6 +206,7 @@ public class FacetThemes {
                 new Facet("data_resource_uid","count",null,null,null),
                 new Facet("institution_uid","count",null,null,null),
                 new Facet("collection_uid", "count",null,null,null),
+                new Facet("dataset_name", "count",null,null,null),
                 new Facet("provenance", "count",null,null,null))
         );
 
@@ -292,7 +293,7 @@ public class FacetThemes {
             return i18nValues;
         }
     }
- 
+
     /**
      * FIXME: This class is exposed on the FacetThemes public API but is not accessible.
      */
