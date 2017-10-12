@@ -4093,7 +4093,9 @@ public class SearchDAOImpl implements SearchDAO {
             //if the facet field is collector or assertion_user_id we need to perform the substitution
             return authService.getDisplayNameFor(value);
         } else {
-            return messageSource.getMessage(facet + "." + value, null, value, null);
+            // Commented out for we want to do the translation elsewhere.
+            // return messageSource.getMessage(facet + "." + value, null, value, null);
+            return value;
         }
     }
 
