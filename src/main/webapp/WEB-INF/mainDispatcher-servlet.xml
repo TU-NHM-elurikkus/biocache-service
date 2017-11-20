@@ -7,34 +7,31 @@
        xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-           http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-3.0.xsd
-           http://www.springframework.org/schema/mvc 
-           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-
-
-
-
-           http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
-           http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
-           http://www.springframework.org/schema/task
-           http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+                           http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring
+                           http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+       >
 
     <!-- Enables swagger ui-->
     <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
-      
+
     <!-- Allows us to use system properties as variables in this configuration file -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <value>file:///data/biocache/config/biocache-config.properties</value>
         </property>
-    </bean>  
-          
+    </bean>
+
     <!--<context:spring-configured/>-->
     <context:component-scan base-package="au.org.ala.biocache"/>
-    
+
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven />
     <task:annotation-driven />
@@ -120,7 +117,7 @@
         <constructor-arg index="0" value="text" />
         <constructor-arg index="1" value="html" />
     </bean>
-    
+
     <bean id="restfulClient" class="org.ala.client.util.RestfulClient"/>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" p:order="0">
         <property name="messageConverters">
@@ -164,14 +161,14 @@
 
     <!-- Ehcache settings @see http://blog.goyello.com/2010/07/29/quick-start-with-ehcache-annotations-for-spring/ -->
     <ehcache:annotation-driven />
- 
+
     <ehcache:config cache-manager="cacheManager">
         <!-- interval is in minutes -->
         <ehcache:evict-expired-elements interval="60" />
     </ehcache:config>
- 
+
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation"  value="/WEB-INF/ehcache.xml"/>
     </bean>
-    
+
 </beans>
