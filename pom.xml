@@ -1,4 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,7 +16,7 @@
     <packaging>war</packaging>
     <version>1.8.2-SNAPSHOT</version>
     <name>biocache-service</name>
-    <url>http://biocache.ala.org.au/ws</url>
+    <url>https://demo.elurikkus.ut.ee/biocache-service/</url>
     <description>This is a the service layer for the Biocache</description>
     <properties>
         <!-- This project uses UTF8 for Regular Expressions -->
@@ -24,9 +28,9 @@
     </properties>
     <!-- AN SCM entry that points to the SVN directory that contains the pom file for the project  -->
     <scm>
-        <connection>scm:git:git@github.com:AtlasOfLivingAustralia/biocache-service.git</connection>
-        <url>https://github.com/AtlasOfLivingAustralia/biocache-service</url>
-        <developerConnection>scm:git:git@github.com:AtlasOfLivingAustralia/biocache-service.git</developerConnection>
+        <connection>scm:git:git@github.com:TU-NHM-elurikkus/biocache-service.git</connection>
+        <url>https://github.com/TU-NHM-elurikkus/biocache-service/tree/erk-live</url>
+        <developerConnection>scm:git:git@github.com:TU-NHM-elurikkus/biocache-service.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
     <dependencies>

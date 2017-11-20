@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-    version="2.4" id="biocache-service">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4"
+         id="biocache-service"
+>
 
     <display-name>Biocache Service</display-name>
     <description>
@@ -13,9 +15,9 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    
+
     <servlet>
-        <servlet-name>mainDispatcher</servlet-name> 
+        <servlet-name>mainDispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>20</load-on-startup>
     </servlet>
@@ -24,7 +26,7 @@
         <servlet-name>mainDispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-      
+
     <welcome-file-list>
         <!--<welcome-file>species</welcome-file>-->
         <welcome-file>index.html</welcome-file>
