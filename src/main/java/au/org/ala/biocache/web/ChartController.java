@@ -115,15 +115,16 @@ public class ChartController extends AbstractSecureController implements Seriali
               @RequestParam(value = "xother", required = false, defaultValue = "true") Boolean xother,
               @RequestParam(value = "seriesmissing", required = false, defaultValue = "false") Boolean seriesmissing,
               @RequestParam(value = "xmissing", required = false, defaultValue = "true") Boolean xmissing,
+              @RequestParam(value = "fsort", required = false, defaultValue = "count") String fsort,
               HttpServletResponse response) throws Exception {
 
         //construct series subqueries
-        List<Map> seriesFqs = produceSeriesFqs(searchParams, x, series, seriesranges, seriesother, seriesmissing);
+        List<Map> seriesFqs = produceSeriesFqs(searchParams, x, series, seriesranges, seriesother, seriesmissing, fsort);
 
         //limit facets returned with an fq or defined xranges
         StringBuilder inverseXranges = new StringBuilder();
         StringBuilder xRanges = new StringBuilder();
-        xranges = produceLimitingXRanges(searchParams, x, xranges, xmissing, xRanges, inverseXranges);
+        xranges = produceLimitingXRanges(searchParams, x, xranges, xmissing, xRanges, inverseXranges, fsort);
         if (!xother) {
             xRanges = new StringBuilder();
             inverseXranges = new StringBuilder();
@@ -145,7 +146,7 @@ public class ChartController extends AbstractSecureController implements Seriali
                 //1. occurrence bar/pie/line chart of field
                 searchParams.setFacet(true);
                 searchParams.setFlimit(maxStringFacets);
-                searchParams.setFsort("count");
+                searchParams.setFsort(fsort);
                 searchParams.setFacets(new String[]{x});
 
                 if (xRanges.length() > 0) appendFq(searchParams, xRanges.toString());
@@ -329,9 +330,16 @@ public class ChartController extends AbstractSecureController implements Seriali
         }
     }
 
-    private String produceLimitingXRanges(SpatialSearchRequestParams searchParams, String x, String xranges, Boolean xmissing, StringBuilder query, StringBuilder inverse) throws Exception {
+    private String produceLimitingXRanges(SpatialSearchRequestParams searchParams,
+                                          String x,
+                                          String xranges,
+                                          Boolean xmissing,
+                                          StringBuilder query,
+                                          StringBuilder inverse,
+                                          String fsort
+                   ) throws Exception {
         if (xranges == null && x != null) {
-            List fqs = makeSeriesFacets(x, searchParams, null, xmissing);
+            List fqs = makeSeriesFacets(x, searchParams, null, xmissing, fsort);
 
             boolean date = isDate(x);
             if (fqs.size() > 0 && (isNumber(x) || date)) {
@@ -362,7 +370,8 @@ public class ChartController extends AbstractSecureController implements Seriali
                                        String series,
                                        String seriesranges,
                                        Boolean includeMissing,
-                                       Boolean other
+                                       Boolean other,
+                                       String fsort
                       ) throws Exception {
         List seriesFqs = new ArrayList();
 
@@ -374,7 +383,7 @@ public class ChartController extends AbstractSecureController implements Seriali
                 seriesFqs.add(makeRangeMap(i == 0, series, sr[i], sr[i + 1], date));
             }
         } else if (series != null) {
-            seriesFqs.addAll(makeSeriesFacets(series, searchParams, maxSeriesFacets, includeMissing));
+            seriesFqs.addAll(makeSeriesFacets(series, searchParams, maxSeriesFacets, includeMissing, fsort));
 
             //limit subsequent queries to any limits that may be imposed by the series definition
             if (!isNumber(series) && !date && other) {
@@ -424,14 +433,19 @@ public class ChartController extends AbstractSecureController implements Seriali
         return field;
     }
 
-    private List getSeriesFacets(String series, SpatialSearchRequestParams searchParams, Integer _maxFacets, Boolean incudeMissing) throws Exception {
+    private List getSeriesFacets(String series,
+                                 SpatialSearchRequestParams searchParams,
+                                 Integer _maxFacets,
+                                 Boolean incudeMissing,
+                                 String fsort
+                 ) throws Exception {
         List seriesFqs = new ArrayList();
 
         searchParams.setFacet(true);
         searchParams.setFlimit(_maxFacets);
         searchParams.setFacets(new String[]{series});
 
-        if (!isDate(series) && !isNumber(series)) searchParams.setFsort("count");
+        if (!isDate(series) && !isNumber(series)) searchParams.setFsort(fsort);
 
         Collection<FacetResultDTO> l = searchDAO.findByFulltextSpatialQuery(searchParams, null).getFacetResults();
         if (l.size() > 0) {
@@ -448,17 +462,22 @@ public class ChartController extends AbstractSecureController implements Seriali
         return seriesFqs;
     }
 
-    private List makeSeriesFacets(String series, SpatialSearchRequestParams searchParams, Integer newMax, Boolean includeMissing) throws Exception {
+    private List makeSeriesFacets(String series,
+                                  SpatialSearchRequestParams searchParams,
+                                  Integer newMax,
+                                  Boolean includeMissing,
+                                  String fsort
+                 ) throws Exception {
         List seriesFqs = new ArrayList();
 
         //for numeric series with > maxFacets, generate buckets
         boolean date = isDate(series);
         if (isNumber(series) || date) {
             int maxSeries = newMax != null ? newMax : maxNumberFacets;
-            List list = getSeriesFacets(series, searchParams, maxSeries + 1, includeMissing);
+            List list = getSeriesFacets(series, searchParams, maxSeries + 1, includeMissing, fsort);
             if (list.size() > maxSeries + (includeMissing ? 1 : 0)) {
                 //get min/max
-                List minMax = (List) chart(searchParams, null, null, series, null, null, false, false, false, false, null).get("data");
+                List minMax = (List) chart(searchParams, null, null, series, null, null, false, false, false, false, null, null).get("data");
                 if (date) {
                     Long min = ((Date) ((FieldStatsItem) ((List) ((Map) minMax.get(0)).get("data")).get(0)).getMin()).getTime();
                     Long max = ((Date) ((FieldStatsItem) ((List) ((Map) minMax.get(0)).get("data")).get(0)).getMax()).getTime();
@@ -503,7 +522,7 @@ public class ChartController extends AbstractSecureController implements Seriali
             }
         } else {
             int maxSeries = newMax != null ? newMax : maxStringFacets;
-            List list = getSeriesFacets(series, searchParams, maxSeries + 1, includeMissing);
+            List list = getSeriesFacets(series, searchParams, maxSeries + 1, includeMissing, fsort);
             if (list.size() > maxSeries + (includeMissing ? 1 : 0)) {
                 seriesFqs.addAll(list);
             }
