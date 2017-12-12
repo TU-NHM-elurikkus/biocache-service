@@ -65,7 +65,7 @@ public class ChartController extends AbstractSecureController implements Seriali
     @Value("${charts.series.max:5}")
     private Integer maxSeriesFacets;
 
-    @Value("${charts.facets.string.max:10}")
+    @Value("${charts.facets.string.max:12}")
     private Integer maxStringFacets;
 
     @Value("${charts.facets.number.max:10}")
@@ -105,9 +105,7 @@ public class ChartController extends AbstractSecureController implements Seriali
             notes = "Generate data for a standard chart",
             response = FieldStatsItem.class, responseContainer = "List")
     @RequestMapping(value = "/chart", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    Map chart(SpatialSearchRequestParams searchParams,
+    public @ResponseBody Map chart(SpatialSearchRequestParams searchParams,
               @RequestParam(value = "x", required = false) String x,
               @RequestParam(value = "xranges", required = false) String xranges,
               @RequestParam(value = "stats", required = false) String stats,
@@ -130,7 +128,6 @@ public class ChartController extends AbstractSecureController implements Seriali
             xRanges = new StringBuilder();
             inverseXranges = new StringBuilder();
         }
-
 
         boolean date = isDate(x);
 
@@ -360,7 +357,13 @@ public class ChartController extends AbstractSecureController implements Seriali
         return xranges;
     }
 
-    private List<Map> produceSeriesFqs(SpatialSearchRequestParams searchParams, String x, String series, String seriesranges, Boolean includeMissing, Boolean other) throws Exception {
+    private List<Map> produceSeriesFqs(SpatialSearchRequestParams searchParams,
+                                       String x,
+                                       String series,
+                                       String seriesranges,
+                                       Boolean includeMissing,
+                                       Boolean other
+                      ) throws Exception {
         List seriesFqs = new ArrayList();
 
         boolean date = isDate(series);
