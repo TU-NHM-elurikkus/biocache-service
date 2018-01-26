@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -54,6 +54,9 @@ public class OccurrenceIndex {
     @Field("rank_id") Integer taxonRankID;
     @Field("country_code") String raw_countryCode;
     @Field("country") String country;
+    @Field("county") String county;
+    @Field("municipality") String municipality;
+    @Field("locality") String locality;
     @Field("kingdom") String kingdom;
     @Field("phylum") String phylum;
     @Field("class") String classs;
@@ -97,7 +100,7 @@ public class OccurrenceIndex {
     @Field("raw_taxon_name") String raw_scientificName;
     @Field("raw_basis_of_record") String raw_basisOfRecord;
     @Field("raw_type_status") String raw_typeStatus;
-    @Field("raw_common_name") String raw_vernacularName;    
+    @Field("raw_common_name") String raw_vernacularName;
     //constructed fields
     @Field("lat_long") String latLong;
     @Field("point-1") String point1;
@@ -115,7 +118,7 @@ public class OccurrenceIndex {
     @Field("record_number") String recordNumber;
     //For harvesting of images into the BIE
     @Field("occurrence_details") String occurrenceDetails;
-    @Field("rights") String rights; 
+    @Field("rights") String rights;
     @Field("photographer_s") String photographer;
     @Field("*_s") Map<String, Object> miscStringProperties;
     @Field("*_i") Map<String, Object> miscIntProperties;
@@ -148,7 +151,7 @@ public class OccurrenceIndex {
     public String getImageUrl(){
         return imageUrl;
     }
-    
+
     public String[] getImageUrls(){
         return imageUrls;
     }
@@ -156,7 +159,7 @@ public class OccurrenceIndex {
     public String getLargeImageUrl(){
         return largeImageUrl;
     }
-    
+
     public void setImageUrls(String[] urls){
         this.imageUrls = urls;
     }
@@ -174,7 +177,7 @@ public class OccurrenceIndex {
             map.put(key,value);
         }
     }
-    
+
     private String safeDblToString(Double d){
         if(d != null) return d.toString();
         return null;
@@ -191,10 +194,10 @@ public class OccurrenceIndex {
                 ObjectMapper o = new ObjectMapper();
                 return o.writeValueAsString(arr);
             }
-        }catch(Exception e){}
+        } catch (Exception e) {}
         return null;
-    }    
-    
+    }
+
     @JsonIgnore
     public Map<String,String> toMap() {
         String sdate = null;
@@ -223,13 +226,16 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "taxon_name",scientificName);
         addToMapIfNotNull(map, "common_name",vernacularName);
         addToMapIfNotNull(map, "rank",taxonRank);
-        addToMapIfNotNull(map, "rank_id",safeIntToString(taxonRankID)); 
+        addToMapIfNotNull(map, "rank_id",safeIntToString(taxonRankID));
         addToMapIfNotNull(map, "country_code", raw_countryCode);
         addToMapIfNotNull(map, "country", country);
-        addToMapIfNotNull(map, "kingdom",kingdom); 
+        addToMapIfNotNull(map, "county", county);
+        addToMapIfNotNull(map, "municipality", municipality);
+        addToMapIfNotNull(map, "locality", locality);
+        addToMapIfNotNull(map, "kingdom",kingdom);
         addToMapIfNotNull(map, "phylum", phylum);
-        addToMapIfNotNull(map, "class", classs); 
-        addToMapIfNotNull(map, "order", order); 
+        addToMapIfNotNull(map, "class", classs);
+        addToMapIfNotNull(map, "order", order);
         addToMapIfNotNull(map, "family", family);
         addToMapIfNotNull(map, "genus",genus);
         addToMapIfNotNull(map, "genus_guid",genusGuid);
@@ -237,44 +243,44 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "species_guid", speciesGuid);
         addToMapIfNotNull(map, "subspecies", subspecies);
         addToMapIfNotNull(map, "subspecies_guid", subspeciesGuid);
-        addToMapIfNotNull(map, "state", stateProvince); 
+        addToMapIfNotNull(map, "state", stateProvince);
         addToMapIfNotNull(map, "latitude", safeDblToString(decimalLatitude));
-        addToMapIfNotNull(map, "longitude", safeDblToString(decimalLongitude)); 
-        addToMapIfNotNull(map, "year", year); 
-        addToMapIfNotNull(map, "month", month); 
+        addToMapIfNotNull(map, "longitude", safeDblToString(decimalLongitude));
+        addToMapIfNotNull(map, "year", year);
+        addToMapIfNotNull(map, "month", month);
         addToMapIfNotNull(map, "basis_of_record", basisOfRecord);
-        addToMapIfNotNull(map, "type_status", typeStatus); 
-        addToMapIfNotNull(map, "location_remarks", raw_locationRemarks); 
+        addToMapIfNotNull(map, "type_status", typeStatus);
+        addToMapIfNotNull(map, "location_remarks", raw_locationRemarks);
         addToMapIfNotNull(map, "occurrence_remarks", raw_occurrenceRemarks);
-        addToMapIfNotNull(map, "lft", safeIntToString(left)); 
+        addToMapIfNotNull(map, "lft", safeIntToString(left));
         addToMapIfNotNull(map, "rgt", safeIntToString(right));
-        addToMapIfNotNull(map, "ibra", ibra); 
+        addToMapIfNotNull(map, "ibra", ibra);
         addToMapIfNotNull(map, "imcra", imcra);
-        addToMapIfNotNull(map, "places", lga); 
-        addToMapIfNotNull(map, "data_provider_uid", dataProviderUid); 
+        addToMapIfNotNull(map, "places", lga);
+        addToMapIfNotNull(map, "data_provider_uid", dataProviderUid);
         addToMapIfNotNull(map, "data_provider", dataProviderName);
         addToMapIfNotNull(map, "data_resource_uid", dataResourceUid);
-        addToMapIfNotNull(map, "data_resource", dataResourceName); 
+        addToMapIfNotNull(map, "data_resource", dataResourceName);
         addToMapIfNotNull(map, "assertions", arrToString(assertions));
-        addToMapIfNotNull(map, "user_assertions", hasUserAssertions); 
+        addToMapIfNotNull(map, "user_assertions", hasUserAssertions);
         addToMapIfNotNull(map, "species_group", arrToString(speciesGroups));
-        addToMapIfNotNull(map, "image_url", image); 
-        addToMapIfNotNull(map, "geospatial_kosher", geospatialKosher); 
+        addToMapIfNotNull(map, "image_url", image);
+        addToMapIfNotNull(map, "geospatial_kosher", geospatialKosher);
         addToMapIfNotNull(map, "taxonomic_kosher", taxonomicKosher);
-        addToMapIfNotNull(map, "raw_taxon_name", raw_scientificName); 
+        addToMapIfNotNull(map, "raw_taxon_name", raw_scientificName);
         addToMapIfNotNull(map, "raw_basis_of_record", raw_basisOfRecord);
-        addToMapIfNotNull(map, "raw_type_status", raw_typeStatus); 
-        addToMapIfNotNull(map, "raw_common_name", raw_vernacularName); 
+        addToMapIfNotNull(map, "raw_type_status", raw_typeStatus);
+        addToMapIfNotNull(map, "raw_common_name", raw_vernacularName);
         addToMapIfNotNull(map, "lat_long", latLong);
-        addToMapIfNotNull(map, "point-1", point1); 
-        addToMapIfNotNull(map, "point-0.1", point01); 
-        addToMapIfNotNull(map, "point-0.01", point001); 
+        addToMapIfNotNull(map, "point-1", point1);
+        addToMapIfNotNull(map, "point-0.1", point01);
+        addToMapIfNotNull(map, "point-0.01", point001);
         addToMapIfNotNull(map, "point-0.001", point0001);
-        addToMapIfNotNull(map, "point-0.0001", point00001); 
-        addToMapIfNotNull(map, "names_and_lsid", namesLsid); 
+        addToMapIfNotNull(map, "point-0.0001", point00001);
+        addToMapIfNotNull(map, "names_and_lsid", namesLsid);
         addToMapIfNotNull(map, "multimedia", arrToString(multimedia));
-        addToMapIfNotNull(map, "collector",collector);
-        addToMapIfNotNull(map, "collectors",arrToString(collectors));
+        addToMapIfNotNull(map, "collector", collector);
+        addToMapIfNotNull(map, "collectors", arrToString(collectors));
         addToMapIfNotNull(map, "record_number", recordNumber);
         addToMapIfNotNull(map, "occurrence_details", occurrenceDetails);
         addToMapIfNotNull(map, "rights", rights);
@@ -305,6 +311,9 @@ public class OccurrenceIndex {
         map.put("rank_id","taxonRankID");
         map.put("country_code", "raw_countryCode");
         map.put("country", "country");
+        map.put("county", "county");
+        map.put("municipality", "municipality");
+        map.put("locality", "locality");
         map.put("kingdom","kingdom");
         map.put("phylum", "phylum");
         map.put("class", "classs");
@@ -520,13 +529,37 @@ public class OccurrenceIndex {
     public void setRaw_countryCode(String raw_countryCode) {
         this.raw_countryCode = raw_countryCode;
     }
-    
+
     public String getCountry(){
         return country;
     }
-    
+
     public void setCountry(String country){
         this.country = country;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
+    }
+
+    public String getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     public String getKingdom() {
@@ -584,7 +617,7 @@ public class OccurrenceIndex {
     public void setGenusGuid(String genusGuid) {
         this.genusGuid = genusGuid;
     }
-    
+
     public String getSpecies() {
         return species;
     }
@@ -600,7 +633,7 @@ public class OccurrenceIndex {
     public void setSpeciesGuid(String speciesGuid) {
         this.speciesGuid = speciesGuid;
     }
-    
+
     public String getSubspecies() {
         return subspecies;
     }
@@ -608,7 +641,7 @@ public class OccurrenceIndex {
     public void setSubspecies(String subspecies) {
         this.subspecies = subspecies;
     }
-    
+
     public String getSubspeciesGuid() {
         return subspeciesGuid;
     }
@@ -616,7 +649,7 @@ public class OccurrenceIndex {
     public void setSubspeciesGuid(String subspeciesGuid) {
         this.subspeciesGuid = subspeciesGuid;
     }
-    
+
     public String getStateProvince() {
         return stateProvince;
     }
@@ -800,11 +833,11 @@ public class OccurrenceIndex {
     public void setImage(String image) {
         this.image = image;
     }
-    
+
     public String[] getImages(){
         return images;
     }
-    
+
     public void setImages(String[] images){
         this.images = images;
     }
@@ -986,7 +1019,7 @@ public class OccurrenceIndex {
     public void setRecordNumber(String recordNumber) {
         this.recordNumber = recordNumber;
     }
-    
+
     /**
      * @return the occurrence details
      */

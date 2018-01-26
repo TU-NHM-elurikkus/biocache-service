@@ -125,11 +125,11 @@ public class SearchDAOImpl implements SearchDAO {
     /** Batch size for a download */
     @Value("${download.batch.size:500}")
     protected Integer downloadBatchSize = 500;
-    /** The size of an internal fixed length blocking queue used to parallelise 
-     * reading from Solr using 'solr.downloadquery.maxthreads' producers before 
-     * writing from the queue using a single consumer thread. 
-     * <br> This should be set large enough so that writing to the output stream 
-     * is the limiting factor, but not so large as to allow OutOfMemoryError's to 
+    /** The size of an internal fixed length blocking queue used to parallelise
+     * reading from Solr using 'solr.downloadquery.maxthreads' producers before
+     * writing from the queue using a single consumer thread.
+     * <br> This should be set large enough so that writing to the output stream
+     * is the limiting factor, but not so large as to allow OutOfMemoryError's to
      * occur due to its memory usage.
      **/
     @Value("${download.internal.queue.size:1000}")
@@ -137,8 +137,8 @@ public class SearchDAOImpl implements SearchDAO {
     /** Maximum total time for downloads to be execute. Defaults to 1 week (604,800,000ms) */
     @Value("${download.max.execute.time:604800000}")
     protected Long downloadMaxTime = 604800000L;
-    /** Maximum total time for downloads to be allowed to normally complete before they are aborted, 
-     * once all of the Solr/etc. queries have been completed or aborted and the RecordWriter is reading the remaining download.internal.queue.size items off the queue. 
+    /** Maximum total time for downloads to be allowed to normally complete before they are aborted,
+     * once all of the Solr/etc. queries have been completed or aborted and the RecordWriter is reading the remaining download.internal.queue.size items off the queue.
      * Defaults to 5 minutes (300,000ms) */
     @Value("${download.max.completion.time:300000}")
     protected Long downloadMaxCompletionTime = 300000L;
@@ -205,7 +205,7 @@ public class SearchDAOImpl implements SearchDAO {
     @Inject
     protected QidCacheDAO qidCacheDao;
 
-    @Inject 
+    @Inject
     protected RangeBasedFacets rangeBasedFacets;
 
     @Inject
@@ -227,15 +227,15 @@ public class SearchDAOImpl implements SearchDAO {
     /** Max number of threads to use in parallel for large solr download queries */
     @Value("${solr.downloadquery.maxthreads:30}")
     protected Integer maxSolrDownloadThreads = 30;
-    
+
     /** The time (ms) to wait for the blocking queue to have new capacity before timing out. */
     @Value("${solr.downloadquery.writertimeout:60000}")
     protected Long writerTimeoutWaitMillis = 60000L;
-    
+
     /** The time (ms) to wait between checking if interrupts have occurred or all of the download tasks have completed. */
     @Value("${solr.downloadquery.busywaitsleep:100}")
     protected Long downloadCheckBusyWaitSleep = 100L;
-    
+
     /** thread pool for multipart endemic queries */
     private volatile ExecutorService endemicExecutor = null;
 
@@ -261,16 +261,16 @@ public class SearchDAOImpl implements SearchDAO {
 
     private volatile Set<IndexFieldDTO> indexFields = null;
     private volatile Map<String, IndexFieldDTO> indexFieldMap = null;
-    
+
     private final Map<String, StatsIndexFieldDTO> rangeFieldCache = new HashMap<String, StatsIndexFieldDTO>();
-    
+
     private Set<String> authIndexFields = null;
 
     /** SOLR index version for client app caching use. */
     private volatile long solrIndexVersion = 0;
     /** last time SOLR index version was refreshed */
     private volatile long solrIndexVersionTime = 0;
-    /** 
+    /**
      * Lock object used to synchronize updates to the solr index version
      */
     private final Object solrIndexVersionLock = new Object();
@@ -437,7 +437,7 @@ public class SearchDAOImpl implements SearchDAO {
                 nextExecutor = endemicExecutor;
                 if(nextExecutor == null) {
                     nextExecutor = endemicExecutor = Executors.newFixedThreadPool(
-                                                                getMaxEndemicQueryThreads(), 
+                                                                getMaxEndemicQueryThreads(),
                                                                 new ThreadFactoryBuilder().setNameFormat("biocache-endemic-%d")
                                                                 .setPriority(Thread.MIN_PRIORITY).build());
                 }
@@ -654,7 +654,7 @@ public class SearchDAOImpl implements SearchDAO {
                         "Record count",});
             int count = 0;
             for (TaxaCountDTO item : species) {
-    
+
                 String[] record = new String[]{
                     item.getGuid(),
                     item.getKingdom(),
@@ -663,7 +663,7 @@ public class SearchDAOImpl implements SearchDAO {
                     item.getCommonName(),
                     item.getCount().toString()
                 };
-    
+
                 csvWriter.writeNext(record);
                 count++;
             }
@@ -717,11 +717,11 @@ public class SearchDAOImpl implements SearchDAO {
                 if (includeLists) {
                     header = (String[]) ArrayUtils.addAll(header, listsService.getTypes().toArray(new String[]{}));
                 }
-                
+
                 CSVRecordWriter writer = new CSVRecordWriter(new CloseShieldOutputStream(out), header);
                 try {
                     boolean addedNullFacet = false;
-    
+
                     //out.write("\n".getBytes());
                     //PAGE through the facets until we reach the end.
                     //do not continue when null facet is already added and the next facet is only null
@@ -738,12 +738,12 @@ public class SearchDAOImpl implements SearchDAO {
                                 //only add null facet once
                                 if (value.getName() == null) addedNullFacet = true;
                                 if (value.getCount() == 0 || (value.getName() == null && addedNullFacet)) continue;
-    
+
                                 guids.add(value.getName());
                                 if (includeCount) {
                                     counts.add(value.getCount());
                                 }
-    
+
                                 //Only want to send a sub set of the list so that the URI is not too long for BIE
                                 if (guids.size() == 30) {
                                     //now get the list of species from the web service TODO may need to move this code
@@ -761,7 +761,7 @@ public class SearchDAOImpl implements SearchDAO {
                                 //only add null facet once
                                 if (value.getName() == null) addedNullFacet = true;
                                 if (value.getCount() == 0 || (value.getName() == null && addedNullFacet)) continue;
-    
+
                                 String name = value.getName() != null ? value.getName() : "";
                                 String[] row = includeCount ? new String[]{name, Long.toString(value.getCount())} : new String[]{name};
                                 writer.write(row);
@@ -771,7 +771,7 @@ public class SearchDAOImpl implements SearchDAO {
                         if (dd != null) {
                             dd.updateCounts(FACET_PAGE_SIZE);
                         }
-    
+
                         //get the next values
                         solrQuery.remove("facet.offset");
                         solrQuery.add("facet.offset", Integer.toString(offset));
@@ -901,7 +901,7 @@ public class SearchDAOImpl implements SearchDAO {
                 logger.debug("Fields excluded from download: "+indexedFields[1]);
                 logger.debug("The headers in downloads: "+indexedFields[2]);
             }
-            
+
             //set the fields to the ones that are available in the index
             String[] fields = indexedFields[0].toArray(new String[]{});
             solrQuery.setFields(fields);
@@ -1013,7 +1013,7 @@ public class SearchDAOImpl implements SearchDAO {
             // Requirement to be able to propagate interruptions to all other threads for this execution
             // Doing this via this variable
             final AtomicBoolean interruptFound = new AtomicBoolean(false);
-                    
+
             // Create a fixed length blocking queue for buffering results before they are written
             final BlockingQueue<String[]> queue = new ArrayBlockingQueue<>(resultsQueueLength);
             // Create a sentinel that we can check for reference equality to signal the end of the queue
@@ -1044,7 +1044,7 @@ public class SearchDAOImpl implements SearchDAO {
                         finalise();
                     }
                 }
-                
+
                 @Override
                 public void finalise() {
                     if (finalised.compareAndSet(false, true)) {
@@ -1064,9 +1064,9 @@ public class SearchDAOImpl implements SearchDAO {
                 public boolean finalised() {
                     return finalisedComplete.get();
                 }
-                
+
             };
-            
+
             // A single thread that consumes elements put onto the queue until it sees the sentinel, finalising after the sentinel or an interrupt
             Runnable writerRunnable = new Runnable() {
                 @Override
@@ -1076,7 +1076,7 @@ public class SearchDAOImpl implements SearchDAO {
                             if (Thread.currentThread().isInterrupted() || interruptFound.get()) {
                                 break;
                             }
-                            
+
                             String[] take = queue.take();
                             // Sentinel object equality check to see if we are done
                             if (take == sentinel || Thread.currentThread().isInterrupted() || interruptFound.get()) {
@@ -1102,10 +1102,10 @@ public class SearchDAOImpl implements SearchDAO {
                 if(rw instanceof ShapeFileRecordWriter){
                     dd.setHeaderMap(((ShapeFileRecordWriter)rw).getHeaderMappings());
                 }
-    
+
                 //order the query by _docid_ for faster paging
                 solrQuery.addSortField("_docid_", ORDER.asc);
-    
+
                 //for each month create a separate query that pages through 500 records per page
                 List<SolrQuery> queries = new ArrayList<SolrQuery>();
                 if(splitByFacet != null){
@@ -1118,7 +1118,7 @@ public class SearchDAOImpl implements SearchDAO {
                                 splitByFacetQuery.setFacet(false);
                                 queries.add(splitByFacetQuery);
                             }
-    
+
                         }
                     }
                     if (splitByFacet.size() > 0) {
@@ -1128,7 +1128,7 @@ public class SearchDAOImpl implements SearchDAO {
                 } else {
                     queries.add(0, solrQuery);
                 }
-    
+
                 //split into sensitive and non-sensitive queries when
                 // - not including all sensitive values
                 // - there is a sensitive fq
@@ -1136,11 +1136,11 @@ public class SearchDAOImpl implements SearchDAO {
                 if (!includeSensitive && dd.getSensitiveFq() != null) {
                     sensitiveQ.addAll(splitQueries(queries, dd.getSensitiveFq(), sensitiveSOLRHdr, notSensitiveSOLRHdr));
                 }
-    
+
                 //Set<Future<Integer>> futures = new HashSet<Future<Integer>>();
                 final AtomicInteger resultsCount = new AtomicInteger(0);
                 final boolean threadCheckLimit = checkLimit;
-    
+
                 List<Callable<Integer>> solrCallables = new ArrayList<>(queries.size());
                 // execute each query, writing the results to stream
                 for(final SolrQuery splitByFacetQuery: queries){
@@ -1151,7 +1151,7 @@ public class SearchDAOImpl implements SearchDAO {
                             int startIndex = 0;
                             // Randomise the wakeup time so they don't all wakeup on a periodic cycle
                             long localThrottle = throttle + Math.round(Math.random() * throttle);
-        
+
                             String [] fq = downloadParams.getFq();
                             if (splitByFacetQuery.getFilterQueries() != null && splitByFacetQuery.getFilterQueries().length > 0) {
                                 if (fq == null) {
@@ -1159,13 +1159,13 @@ public class SearchDAOImpl implements SearchDAO {
                                 }
                                 fq = org.apache.commons.lang3.ArrayUtils.addAll(fq, splitByFacetQuery.getFilterQueries());
                             }
-    
+
                             QueryResponse qr = runSolrQuery(splitByFacetQuery, fq, downloadBatchSize, startIndex, "_docid_", "asc");
                             AtomicInteger recordsForThread = new AtomicInteger(0);
                             if(logger.isDebugEnabled()) {
                                 logger.debug(splitByFacetQuery.getQuery() + " - results: " + qr.getResults().size());
                             }
-    
+
                             while (qr != null && !qr.getResults().isEmpty()) {
                                 if(logger.isDebugEnabled()) {
                                     logger.debug("Start index: " + startIndex + ", " + splitByFacetQuery.getQuery());
@@ -1179,7 +1179,7 @@ public class SearchDAOImpl implements SearchDAO {
                                 }
                                 recordsForThread.addAndGet(count);
                                 startIndex += downloadBatchSize;
-                                // we have already set the Filter query the first time the query was constructed 
+                                // we have already set the Filter query the first time the query was constructed
                                 // rerun with the same params but different startIndex
                                 if(!threadCheckLimit || resultsCount.get() < maxDownloadSize){
                                     if(!threadCheckLimit){
@@ -1196,15 +1196,15 @@ public class SearchDAOImpl implements SearchDAO {
                     };
                     solrCallables.add(solrCallable);
                 }
-    
+
                 List<Future<Integer>> futures = new ArrayList<>(solrCallables.size());
                 for(Callable<Integer> nextCallable : solrCallables) {
                     futures.add(nextExecutor.submit(nextCallable));
                 }
-                
-                // Busy wait because we need to be able to respond to an interrupt on any callable 
+
+                // Busy wait because we need to be able to respond to an interrupt on any callable
                 // and propagate it to all of the others for this particular query
-                // Because the executor service is shared to prevent too many concurrent threads being run, 
+                // Because the executor service is shared to prevent too many concurrent threads being run,
                 // this requires a busy wait loop on the main thread to monitor state
                 boolean waitAgain = false;
                 do {
@@ -1224,7 +1224,7 @@ public class SearchDAOImpl implements SearchDAO {
                     }
                     Thread.sleep(downloadCheckBusyWaitSleep);
                 } while (waitAgain);
-                
+
                 AtomicInteger totalDownload = new AtomicInteger(0);
                 for(Future<Integer> future: futures){
                     if (future.isDone()){
@@ -1243,7 +1243,7 @@ public class SearchDAOImpl implements SearchDAO {
                 }
             } finally {
                 try {
-                    // Once we get here, we need to finalise starting at the concurrent wrapper, 
+                    // Once we get here, we need to finalise starting at the concurrent wrapper,
                     // as there are no more non-sentinel records to be added to the queue
                     // This eventually triggers finalisation of the underlying writer when the queue empties
                     // This is a soft shutdown, and hence we wait below for this stage to complete in normal circumstances
@@ -1255,9 +1255,9 @@ public class SearchDAOImpl implements SearchDAO {
                         final long completionStartTime = System.currentTimeMillis();
                         // Busy wait check for finalised to be called in the RecordWriter or something is interrupted
                         // By this stage, there are at maximum download.internal.queue.size items remaining (default 1000)
-                        while(writerThread.isAlive() 
+                        while(writerThread.isAlive()
                                && !writerThread.isInterrupted()
-                               && !interruptFound.get() 
+                               && !interruptFound.get()
                                && !Thread.currentThread().isInterrupted()
                                && !rw.finalised()
                                && !((System.currentTimeMillis() - completionStartTime) > downloadMaxCompletionTime)) {
@@ -1266,20 +1266,20 @@ public class SearchDAOImpl implements SearchDAO {
                     } finally {
                         try {
                             // Attempt all actions that could trigger the writer thread to finalise, as by this stage we are in hard shutdown mode
-                            
+
                             // Signal that we are in hard shutdown mode
                             interruptFound.set(true);
-                            
+
                             // Add the sentinel or clear the queue and try again until it gets onto the queue
-                            // We are in hard shutdown mode, so only priority is that the queue either 
+                            // We are in hard shutdown mode, so only priority is that the queue either
                             // gets the sentinel or the thread is interrupted to clean up resources
                             while(!queue.offer(sentinel)) {
                                 queue.clear();
                             }
-                            
+
                             // Interrupt the single writer thread
                             writerThread.interrupt();
-                            
+
                             // Explicitly call finalise on the RecordWriter as a backup
                             // In normal circumstances it is called via the sentinel or the interrupt
                             // This will not block if finalise has been called previously in the current three implementations
@@ -1431,18 +1431,18 @@ public class SearchDAOImpl implements SearchDAO {
                 if(rw instanceof ShapeFileRecordWriter) {
                     dd.setHeaderMap(((ShapeFileRecordWriter)rw).getHeaderMappings());
                 }
-    
+
                 //retain output header fields and field names for inclusion of header info in the download
                 StringBuilder infoFields = new StringBuilder("infoFields,");
                 for (String h : fields) infoFields.append(",").append(h);
                 for (String h : qaFields) infoFields.append(",").append(h);
-    
+
                 StringBuilder infoHeader = new StringBuilder("infoHeaders,");
                 for (String h : header) infoHeader.append(",").append(h);
-    
+
                 uidStats.put(infoFields.toString(), new AtomicInteger(-1));
                 uidStats.put(infoHeader.toString(), new AtomicInteger(-2));
-    
+
                 //download the records that have limits first...
                 if(downloadLimit.size() > 0) {
                     String[] originalFq = downloadParams.getFq();
@@ -1526,7 +1526,7 @@ public class SearchDAOImpl implements SearchDAO {
         if(downloadParams.getExtra().length() > 0) {
             sb.append(",").append(downloadParams.getExtra());
         }
-        
+
         List<SolrQuery> queries = new ArrayList<SolrQuery>();
         queries.add(solrQuery);
 
@@ -2556,7 +2556,7 @@ public class SearchDAOImpl implements SearchDAO {
                         logger.debug("term query: " + value );
                         logger.debug("groups: " + matcher.group(1) + "|" + matcher.group(2) );
                     }
-                    
+
                     if ("matched_name".equals(matcher.group(1))) {
                         // name -> accepted taxon name (taxon_name:)
                         String field = matcher.group(1);
@@ -3356,7 +3356,7 @@ public class SearchDAOImpl implements SearchDAO {
         getIndexedFields();
         return indexFieldMap;
     }
-    
+
     /**
      * parses the response string from the service that returns details about the indexed fields
      * @param str
