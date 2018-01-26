@@ -23,14 +23,14 @@ import java.util.Map;
 
 /**
  * Holds the Occurrence information about a specific occurrence
- * from the biocache store
+ * from the biocache store.
  *
  * @author "Natasha Carter <natasha.carter@csiro.au>"
  */
 public class OccurrenceDTO implements Serializable {
 
-	private static final long serialVersionUID = 2240957361572672142L;
-	private FullRecord raw;
+    private static final long serialVersionUID = 2240957361572672142L;
+    private FullRecord raw;
     private FullRecord processed;
     private FullRecord consensus;
     private Map<String,List<QualityAssertion>> systemAssertions;

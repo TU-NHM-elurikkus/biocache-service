@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd"
->
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>au.org.ala</groupId>
+    <artifactId>biocache-service</artifactId>
+    <version>1.8.2-SNAPSHOT</version>
 
     <parent>
         <groupId>au.org.ala</groupId>
@@ -11,21 +13,21 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>au.org.ala</groupId>
-    <artifactId>biocache-service</artifactId>
     <packaging>war</packaging>
-    <version>1.8.2-SNAPSHOT</version>
     <name>biocache-service</name>
     <url>https://demo.elurikkus.ut.ee/biocache-service/</url>
     <description>This is a the service layer for the Biocache</description>
+
     <properties>
         <!-- This project uses UTF8 for Regular Expressions -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <openrdf.sesame.version>2.2</openrdf.sesame.version>
-        <spring.version>3.2.17.RELEASE</spring.version>
+        <spring.version>3.2.18.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
         <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
+        <java.version>1.8</java.version>
     </properties>
+
     <!-- AN SCM entry that points to the SVN directory that contains the pom file for the project  -->
     <scm>
         <connection>scm:git:git@github.com:TU-NHM-elurikkus/biocache-service.git</connection>
@@ -33,6 +35,7 @@
         <developerConnection>scm:git:git@github.com:TU-NHM-elurikkus/biocache-service.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
+
     <dependencies>
         <!-- JSR 303 validation support -->
         <dependency>
@@ -421,9 +424,11 @@
             <version>1.0.13</version>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>biocache-service</finalName>
     </build>
+
     <profiles>
         <profile>
             <id>default</id>
