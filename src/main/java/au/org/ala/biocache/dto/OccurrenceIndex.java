@@ -90,7 +90,7 @@ public class OccurrenceIndex {
     @Field("assertions") String[] assertions;
     @Field("user_assertions") String hasUserAssertions;
     @Field("species_group") String[] speciesGroups;
-    @Field("individual_count") String[] individualCount;
+    @Field("individual_count") String individualCount;
     @Field("image_url") String image;
     @Field("all_image_url") String[] images;
     @Field("geospatial_kosher") String geospatialKosher;
@@ -829,11 +829,11 @@ public class OccurrenceIndex {
         this.speciesGroups = speciesGroups;
     }
 
-    public String[] getIndividualCount() {
+    public String getIndividualCount() {
         return individualCount;
     }
 
-    public void setIndividualCount(String[] individualCount) {
+    public void setIndividualCount(String individualCount) {
         this.individualCount = individualCount;
     }
 
