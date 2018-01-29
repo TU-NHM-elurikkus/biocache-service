@@ -90,6 +90,7 @@ public class OccurrenceIndex {
     @Field("assertions") String[] assertions;
     @Field("user_assertions") String hasUserAssertions;
     @Field("species_group") String[] speciesGroups;
+    @Field("individual_count") String[] individualCount;
     @Field("image_url") String image;
     @Field("all_image_url") String[] images;
     @Field("geospatial_kosher") String geospatialKosher;
@@ -264,6 +265,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "assertions", arrToString(assertions));
         addToMapIfNotNull(map, "user_assertions", hasUserAssertions);
         addToMapIfNotNull(map, "species_group", arrToString(speciesGroups));
+        addToMapIfNotNull(map, "individual_count", individualCount);
         addToMapIfNotNull(map, "image_url", image);
         addToMapIfNotNull(map, "geospatial_kosher", geospatialKosher);
         addToMapIfNotNull(map, "taxonomic_kosher", taxonomicKosher);
@@ -346,6 +348,7 @@ public class OccurrenceIndex {
         map.put("assertions", "assertions");
         map.put("user_assertions", "hasUserAssertions");
         map.put("species_group", "speciesGroups");
+        map.put("individual_count", "individualCount");
         map.put("image_url", "image");
         map.put("geospatial_kosher", "geospatialKosher");
         map.put("taxonomic_kosher", "taxonomicKosher");
@@ -824,6 +827,14 @@ public class OccurrenceIndex {
 
     public void setSpeciesGroups(String[] speciesGroups) {
         this.speciesGroups = speciesGroups;
+    }
+
+    public String[] getIndividualCount() {
+        return individualCount;
+    }
+
+    public void setIndividualCount(String[] individualCount) {
+        this.individualCount = individualCount;
     }
 
     public String getImage() {
