@@ -101,7 +101,7 @@ public class WMSCache {
      * @param colourMode to store as String
      * @param pointType resolution of data to store as PointType
      * @param wco data to store as WMSTile
-     * @return true when successfully added to the cache.  WMSCache must be 
+     * @return true when successfully added to the cache.  WMSCache must be
      * enabled, not full.  wco must be not too large and not cause the cache
      * to exceed max size when added.
      */
@@ -178,7 +178,7 @@ public class WMSCache {
     }
 
     /**
-     * Get a WMSTile without returning an empty, lockable WMSTile. 
+     * Get a WMSTile without returning an empty, lockable WMSTile.
      *
      * @param query
      * @param colourmode
@@ -196,7 +196,7 @@ public class WMSCache {
      */
     void cleanCache() {
         updateTriggerCleanSize();
-                
+
         List<Entry<String, WMSTile>> entries = new ArrayList(cache.entrySet());
 
         //sort ascending by last use time

@@ -10,13 +10,13 @@ import org.geotools.geometry.jts.JTS;
 
 /**
  * Supplies spatial utilities that can be used for the geospatial seaches
- * 
+ *
  * @author Natasha Carter
  */
 public class SpatialUtils {
 
     private final static Logger logger = Logger.getLogger(SpatialUtils.class);
-  
+
     private static final Geometry THE_WORLD=JTS.toGeometry(new Envelope(-180.0,180.0, -90.0, 90.0));
     private static final double TO_DEG = Math.toDegrees(1.0);
     /**
@@ -42,13 +42,13 @@ public class SpatialUtils {
         public static final double EARTH_RADIUS_POLAR = 6356.7523;
     /**
      * This method return an inverse WKT string by subtractoing the WKT from the earth.
-     * 
+     *
      * @deprecated No longer necessary because the SOLR spatial support negated areas in the query.
-     * 
+     *
      * @param wkt
      * @return
      */
-    @Deprecated 
+    @Deprecated
     public static String getInverseWKT(String wkt){
         try{
             String text=null;
@@ -78,11 +78,11 @@ public class SpatialUtils {
                 WKTReader r = new WKTReader();
                 Geometry g = r.read(wkt);
                 Geometry newOne = THE_WORLD.difference(g);
-                text = newOne.toText();           
-                
-                //The WKTWriter used to create the text from the geometry places extra spaces between coordinates and between the type  
+                text = newOne.toText();
+
+                //The WKTWriter used to create the text from the geometry places extra spaces between coordinates and between the type
                 //System.out.println(newOne.toText());
-                
+
             }
             return text.replaceAll("POLYGON ","POLYGON").replaceAll("MULTIPOLYGON ", "MULTIPOLYGON").replaceAll(", ",",");//.replaceAll(" ", ":");
         }
@@ -92,7 +92,7 @@ public class SpatialUtils {
         }
         return wkt;
   }
-  
+
   public static void main(String[] args){
       System.out.println(getInverseWKT("POLYGON((140 -37,151 -37,151 -26, 140.1310 -26, 140 -37))"));
       System.out.println(convertToDegrees(5f));
@@ -104,9 +104,9 @@ public class SpatialUtils {
       System.out.println(getWKTQuery("geohash", wkt, false));
       System.out.println(getWKTQuery("geohash", wkt, true));
       System.out.println(getInverseWKT(wkt));
-      
+
   }
-  
+
   //Borrowed from https://github.com/joshuamckenty/OpenSHA/blob/master/java/org/opensha/commons/geo/GeoTools.java
   /**
   * Returns the radius of the earth at the latitude of the supplied
@@ -146,12 +146,12 @@ public class SpatialUtils {
     }
 
 
-  
+
   /**
    * Turns the number of km in a degreee representation based on a conversion factor in Australia.
-   * 
+   *
    * TODO consider making the conversion factor more dynamic based on supplied lat and long
-   * 
+   *
    * @param kilometres
    * @return
    */
@@ -199,7 +199,7 @@ public class SpatialUtils {
      * boolean logic.
      * @param spatialField The SOLR field that is being used to search WKT
      * @param wkt The source WKT value
-     * @param negated Whether or not the query should be negated this effects logic operator used 
+     * @param negated Whether or not the query should be negated this effects logic operator used
      * @return
      */
     public static String getWKTQuery(String spatialField,String wkt, boolean negated){
@@ -211,7 +211,7 @@ public class SpatialUtils {
             try{
                 WKTReader r = new WKTReader();
                 GeometryCollection gc = (GeometryCollection)r.read(wkt);
-                
+
                 //now get the individual components
                 sb.append("(");
                 for(int i=0;i<gc.getNumGeometries();i++){
@@ -224,7 +224,7 @@ public class SpatialUtils {
                     sb.append(")\"");
                 }
                 sb.append(")");
-                
+
             } catch(Exception e){
                 //log the error
                 e.printStackTrace();
@@ -233,7 +233,7 @@ public class SpatialUtils {
             sb.append(field).append(":\"Intersects(");
             sb.append(wkt);
             sb.append(")\"");
-            
+
         }
         return sb.toString();
     }

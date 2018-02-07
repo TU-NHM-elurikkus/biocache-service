@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -21,9 +21,9 @@ import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 
+ *
  * A Writer that outputs a record in CSV format
- * 
+ *
  * @author Natasha Carter
  */
 public class TSVRecordWriter implements RecordWriter{
@@ -33,14 +33,14 @@ public class TSVRecordWriter implements RecordWriter{
 
     private final AtomicBoolean finalised = new AtomicBoolean(false);
     private final AtomicBoolean finalisedComplete = new AtomicBoolean(false);
-    
+
     public TSVRecordWriter(OutputStream out, String[] header){
         this.outputStream = out;
         write(header);
     }
-    
+
     /**
-     * Writes the supplied record to output stream  
+     * Writes the supplied record to output stream
      */
     @Override
     public void write(String[] record) {

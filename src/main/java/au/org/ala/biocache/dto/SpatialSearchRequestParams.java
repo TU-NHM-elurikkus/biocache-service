@@ -25,7 +25,7 @@ import java.util.Arrays;
  * @author "Natasha Carter <Natasha.Carter@csiro.au>"
  */
 public class SpatialSearchRequestParams extends SearchRequestParams {
-	
+
     protected Float radius = null;
     protected Float lat = null;
     protected Float lon = null;
@@ -136,8 +136,8 @@ public class SpatialSearchRequestParams extends SearchRequestParams {
     }
 
     /**
-     * Get the value of fq.  
-     * 
+     * Get the value of fq.
+     *
      * Adds the gk FQ if necessary...
      *
      * @return the value of fq
@@ -164,5 +164,5 @@ public class SpatialSearchRequestParams extends SearchRequestParams {
         result = prime * result + ((radius == null) ? 0 : radius.hashCode());
         result = prime * result + ((wkt == null) ? 0 : wkt.hashCode());
         return result;
-    }      
+    }
 }

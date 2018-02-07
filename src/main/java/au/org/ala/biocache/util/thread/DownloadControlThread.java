@@ -15,7 +15,7 @@ import au.org.ala.biocache.dto.DownloadDetailsDTO.DownloadType;
 
 /**
  * A Runnable that can be used to schedule records dumps for a particular class of download.
- * 
+ *
  * @author Peter Ansell
  */
 public class DownloadControlThread implements Runnable {
@@ -25,13 +25,13 @@ public class DownloadControlThread implements Runnable {
     private final long pollDelay;
     private final long executionDelay;
     private final int threadPriority;
-    
+
     private final DownloadServiceExecutor downloadServiceExecutor;
     private final AtomicBoolean shutdownFlag = new AtomicBoolean(false);
     private final Queue<DownloadDetailsDTO> currentDownloads;
     private final DownloadCreator downloadCreator;
     private final PersistentQueueDAO persistentQueueDAO;
-    
+
     public DownloadControlThread(Integer maxRecords, DownloadType downloadType, int concurrencyLevel, Long pollDelayMs, Long executionDelayMs, Integer threadPriority, Queue<DownloadDetailsDTO> currentDownloads, DownloadCreator downloadCreator, PersistentQueueDAO persistentQueueDAO) {
         this.maxRecords = maxRecords;
         this.downloadType = downloadType;
@@ -47,8 +47,8 @@ public class DownloadControlThread implements Runnable {
     }
 
     protected DownloadServiceExecutor createExecutor() {
-        return new DownloadServiceExecutor(this.maxRecords, this.downloadType, 
-                                           this.concurrencyLevel, this.executionDelay, 
+        return new DownloadServiceExecutor(this.maxRecords, this.downloadType,
+                                           this.concurrencyLevel, this.executionDelay,
                                            this.threadPriority, this.downloadCreator);
     }
 
@@ -84,28 +84,28 @@ public class DownloadControlThread implements Runnable {
             }
         }
     }
-    
+
     /**
      * Set a flag to indicate that we need to shutdown.
      */
     public void shutdown() {
         shutdownFlag.set(true);
     }
-    
+
     /**
-     * A thread to abstract away the details of the ExecutorService/Callable being used. 
-     * 
+     * A thread to abstract away the details of the ExecutorService/Callable being used.
+     *
      * @author Peter Ansell
      */
     public class DownloadServiceExecutor {
-    
+
         private final Integer maxRecords;
         private final DownloadType downloadType;
         private final ExecutorService executor;
         private final long executionDelay;
         private final int priority;
         private final DownloadCreator downloadCreator;
-    
+
         public DownloadServiceExecutor(Integer maxRecords, DownloadType downloadType, int concurrencyLevel, long executionDelay, int threadPriority, DownloadCreator downloadCreator) {
             this.maxRecords = maxRecords;
             this.downloadType = downloadType;
@@ -121,19 +121,19 @@ public class DownloadControlThread implements Runnable {
             this.executor = Executors.newFixedThreadPool(concurrencyLevel,
                     new ThreadFactoryBuilder().setNameFormat(nameFormat).setPriority(priority).build());
         }
-    
+
         public void submitDownload(DownloadDetailsDTO nextDownload) throws RejectedExecutionException {
             executor.submit(downloadCreator.createCallable(nextDownload, executionDelay));
         }
-    
+
         public void shutdown() {
             executor.shutdown();
         }
-        
+
         public void shutdownNow() {
             executor.shutdownNow();
         }
-        
+
         public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
             executor.awaitTermination(timeout, unit);
         }

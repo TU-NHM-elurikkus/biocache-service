@@ -24,15 +24,15 @@ public class PersistentQueueDAOTest {
 
     @Rule
     public Timeout timeout = new Timeout(30, TimeUnit.SECONDS);
-    
+
     @Rule
     public TemporaryFolder tempDir = new TemporaryFolder();
-    
+
     private Path testCacheDir;
     private Path testDownloadDir;
-    
+
     private PersistentQueueDAO queueDAO;
-    
+
     @Before
     public void setUp() throws Exception{
         System.out.println("BEFORE...");
@@ -41,7 +41,7 @@ public class PersistentQueueDAOTest {
         new FacetThemes();
 
         testCacheDir = tempDir.newFolder("persistentqueuedaotest-cache").toPath();
-        testDownloadDir = tempDir.newFolder("persistentqueuedaotest-destination").toPath();        
+        testDownloadDir = tempDir.newFolder("persistentqueuedaotest-destination").toPath();
         queueDAO = new JsonPersistentQueueDAOImpl() {
             @Override
             public void init() {
@@ -65,16 +65,16 @@ public class PersistentQueueDAOTest {
         d.setEmail("natasha.carter@csiro.au");
         return d;
     }
-    
+
     @Test
     public void testQueue(){
         System.out.println("test add");
         DownloadDetailsDTO dd = new DownloadDetailsDTO(getParams("test1"), "127.0.0.1", DownloadType.FACET);
-        
+
         queueDAO.addDownloadToQueue(dd);
         assertEquals(1,queueDAO.getTotalDownloads());
         DownloadDetailsDTO dd2 = new DownloadDetailsDTO(getParams("test2"), "127.0.0.1", DownloadType.FACET);
-        
+
         queueDAO.addDownloadToQueue(dd2);
         assertEquals(2,queueDAO.getTotalDownloads());
         //now test that they are persisted

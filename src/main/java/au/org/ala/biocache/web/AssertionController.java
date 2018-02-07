@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -59,7 +59,7 @@ public class AssertionController extends AbstractSecureController {
     protected AuthService authService;
     @Inject
     private AbstractMessageSource messageSource;
-   
+
     /**
      * Retrieve an array of the assertion codes in use by the processing system
      *
@@ -98,7 +98,7 @@ public class AssertionController extends AbstractSecureController {
 
     /**
      * Add assertion.
-     * 
+     *
      * @param recordUuid
      * @param request
      * @param response
@@ -113,13 +113,13 @@ public class AssertionController extends AbstractSecureController {
     }
     /**
      * Adds a bulk list of assertions.
-     * 
+     *
      * This method expects certain request params to be provided
      * apiKey
      * userId
      * userDisplayName
      * assertions - a json list of assertion maps to be applied.
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
@@ -128,7 +128,7 @@ public class AssertionController extends AbstractSecureController {
     public void addBulkAssertions(HttpServletRequest request, HttpServletResponse response) throws Exception {
         ObjectMapper om = new ObjectMapper();
         try {
-            String json = request.getParameter("assertions");            
+            String json = request.getParameter("assertions");
             String userId = request.getParameter("userId");
             String userDisplayName = request.getParameter("userDisplayName");
             //check to see that the assertions have come from a valid source before adding
@@ -179,7 +179,7 @@ public class AssertionController extends AbstractSecureController {
                 logger.debug("Adding assertion to:" + recordUuid + ", code:" + code + ", comment:" + comment
                         + ",userAssertionStatus: " + userAssertionStatus + ", assertionUuid: " + assertionUuid
                         + ", userId:" +userId + ", userDisplayName:" + userDisplayName);
-    
+
                 QualityAssertion qa = au.org.ala.biocache.model.QualityAssertion.apply(Integer.parseInt(code));
                 qa.setComment(comment);
                 qa.setUserId(userId);
@@ -210,10 +210,10 @@ public class AssertionController extends AbstractSecureController {
 
     /**
      * Removes an assertion
-     * 
+     *
      * This version of the method can handle the situation where we use rowKeys as Uuids. Thus
      * URL style rowKeys can be correctly supported.
-     * 
+     *
      * @param recordUuid
      * @param assertionUuid
      * @param request
@@ -332,7 +332,7 @@ public class AssertionController extends AbstractSecureController {
     public void setAssertionUtils(AssertionUtils assertionUtils) {
         this.assertionUtils = assertionUtils;
     }
-    
+
     private ErrorCode[] applyi18n(ErrorCode[] errorCodes) {
         //use i18n descriptions
         ErrorCode[] formattedErrorCodes = new ErrorCode[errorCodes.length];

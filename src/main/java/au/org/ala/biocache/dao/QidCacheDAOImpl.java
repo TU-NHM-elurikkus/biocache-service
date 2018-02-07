@@ -212,7 +212,7 @@ public class QidCacheDAOImpl implements QidCacheDAO {
      */
     synchronized void cleanCache() {
         updateTriggerCleanSize();
-                
+
         if (cacheSize < triggerCleanSize) {
             return;
         }

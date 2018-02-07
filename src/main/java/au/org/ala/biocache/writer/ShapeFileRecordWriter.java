@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -48,11 +48,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A record writer that produces a shapefile.
- * 
+ *
  * @author Natasha Carter
  */
 public class ShapeFileRecordWriter implements RecordWriter {
-	
+
     private final static Logger logger = LoggerFactory.getLogger(ShapeFileRecordWriter.class);
 
     private String tmpDownloadDirectory;
@@ -67,7 +67,7 @@ public class ShapeFileRecordWriter implements RecordWriter {
 
     private final AtomicBoolean finalised = new AtomicBoolean(false);
     private final AtomicBoolean finalisedComplete = new AtomicBoolean(false);
-    
+
     /**
      * GeometryFactory will be used to create the geometry attribute of each feature (a Point
      * object for the location)
@@ -77,7 +77,7 @@ public class ShapeFileRecordWriter implements RecordWriter {
     public ShapeFileRecordWriter(String tmpdir, String filename, OutputStream out, String[] header) {
         tmpDownloadDirectory = tmpdir;
         //perform the header mappings so that features are only 10 characters long.
-        headerMappings = AlaFileUtils.generateShapeHeader(header); 
+        headerMappings = AlaFileUtils.generateShapeHeader(header);
         //set the outputStream
         outputStream = out;
         //initialise a temporary file that can used to write the shape file
@@ -91,20 +91,20 @@ public class ShapeFileRecordWriter implements RecordWriter {
                 latIdx = ArrayUtils.indexOf(header, "decimalLatitude.p");
                 longIdx = ArrayUtils.indexOf(header, "decimalLongitude.p");
             }
-            
+
             simpleFeature = createFeatureType(headerMappings.keySet(), null);
             featureBuilder = new SimpleFeatureBuilder(simpleFeature);
-            
+
             if(latIdx <0 || longIdx<0){
                 logger.error("The invalid header..." + StringUtils.join(header, "|"));
                 throw new IllegalArgumentException("A Shape File Export needs to include latitude and longitude in the headers.");
             }
-            
+
         } catch (java.io.IOException e){
             logger.error("Unable to create the temporary file necessary for ShapeFile exporting.",e);
         }
     }
-    
+
     /**
      * dynamically creates the feature type based on the headers for the download
      * @param features
@@ -128,7 +128,7 @@ public class ShapeFileRecordWriter implements RecordWriter {
                 //SimpleFeatureType test = builder.buildFeatureType();
                 //logger.error(test.getAttributeCount()+ " : " + test.getAttributeDescriptors());
             }
-            i++;        
+            i++;
         }
         //builder.length(15).add("Name", String.class); // <- 15 chars width for name field
 
@@ -140,9 +140,9 @@ public class ShapeFileRecordWriter implements RecordWriter {
         }
         return LOCATION;
     }
-    
+
     /**
-     * Indicates that the download has completed and the shape file should be generated and 
+     * Indicates that the download has completed and the shape file should be generated and
      * written to the supplied output stream.
      */
     @Override
@@ -150,34 +150,34 @@ public class ShapeFileRecordWriter implements RecordWriter {
         if(finalised.compareAndSet(false, true)) {
             // stream the contents of the file into the supplied outputStream
             //Properties for the shape file construction
-        	try {
+            try {
                 Map<String, Serializable> params = new HashMap<String, Serializable>();
                 params.put("url", temporaryShapeFile.toURI().toURL());
                 params.put("create spatial index", Boolean.TRUE);
-                
+
                 ShapefileDataStore newDataStore = (ShapefileDataStore) dataStoreFactory.createNewDataStore(params);
                 newDataStore.createSchema(simpleFeature);
                 String typeName = newDataStore.getTypeNames()[0];
                 SimpleFeatureSource featureSource = newDataStore.getFeatureSource(typeName);
                 //inputStream = new java.io.FileInputStream(temporaryShapeFile);
-                
+
                 if (featureSource instanceof SimpleFeatureStore) {
                     SimpleFeatureStore featureStore = (SimpleFeatureStore) featureSource;
-        
+
                    // featureStore.setTransaction(transaction);
                     try {
                         featureStore.addFeatures(collection);
                      //   transaction.commit();
-        
+
                     } catch (Exception problem) {
                         logger.error(problem.getMessage(), problem);
                        // transaction.rollback();
-        
+
                     } finally {
                        // transaction.close();
                     }
                     //zip the parent directory
-                    String targetZipFile = temporaryShapeFile.getParentFile().getParent()+File.separator+temporaryShapeFile.getName().replace(".shp", ".zip");                
+                    String targetZipFile = temporaryShapeFile.getParentFile().getParent()+File.separator+temporaryShapeFile.getName().replace(".shp", ".zip");
                     AlaFileUtils.createZip(temporaryShapeFile.getParent(), targetZipFile);
                     try(java.io.FileInputStream inputStream = new java.io.FileInputStream(targetZipFile);) {
                         //write the shapefile to the supplied output stream
@@ -186,11 +186,11 @@ public class ShapeFileRecordWriter implements RecordWriter {
                         //now remove the temporary directory
                         FileUtils.deleteDirectory(temporaryShapeFile.getParentFile().getParentFile());
                     }
-                    
+
                 } else {
-                    logger.error(typeName + " does not support read/write access");                
+                    logger.error(typeName + " does not support read/write access");
                 }
-                
+
                 outputStream.flush();
             } catch (java.io.IOException e){
                 logger.error("Unable to create ShapeFile", e);
@@ -199,9 +199,9 @@ public class ShapeFileRecordWriter implements RecordWriter {
             }
         }
     }
-    
+
     /**
-     * Writes a new record to the download. As a shape file each of the fields are added as a feature. 
+     * Writes a new record to the download. As a shape file each of the fields are added as a feature.
      */
     @Override
     public void write(String[] record) {
@@ -212,10 +212,10 @@ public class ShapeFileRecordWriter implements RecordWriter {
             /* Longitude (= x coord) first ! */
             Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
             featureBuilder.add(point);
-            
+
             //now add all the applicable features
             int i = 0;
-            
+
             //logger.debug("FEATURE ATTRIBUT COUNT" + simpleFeature.getAttributeCount());
             int max = simpleFeature.getAttributeCount() + 2;//+2 is the lat and long...
             for(String value : record){
@@ -233,7 +233,7 @@ public class ShapeFileRecordWriter implements RecordWriter {
             logger.debug("Not adding record with missing lat/long: " + record[0]);
         }
     }
-    
+
     /**
      * @return the headerMappings
      */

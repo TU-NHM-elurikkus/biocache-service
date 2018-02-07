@@ -351,7 +351,7 @@ public class SearchUtils {
         if (requestParams.getFacets() == null)
             requestParams.setFacets(blankRequestParams.getFacets());
     }
-    
+
     public static Map<String, String[]> getExtraParams(Map map){
         Map<String, String[]> extraParams = new java.util.HashMap<String, String[]>(map);
         for(String field : defaultParams)
@@ -376,7 +376,7 @@ public class SearchUtils {
      *
      * Refactor: now returns a Map<String, ActiveFacet> with an additional field "label" that is used to
      * provide a human readable version of the filter query.
-     * 
+     *
      * NC 2013-01-11: This method has been moved from hubs-webapp so that all the processing is performed
      * by the service rather than the client.
      * This means that the authService will perform the lookup here.
@@ -448,11 +448,11 @@ public class SearchUtils {
                                 } else if (StringUtils.equals(fn, "month")) {
                                     fv = substituteMonthNamesForNums(fv);
                                 } else if (authIndexFields.contains(fn)) {
-                                    if (authService.getMapOfAllUserNamesById().containsKey(StringUtils.remove(fv, "\""))) 
+                                    if (authService.getMapOfAllUserNamesById().containsKey(StringUtils.remove(fv, "\"")))
                                         fv = authService.getMapOfAllUserNamesById().get(StringUtils.remove(fv, "\""));
                                     else if (authService.getMapOfAllUserNamesByNumericId().containsKey(StringUtils.remove(fv, "\"")))
                                         fv = authService.getMapOfAllUserNamesByNumericId().get(StringUtils.remove(fv, "\""));
-                                  
+
                                 } else if (StringUtils.contains(fv, "@")) {
                                     //fv = StringUtils.substringBefore(fv, "@"); // hide email addresses
                                     if (authService.getMapOfAllUserNamesById().containsKey(StringUtils.remove(fv, "\""))) {
@@ -495,7 +495,7 @@ public class SearchUtils {
         List<String> guids = new ArrayList<String>();
         guids.add(fieldValue);
         List<String> names = speciesLookupService.getNamesForGuids(guids);
-        
+
         if (names != null && names.size() >= 1) {
             name = names.get(0);
         }
@@ -527,7 +527,7 @@ public class SearchUtils {
      * E.g. [1940-01-01T00:00:00Z TO 1949-12-31T00:00:00Z]
      * to
      * 1940-1949
-     * 
+     *
      * @param fieldValue
      * @return
      */
@@ -535,7 +535,7 @@ public class SearchUtils {
         String dateRange = URLDecoder.decode(fieldValue);
         String formattedDate = StringUtils.replaceChars(dateRange, "[]", "");
         String[] dates =  formattedDate.split(" TO ");
-        
+
         if (dates != null && dates.length > 1) {
             // grab just the year portions
             dateRange = StringUtils.substring(dates[0], 0, 4) + "-" + StringUtils.substring(dates[1], 0, 4);
@@ -543,7 +543,7 @@ public class SearchUtils {
 
         return dateRange;
     }
-    
+
     /**
      * Enum for months lookup
      */

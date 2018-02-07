@@ -230,11 +230,11 @@ public class SpeciesLookupIndexService implements SpeciesLookupService {
     public void setNameIndexLocation(String nameIndexLocation) {
         this.nameIndexLocation = nameIndexLocation;
     }
-    
+
     public Map search(String query, String [] filterQuery, int max, boolean includeSynonyms, boolean includeAll, boolean counts) {
-        // TODO: better method of dealing with records with 0 occurrences being removed. 
+        // TODO: better method of dealing with records with 0 occurrences being removed.
         int maxFind = includeAll ? max : max + 1000;
-        
+
         List<Map> results = getNameIndex().autocomplete(query, maxFind, includeSynonyms);
 
         List<Map> output = new ArrayList();
@@ -302,10 +302,10 @@ public class SpeciesLookupIndexService implements SpeciesLookupService {
 
         String guid = (String) m.get("lsid");
         formatted.put("guid", guid);
-        
+
         //all results resolve to accepted lsids
         formatted.put("linkIdentifier", guid);
-        
+
         formatted.put("name", m.get("name"));
         formatted.put("idxType", "TAXON");
         formatted.put("score", m.get("score"));

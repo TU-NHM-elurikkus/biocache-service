@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Stores the details of a download.  Will allow for monitoring of downloads
- * 
+ *
  * @author Natasha Carter
  */
 public class DownloadDetailsDTO {
@@ -44,10 +44,10 @@ public class DownloadDetailsDTO {
     private String sensitiveFq = null;
 
     /**
-     * Default constructor necessary for Jackson to create an object from the JSON. 
+     * Default constructor necessary for Jackson to create an object from the JSON.
      */
     public DownloadDetailsDTO(){}
-    
+
     public DownloadDetailsDTO(String params, String ipAddress, DownloadType type){
         this.downloadParams = params;
         this.ipAddress = ipAddress;
@@ -55,7 +55,7 @@ public class DownloadDetailsDTO {
         this.startDate = new Date();
         this.lastUpdate = new Date();
     }
-    
+
     public DownloadDetailsDTO(DownloadRequestParams params, String ipAddress, DownloadType type){
         this(params.getUrlParams(), ipAddress, type);
         requestParams = params;
@@ -69,32 +69,32 @@ public class DownloadDetailsDTO {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-    
+
     @JsonIgnore
     public long getStartTime(){
         return startDate.getTime();
     }
-    
+
     public String getStartDateString(){
         return startDate.toString();
     }
-    
+
     public Date getStartDate(){
         return this.startDate;
     }
-    
+
     public void setStartDate(Date startDate){
         this.startDate = startDate;
     }
-    
+
     public AtomicLong getRecordsDownloaded(){
         return recordsDownloaded;
     }
-    
+
     public String getDownloadParams(){
         return downloadParams;
     }
-    
+
     /**
      * @param downloadParams the downloadParams to set
      */
@@ -105,30 +105,30 @@ public class DownloadDetailsDTO {
     public String getIpAddress(){
         return ipAddress;
     }
-    
+
     public DownloadType getDownloadType(){
         return downloadType;
     }
-    
+
     /**
      * @param downloadType the downloadType to set
      */
     public void setDownloadType(DownloadType downloadType) {
         this.downloadType = downloadType;
     }
-    
+
     public void updateCounts(int number){
         recordsDownloaded.addAndGet(number);
         lastUpdate = new Date();
     }
-    
+
     public void setTotalRecords(long total){
         this.totalRecords = total;
     }
     public long getTotalRecords(){
         return totalRecords;
     }
-  
+
     /**
      * @return the email
      */
@@ -238,7 +238,7 @@ public class DownloadDetailsDTO {
 
     /**
      * Encompasses the different types of downloads that can be performed.
-     */ 
+     */
     public enum DownloadType{
         FACET,
         RECORDS_DB,
@@ -262,5 +262,5 @@ public class DownloadDetailsDTO {
                 .append("]");
         return builder.toString();
     }
-  
+
 }

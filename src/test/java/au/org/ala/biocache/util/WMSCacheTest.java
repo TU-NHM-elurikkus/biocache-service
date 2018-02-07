@@ -25,7 +25,7 @@ public class WMSCacheTest extends TestCase {
      */
     public void testPutGetWMS() {
         initCache();
-        
+
         //test a cache put and get
         WMSTile wco1 = getDefaultWMSCacheObject("q1", 100, true);
         wmsCache.put(wco1.getQuery(), wco1.getColourmode(), PointType.POINT_001, wco1);
@@ -56,7 +56,7 @@ public class WMSCacheTest extends TestCase {
      */
     public void testSizeManagementWMS() {
         initCache();
-        
+
         ArrayList<WMSTile> wcos = new ArrayList<WMSTile>();
         long putSize = 0;
         long maxSize = 0;

@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -43,7 +43,7 @@ import java.util.*;
 public class ExploreController {
 
     /** Logger initialisation */
-	private final static Logger logger = Logger.getLogger(ExploreController.class);
+    private final static Logger logger = Logger.getLogger(ExploreController.class);
 
     /** Fulltext search DAO */
     @Inject
@@ -57,12 +57,12 @@ public class ExploreController {
 
     /** Mapping of radius in km to OpenLayers zoom level */
     public final static HashMap<Float, Integer> radiusToZoomLevelMap = new HashMap<Float, Integer>();
-	static {
-		radiusToZoomLevelMap.put(1f, 14);
+    static {
+        radiusToZoomLevelMap.put(1f, 14);
         radiusToZoomLevelMap.put(5f, 12);
-		radiusToZoomLevelMap.put(10f, 11);
-		radiusToZoomLevelMap.put(50f, 9);
-	}
+        radiusToZoomLevelMap.put(10f, 11);
+        radiusToZoomLevelMap.put(50f, 9);
+    }
 
     @RequestMapping(value = "/explore/hierarchy", method = RequestMethod.GET)
     public void getHierarchy(HttpServletResponse response) throws Exception {
@@ -168,7 +168,7 @@ public class ExploreController {
      *
      */
     @RequestMapping(value = "/explore/groups*", method = RequestMethod.GET)
-	public @ResponseBody List<SpeciesGroupDTO> yourAreaView(SpatialSearchRequestParams requestParams) throws Exception {
+    public @ResponseBody List<SpeciesGroupDTO> yourAreaView(SpatialSearchRequestParams requestParams) throws Exception {
 
         //now we want to grab all the facets to get the counts associated with the species groups
         List<au.org.ala.biocache.vocab.SpeciesGroup> sgs = au.org.ala.biocache.Store.retrieveSpeciesGroups();
@@ -194,7 +194,7 @@ public class ExploreController {
             if(oldName!= null && sg.parent()!= null && sg.parent().equals(kingdom)) {
                 level = 2;
             }
-            
+
             oldName = sg.name();
             if(sg.parent() == null){
                 level = 1;
@@ -210,11 +210,11 @@ public class ExploreController {
             speciesGroups.add(sdto);
         }
         return speciesGroups;
-	}
-    
+    }
+
     /**
      * Returns the number of records and distinct species in a particular species group
-     * 
+     *
      * @param requestParams
      * @param group
      * @return
@@ -232,7 +232,7 @@ public class ExploreController {
         if(results.getFacetResults().size() > 0){
             speciesCount = results.getFacetResults().iterator().next().getFieldResult().size();
         }
-        
+
         return new Integer[]{(int) results.getTotalRecords(), speciesCount};
     }
 
@@ -288,7 +288,7 @@ public class ExploreController {
         model.addAttribute("points", points);
         return POINTS_GEOJSON;
     }
-    
+
     /**
      * Map a zoom level to a coordinate accuracy level
      *
@@ -321,108 +321,108 @@ public class ExploreController {
         }
         return pointType;
     }
- 
+
     private void applyFacetForCounts(SpatialSearchRequestParams requestParams, boolean useCommonName){
-    	if(useCommonName)
-    		requestParams.setFacets(new String[]{SearchDAOImpl.COMMON_NAME_AND_LSID});
-    	else
-    		requestParams.setFacets(new String[]{SearchDAOImpl.NAMES_AND_LSID});
+        if(useCommonName)
+            requestParams.setFacets(new String[]{SearchDAOImpl.COMMON_NAME_AND_LSID});
+        else
+            requestParams.setFacets(new String[]{SearchDAOImpl.NAMES_AND_LSID});
     }
 
     /**
-	 * Occurrence search page uses SOLR JSON to display results
-	 *
+     * Occurrence search page uses SOLR JSON to display results
+     *
      * @return
      * @throws Exception
      */
-	@RequestMapping(value = "/explore/group/{group}/download*", method = RequestMethod.GET)
-	public void yourAreaDownload(
+    @RequestMapping(value = "/explore/group/{group}/download*", method = RequestMethod.GET)
+    public void yourAreaDownload(
             DownloadRequestParams requestParams,
             @PathVariable(value="group") String group,
             @RequestParam(value="common", required=false, defaultValue="false") boolean common,
             HttpServletResponse response)
             throws Exception {
-	    String filename = requestParams.getFile() != null ? requestParams.getFile():"data"; 
+        String filename = requestParams.getFile() != null ? requestParams.getFile():"data";
         logger.debug("Downloading the species in your area... ");
         response.setHeader("Cache-Control", "must-revalidate");
         response.setHeader("Pragma", "must-revalidate");
         response.setHeader("Content-Disposition", "attachment;filename="+filename);
         response.setContentType("application/vnd.ms-excel");
-       
+
         addGroupFilterToQuery(requestParams, group);
         applyFacetForCounts(requestParams, common);
-        
+
         ServletOutputStream out = response.getOutputStream();
         int count = searchDao.writeSpeciesCountByCircleToStream(requestParams,group, out);
         logger.debug("Exported " + count + " species records in the requested area");
-        
-	}
+
+    }
 
     /**
      * JSON web service that returns a list of species and record counts for a given location search
-     * and a higher taxa with rank. 
+     * and a higher taxa with rank.
      *
      * @param model
      * @throws Exception
      */
     @RequestMapping(value = "/explore/group/{group}*", method = RequestMethod.GET)
-	public @ResponseBody List<TaxaCountDTO> listSpeciesForHigherTaxa(
+    public @ResponseBody List<TaxaCountDTO> listSpeciesForHigherTaxa(
             SpatialSearchRequestParams requestParams,
             @PathVariable(value="group") String group,
-            @RequestParam(value="common", required=false, defaultValue="false") boolean common,           
+            @RequestParam(value="common", required=false, defaultValue="false") boolean common,
             Model model) throws Exception {
 
-       
+
         addGroupFilterToQuery(requestParams, group);
         applyFacetForCounts(requestParams, common);
-        
+
         return searchDao.findAllSpeciesByCircleAreaAndHigherTaxa(requestParams, group);
     }
-	// The Endemism Web Services - Move these if they get too large...
-	/**
-	 * Returns the number of distinct species that are in the supplied region.
-	 * @param requestParams
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/explore/counts/endemic*", method = RequestMethod.GET)
-	public @ResponseBody int getSpeciesCountOnlyInWKT(SpatialSearchRequestParams requestParams, 
-	          HttpServletResponse response) 
-	          throws Exception{  
-	    List list = getSpeciesOnlyInWKT(requestParams,response);
-	    if(list != null)
-	        return list.size();
-	    return 0;
-	}
-		
-	/**
-	 * Returns the species that only have occurrences in the supplied WKT.
-	 * @return
-	 */
-	@RequestMapping(value = "/explore/endemic/species*", method = RequestMethod.GET)
-	public @ResponseBody List<FieldResultDTO> getSpeciesOnlyInWKT(SpatialSearchRequestParams requestParams,
-	          HttpServletResponse response) 
-	              throws Exception{
-	    Qid qid = qidCacheDao.getQidFromQuery(requestParams.getQ());
-	    String wkt =StringUtils.isNotBlank(requestParams.getWkt())?requestParams.getWkt():qid.getWkt();
-	    if(qid != null){
-	        requestParams.setQ(qid.getQ());
-	        requestParams.setWkt(qid.getWkt());
+    // The Endemism Web Services - Move these if they get too large...
+    /**
+     * Returns the number of distinct species that are in the supplied region.
+     * @param requestParams
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/explore/counts/endemic*", method = RequestMethod.GET)
+    public @ResponseBody int getSpeciesCountOnlyInWKT(SpatialSearchRequestParams requestParams,
+              HttpServletResponse response)
+              throws Exception{
+        List list = getSpeciesOnlyInWKT(requestParams,response);
+        if(list != null)
+            return list.size();
+        return 0;
+    }
+
+    /**
+     * Returns the species that only have occurrences in the supplied WKT.
+     * @return
+     */
+    @RequestMapping(value = "/explore/endemic/species*", method = RequestMethod.GET)
+    public @ResponseBody List<FieldResultDTO> getSpeciesOnlyInWKT(SpatialSearchRequestParams requestParams,
+              HttpServletResponse response)
+                  throws Exception{
+        Qid qid = qidCacheDao.getQidFromQuery(requestParams.getQ());
+        String wkt =StringUtils.isNotBlank(requestParams.getWkt())?requestParams.getWkt():qid.getWkt();
+        if(qid != null){
+            requestParams.setQ(qid.getQ());
+            requestParams.setWkt(qid.getWkt());
             requestParams.setFq(qid.getFqs());
-	    }
-	    
-	    if(StringUtils.isNotBlank(wkt) ){
-	        if(requestParams.getFacets() != null && requestParams.getFacets().length ==1){
+        }
+
+        if(StringUtils.isNotBlank(wkt) ){
+            if(requestParams.getFacets() != null && requestParams.getFacets().length ==1){
                 return searchDao.getEndemicSpecies(requestParams);
-	        } else {
-	            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Please supply only one facet.");
-	        }
-	    } else {
-	        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Please supply a WKT area.");
-	    }
-	    return null;
-	}
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Please supply only one facet.");
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Please supply a WKT area.");
+        }
+        return null;
+    }
 
     /**
      * Returns facet values that only occur in the supplied subQueryQid

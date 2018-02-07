@@ -139,9 +139,9 @@ public class ScatterplotController {
         String displayNameY = null;
         List<String> validDatatypes = Arrays.asList(VALID_DATATYPES);
         Set<IndexFieldDTO> indexedFields = searchDAO.getIndexedFields();
-        
+
         Exception toThrowX = null;
-        
+
         // FIXME: VALID_DATATYPES does not contain all of the necesary datatypes
         for (IndexFieldDTO xField : indexedFields) {
             if(xField.getName().equals(x)) {
@@ -157,13 +157,13 @@ public class ScatterplotController {
                 }
             }
         }
-        
+
         if(displayNameX == null) {
             throw new Exception("Unknown, unsupported datatype, or not stored, value for x: " + x, toThrowX);
         }
-        
+
         Exception toThrowY = null;
-        
+
         for (IndexFieldDTO yField : indexedFields) {
             if(yField.getName().equals(y)) {
                 if (!validDatatypes.contains(yField.getDataType() )) {
@@ -178,7 +178,7 @@ public class ScatterplotController {
                 }
             }
         }
-        
+
         if(displayNameY == null) {
             throw new Exception("Unknown, unsupported datatype, or not stored, value for y: " + y, toThrowY);
         }

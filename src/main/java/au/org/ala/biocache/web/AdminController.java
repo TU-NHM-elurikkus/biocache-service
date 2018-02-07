@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2013 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -93,8 +93,8 @@ public class AdminController extends AbstractSecureController {
      * @throws Exception
      */
     @RequestMapping(value = "/admin/index/optimise", method = RequestMethod.POST)
-	public void optimiseIndex(HttpServletRequest request, 
-	   HttpServletResponse response) throws Exception {
+    public void optimiseIndex(HttpServletRequest request,
+       HttpServletResponse response) throws Exception {
         if(shouldPerformOperation(request, response)){
             String message = Store.optimiseIndex();
             response.setStatus(HttpServletResponse.SC_OK);
@@ -114,7 +114,7 @@ public class AdminController extends AbstractSecureController {
     @RequestMapping(value = "/admin/modify*", method = RequestMethod.GET)
     public @ResponseBody List<String> modifyServer(@RequestParam(value = "ro", required = false) Boolean readOnly,
             @RequestParam(value = "reopenIndex", required = false,defaultValue="false") Boolean reopenIndex) throws Exception {
-        List<String> actionsPerformed = new java.util.ArrayList<String>(); 
+        List<String> actionsPerformed = new java.util.ArrayList<String>();
         if(readOnly != null){
             Store.setReadOnly(readOnly);
             actionsPerformed.add("Set readonly = " + readOnly);
@@ -127,13 +127,13 @@ public class AdminController extends AbstractSecureController {
     }
     /**
      * Reindexes the supplied dr based on modifications since the supplied date.
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
      */
     @RequestMapping(value = "/admin/index/reindex", method = RequestMethod.POST)
-    public void reindex(HttpServletRequest request, 
+    public void reindex(HttpServletRequest request,
             HttpServletResponse response)throws Exception{
         if(shouldPerformOperation(request, response)){
             String dataResource = request.getParameter("dataResource");

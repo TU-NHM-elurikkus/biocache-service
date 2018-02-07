@@ -46,8 +46,8 @@ public class GeospatialController {
     @RequestMapping(value = {"/occurrences/spatial*"}, method = RequestMethod.GET)
     public @ResponseBody SearchResultDTO listWktOccurrences(SpatialSearchRequestParams requestParams,
                                     @RequestParam(value = "url", required = false) String url) throws Exception {
-        
-        requestParams.setQ("*:*");       
+
+        requestParams.setQ("*:*");
         //don't limit the facets
         requestParams.setFlimit(-1);
         //check to see if a url has been provided
@@ -77,19 +77,19 @@ public class GeospatialController {
 
             if (obj.getString("type").equalsIgnoreCase("multipolygon")) {
                 return coords.replace("]]],[[[", "))*((")
-                		.replace("]],[[", "))*((")
-                		.replace("],[", "*")
-                		.replace(",", " ")
-                		.replace("*", ",")
-                		.replace("[[[[", "MULTIPOLYGON(((")
-                		.replace("]]]]", ")))");
+                        .replace("]],[[", "))*((")
+                        .replace("],[", "*")
+                        .replace(",", " ")
+                        .replace("*", ",")
+                        .replace("[[[[", "MULTIPOLYGON(((")
+                        .replace("]]]]", ")))");
             } else {
                 return coords.replace("],[", "*")
-                		.replace(",", " ")
-                		.replace("*", ",")
-                		.replace("[[[[", "POLYGON((")
-                		.replace("]]]]", "))")
-                		.replace("],[", "),(");
+                        .replace(",", " ")
+                        .replace("*", ",")
+                        .replace("[[[[", "POLYGON((")
+                        .replace("]]]]", "))")
+                        .replace("],[", "),(");
             }
         } catch (Exception e) {
             logger.warn("Unable to get JSON", e);

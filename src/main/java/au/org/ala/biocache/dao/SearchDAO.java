@@ -2,12 +2,12 @@ package au.org.ala.biocache.dao;
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -37,7 +37,7 @@ public interface SearchDAO {
 
     /**
      * Finds the endemic species of the supplied area.
-     * 
+     *
      * @param requestParams
      * @return
      * @throws Exception
@@ -97,7 +97,7 @@ public interface SearchDAO {
 
     /**
      * Write out the results of this query to the output stream
-     * 
+     *
      * @param searchParams
      * @param out
      * @param maxNoOfRecords
@@ -105,17 +105,17 @@ public interface SearchDAO {
      * @return A map of uids and counts that needs to be logged to the ala-logger
      * @throws Exception
      */
-	ConcurrentMap<String, AtomicInteger> writeResultsToStream(DownloadRequestParams searchParams, OutputStream out, int maxNoOfRecords, boolean includeSensitive, DownloadDetailsDTO dd, boolean limit) throws Exception;
-	
-	/**
-	 * Writes the results of this query to the output stream using the index as a source of the data.
-	 * @param downloadParams
-	 * @param out
-	 * @param includeSensitive
-	 * @return
-	 * @throws Exception
-	 */
-	ConcurrentMap<String, AtomicInteger> writeResultsFromIndexToStream(DownloadRequestParams downloadParams, OutputStream out, boolean includeSensitive, DownloadDetailsDTO dd,boolean checkLimit) throws Exception;
+    ConcurrentMap<String, AtomicInteger> writeResultsToStream(DownloadRequestParams searchParams, OutputStream out, int maxNoOfRecords, boolean includeSensitive, DownloadDetailsDTO dd, boolean limit) throws Exception;
+
+    /**
+     * Writes the results of this query to the output stream using the index as a source of the data.
+     * @param downloadParams
+     * @param out
+     * @param includeSensitive
+     * @return
+     * @throws Exception
+     */
+    ConcurrentMap<String, AtomicInteger> writeResultsFromIndexToStream(DownloadRequestParams downloadParams, OutputStream out, boolean includeSensitive, DownloadDetailsDTO dd,boolean checkLimit) throws Exception;
 
     /**
      * Write coordinates out to the supplied stream.
@@ -146,7 +146,7 @@ public interface SearchDAO {
      * @throws Exception
      */
     Set<IndexFieldDTO> getIndexedFields() throws Exception;
-    
+
     /**
      * Retrieve a map of indexed fields based on {@link IndexFieldDTO#getName()}
      *
@@ -154,7 +154,7 @@ public interface SearchDAO {
      * @throws Exception
      */
     Map<String, IndexFieldDTO> getIndexedFieldsMap() throws Exception;
-    
+
     /**
      * Returns the up to date statistics for the supplied field
      * @param field
@@ -174,7 +174,7 @@ public interface SearchDAO {
     List<OccurrencePoint> getFacetPoints(SpatialSearchRequestParams searchParams, PointType pointType) throws Exception;
 
     /**
-     * Retrieve an OccurrencePoint (distinct list of points - lat-long to 4 decimal places) for a given search 
+     * Retrieve an OccurrencePoint (distinct list of points - lat-long to 4 decimal places) for a given search
      * without convertion to List of OccurrencePoint
      *
      * @param searchParams
@@ -223,7 +223,7 @@ public interface SearchDAO {
 
     /**
      * Find all the data providers with records.
-     * 
+     *
      * @return
      */
     List<DataProviderCountDTO> getDataProviderCounts() throws Exception;
@@ -272,7 +272,7 @@ public interface SearchDAO {
      * @throws Exception
      */
     List<TaxaCountDTO> findAllSpecies(SpatialSearchRequestParams requestParams) throws Exception;
-    
+
     /**
      * Find all occurrences for a given query as SolrDocumentList
      *
@@ -334,7 +334,7 @@ public interface SearchDAO {
 
     /**
      * Perform grouped facet query.
-     * 
+     *
      * facets is the list of grouped facets required
      * flimit restricts the number of groups returned
      * pageSize restricts the number of docs in each group returned

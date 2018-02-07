@@ -28,10 +28,10 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * Implementation of @see au.org.ala.biocache.service.LoggerService that
- * performs lookup via HTTP GET to webservice. 
+ * performs lookup via HTTP GET to webservice.
  *
  * NC: 20130924 - Instead of caching on request. The cache reloaded based on a schedule
- * 
+ *
  * @author Nick dos Remedios (nick.dosremedios@csiro.au)
  */
 @Component("loggerRestService")
@@ -55,27 +55,27 @@ public class LoggerRestService implements LoggerService {
     @Inject
     private RestOperations restTemplate; // NB MappingJacksonHttpMessageConverter() injected by Spring
 
-    @Override    
+    @Override
     public List<Map<String,Object>> getReasons() {
         init();
 
         return loggerReasons;
     }
 
-    @Override    
+    @Override
     public List<Map<String,Object>> getSources() {
         init();
 
         return loggerSources;
     }
-    
-    @Override 
+
+    @Override
     public List<Integer> getReasonIds(){
         init();
 
-        return reasonIds; 
+        return reasonIds;
     }
-    
+
     @Override
     public List<Integer> getSourceIds(){
         init();
@@ -136,7 +136,7 @@ public class LoggerRestService implements LoggerService {
         }
         return returnList;
     }
-    
+
     /**
      * Get a list of entities for the given LoggerType
      *

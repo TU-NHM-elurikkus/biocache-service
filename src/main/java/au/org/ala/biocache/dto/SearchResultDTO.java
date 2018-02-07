@@ -79,7 +79,7 @@ public class SearchResultDTO {
     /*
      * Getters & Setters
      */
-    
+
     public long getStartIndex() {
         return startIndex;
     }
@@ -103,12 +103,12 @@ public class SearchResultDTO {
     public void setPageSize(long pageSize) {
         this.pageSize = pageSize;
     }
-    
+
     @JsonIgnore
     public long getCurrentPage() {
         return this.startIndex/pageSize;
     }
-   
+
     public String getDir() {
         return dir;
     }
@@ -162,7 +162,7 @@ public class SearchResultDTO {
     public QueryResponse getQr() {
         return qr;
     }
-    
+
     @JsonIgnore
     public void setQr(QueryResponse qr) {
         this.qr = qr;
