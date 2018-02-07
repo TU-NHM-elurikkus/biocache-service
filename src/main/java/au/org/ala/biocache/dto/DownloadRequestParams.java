@@ -50,9 +50,9 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     protected Boolean dwcHeaders=false;
     /** Include all available misc fields. For Cassandra downloads only. */
     protected Boolean includeMisc = false;
-    
+
     @NotNull @LogType(type="reason")//@Range(min=0, max=10)
-    protected Integer reasonTypeId = null;    
+    protected Integer reasonTypeId = null;
     @LogType(type="source")
     protected Integer sourceTypeId = null;
     //The file type for the download file."shp" or "csv"
@@ -78,7 +78,7 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
         }
         if(sourceTypeId != null) {
             req.append("&sourceTypeId=").append(sourceTypeId);
-        } 
+        }
         if(!"csv".equals(fileType)){
             req.append("&fileType=").append(fileType);
         }
@@ -91,7 +91,7 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
         if (includeMisc) {
             req.append("&includeMisc=true");
         }
-        
+
         return req.toString();
     }
 
@@ -218,11 +218,11 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     public void setSep(Character sep) {
         this.sep = sep;
     }
-    
-    public Boolean getDwcHeaders() { 
+
+    public Boolean getDwcHeaders() {
         return dwcHeaders;
     }
-    
+
     public void setDwcHeaders(Boolean dwcHeaders) {
         this.dwcHeaders = dwcHeaders;
     }

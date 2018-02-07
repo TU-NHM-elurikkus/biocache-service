@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package au.org.ala.biocache.service;
 
@@ -32,7 +32,7 @@ import au.org.ala.biocache.util.thread.DownloadCreator;
 
 /**
  * Test for {@link DownloadService}
- * 
+ *
  * @author Peter Ansell
  */
 public class DownloadServiceTest {

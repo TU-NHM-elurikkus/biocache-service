@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -31,17 +31,17 @@ import java.util.*;
  * @author "Natasha Carter <Natasha.Carter@csiro.au>"
  */
 public class DownloadFields {
-	
+
     private final static Logger logger = LoggerFactory.getLogger(DownloadFields.class);
 
     private AbstractMessageSource messageSource;
-    
+
     private Properties layerProperties = new Properties();
     private Map<String,IndexFieldDTO> indexFieldMaps;
 
     public DownloadFields(Set<IndexFieldDTO> indexFields, AbstractMessageSource messageSource){
         this.messageSource = messageSource;
-        
+
         //initialise the properties
         try {
             indexFieldMaps = new TreeMap<String,IndexFieldDTO>();
@@ -51,7 +51,7 @@ public class DownloadFields {
 
             updateLayerNames();
         } catch(Exception e) {
-        	logger.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -81,11 +81,11 @@ public class DownloadFields {
             //wait
             t.run();
         } else {
-            //do not wait 
+            //do not wait
             t.start();
         }
     }
-    
+
     /**
      * Gets the header for the file
      * @param values

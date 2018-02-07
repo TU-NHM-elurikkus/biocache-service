@@ -560,7 +560,7 @@ public class SearchDAOImpl implements SearchDAO {
                 first = false;
             } else {
                 int idx = value.lastIndexOf(",");
-		        //handle values enclosed in "
+                //handle values enclosed in "
                 list.add(new FieldResultDTO(value.substring(0,idx), Long.parseLong(value.substring(idx+1).replace("\"",""))));
             }
         }

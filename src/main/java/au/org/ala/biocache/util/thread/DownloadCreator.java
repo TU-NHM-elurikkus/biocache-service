@@ -20,7 +20,7 @@ import au.org.ala.biocache.dto.DownloadDetailsDTO;
 
 /**
  * An interface representing a BiFunction to create Callable<DownloadDetailsDTO> objects that can be processed by the DownloadService.
- * 
+ *
  * @author Peter Ansell
  */
 public interface DownloadCreator {

@@ -1,17 +1,17 @@
 package au.org.ala.biocache.dto;
 /**
- * 
+ *
  * A DTO for the parameters used in the breakdown services.
- * 
+ *
  * @author Natasha Carter
  *
  */
 public class BreakdownRequestParams extends SpatialSearchRequestParams {
     protected String rank=null;
-    protected String name=null;    
+    protected String name=null;
     protected Integer max = null;
     protected String level=null;
-    
+
     public String toString(){
         StringBuilder req = new StringBuilder(super.toString());
         if(rank != null) req.append("&rank=").append(rank);
@@ -20,7 +20,7 @@ public class BreakdownRequestParams extends SpatialSearchRequestParams {
         if(level != null) req.append("&level=").append(level);
         return req.toString();
     }
-    
+
     /**
      * @return the rank
      */
@@ -47,7 +47,7 @@ public class BreakdownRequestParams extends SpatialSearchRequestParams {
      */
     public void setName(String name) {
         this.name = name;
-    }   
+    }
 
     /**
      * @return the max

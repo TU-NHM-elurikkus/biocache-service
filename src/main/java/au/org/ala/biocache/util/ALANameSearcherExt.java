@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * Some additional methods that should be moved to ALANameSearcher.
- * 
+ *
  * Created by Adam Collins on 22/09/15.
  */
 public class ALANameSearcherExt extends ALANameSearcher {
@@ -58,12 +58,12 @@ public class ALANameSearcherExt extends ALANameSearcher {
         }
         return vernIdxSearcher;
     }
-    
+
     /**
      * get IndexSearcher from nameIndex to avoid reloading index
      *
      * one of: cbSearcher, vernSercher, idSearcher, irmngSearcher
-     *  
+     *
      * @param searcher
      * @return
      */
@@ -73,7 +73,7 @@ public class ALANameSearcherExt extends ALANameSearcher {
             field.setAccessible(true);
             IndexSearcher value = (IndexSearcher) field.get(this);
             field.setAccessible(false);
-            
+
             return value;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -139,7 +139,7 @@ public class ALANameSearcherExt extends ALANameSearcher {
             }
         }
     }
-    
+
     private Query buildAutocompleteQuery(String field, String q, boolean allSearches) {
         //best match
         Query fq1 = new TermQuery(new Term(field,q));  //exact match

@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -53,21 +53,21 @@ public enum OccurrenceSource {
         range = r;
         displayName = d;
     }
-    
+
     public String getRange(){
         return range;
     }
-    
+
     public String getDisplayName(){
         return displayName;
     }
-    
+
     public static OccurrenceSource getForDisplayName(String name){
         if(StringUtils.isBlank(name))
             return null;
         return displayNameLookup.get(name.toLowerCase());
     }
-    
+
     public static OccurrenceSource getForRange(String range){
         if(StringUtils.isBlank(range))
             return null;

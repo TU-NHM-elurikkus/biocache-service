@@ -196,7 +196,7 @@ public class WMSController {
         //simplify wkt
         String wkt = requestParams.getWkt();
         if (wkt != null && wkt.length() > 0) {
-            //TODO: Is this too slow? Do not want to send large WKT to SOLR. 
+            //TODO: Is this too slow? Do not want to send large WKT to SOLR.
             wkt = fixWkt(wkt);
 
             if (wkt == null) {
@@ -2072,7 +2072,7 @@ public class WMSController {
         String qfull = qparam + StringUtils.join(requestParams.getFq(), ",") + requestParams.getQc() +
                 requestParams.getWkt() + requestParams.getRadius() + requestParams.getLat() + requestParams.getLon();
 
-        //qfull can be long if there is WKT 
+        //qfull can be long if there is WKT
         String q = String.valueOf(qfull.hashCode());
 
         //grid and -1 colour modes have the same data
@@ -2148,7 +2148,7 @@ public class WMSController {
                 return wco;
             }
 
-            // when there is only one colour, return the result for colourMode=="-1" 
+            // when there is only one colour, return the result for colourMode=="-1"
             if ((colours == null || colours.size() == 1) && !cm.equals("-1")) {
                 String prevColourMode = vars.colourMode;
                 vars.colourMode = "-1";

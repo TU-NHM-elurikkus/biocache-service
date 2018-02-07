@@ -44,10 +44,10 @@ import java.util.Set;
 /**
  * A Controller for downloading records based on queries.  This controller
  * will provide methods for offline asynchronous downloads of large result sets.
- * <ul> 
+ * <ul>
  * <li> persistent queue to contain the offline downloads. - written to filesystem before emailing to supplied user </li>
  * <li> administering the queue - changing order, removing items from queue </li>
- * </ul> 
+ * </ul>
  * @author Natasha Carter (natasha.carter@csiro.au)
  */
 @Controller

@@ -1,12 +1,12 @@
 /**************************************************************************
  *  Copyright (C) 2010 Atlas of Living Australia
  *  All Rights Reserved.
- * 
+ *
  *  The contents of this file are subject to the Mozilla Public
  *  License Version 1.1 (the "License"); you may not use this file
  *  except in compliance with the License. You may obtain a copy of
  *  the License at http://www.mozilla.org/MPL/
- * 
+ *
  *  Software distributed under the License is distributed on an "AS
  *  IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  *  implied. See the License for the specific language governing
@@ -34,48 +34,48 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A queue that stores the Downloads as JSON files in the supplied directory
- * 
+ *
  * @author Natasha Carter (natasha.carter@csiro.au)
  */
 @Component("persistentQueueDao")
 public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
-	
+
     /** log4 j logger */
     private static final Logger logger = Logger.getLogger(JsonPersistentQueueDAOImpl.class);
-    
+
     @Value("${download.cache.dir:/data/cache/downloads}")
     protected String cacheDirectory="/data/cache/downloads";
-    
+
     private static final String FILE_PREFIX = "offline";
 
     @Value("${download.dir:/data/biocache-download}")
     protected String biocacheDownloadDir;
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
-    
+
     private final Queue<DownloadDetailsDTO> offlineDownloadList = new LinkedBlockingQueue<>();
 
     private final Object listLock = new Object();
 
     /**
      * Start closed and wait until the {@link #init()} method completes to accept downloads.<br>
-     * Otherwise there is the chance that they will be clobbered or fail to be added correctly by the "forceMkdir" code 
+     * Otherwise there is the chance that they will be clobbered or fail to be added correctly by the "forceMkdir" code
      * or the refresh that clears the queue and refreshes it from the JSON files on disk.<br>
      * Can also be closed by a call to the {@link #shutdown()} method.
      */
     private final AtomicBoolean closed = new AtomicBoolean(true);
-    
+
     /**
      * Ensures initialisation is only attempted once, to avoid clobbering the queue by a reinitialisation.
      */
     private final AtomicBoolean initialised = new AtomicBoolean(false);
-    
+
     /**
-     * A latch that is released once initialisation completes, to enable the off-thread 
+     * A latch that is released once initialisation completes, to enable the off-thread
      * initialisation to occur completely before servicing queries.
      */
     private final CountDownLatch initialisationLatch = new CountDownLatch(1);
-    
+
     /**
      * Call this method at the start of web service calls that require initialisation to be complete before continuing.
      * This blocks until it is either interrupted or the initialisation thread from {@link #init()} is finished (successful or not).
@@ -87,7 +87,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
             Thread.currentThread().interrupt();
         }
     }
-    
+
     @PostConstruct
     @Override
     public void init() {
@@ -100,15 +100,15 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
                     try {
                         synchronized (listLock) {
                             jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                
+
                             File file = new File(cacheDirectory);
                             try {
                                 FileUtils.forceMkdir(file);
                             } catch (IOException e) {
                                 logger.error("Unable to construct cache directory.", e);
                             }
-                
-                            // IMPORTANT: must set closed to false before calling refreshFromPersistent, 
+
+                            // IMPORTANT: must set closed to false before calling refreshFromPersistent,
                             // to avoid refresh adding downloads to queue when we are closed
                             closed.set(false);
                             refreshFromPersistent();
@@ -179,7 +179,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
                 }
             }
         }
-        
+
         //if we reached here all of the downloads have started or there are no downloads on the list
         return null;
     }
@@ -209,7 +209,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
         //if we reached here all of the downloads have started or there are no downloads on the list
         return null;
     }
-    
+
     /**
      * @see au.org.ala.biocache.dao.PersistentQueueDAO#getTotalDownloads()
      */
@@ -220,7 +220,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
             return offlineDownloadList.size();
         }
     }
-    
+
     /**
      * @see au.org.ala.biocache.dao.PersistentQueueDAO#removeDownloadFromQueue(au.org.ala.biocache.dto.DownloadDetailsDTO)
      */
@@ -241,9 +241,9 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
                 offlineDownloadList.remove(download);
             }
         }
-        
+
     }
-    
+
     /**
      * @see au.org.ala.biocache.dao.PersistentQueueDAO#getAllDownloads()
      */
@@ -255,7 +255,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
             return Collections.unmodifiableList(result);
         }
     }
-    
+
     /**
      * @see au.org.ala.biocache.dao.PersistentQueueDAO#refreshFromPersistent()
      */
@@ -274,14 +274,14 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
                             return (int) (((File) o1).lastModified() - ((File) o2).lastModified());
                         }
                     });
-    
+
                     //value = jsonMapper.readValue(file, ParamsCacheObject.class);
                     for (File f : files) {
                         if (f.isFile()) {
                             try {
                                 DownloadDetailsDTO dd = jsonMapper.readValue(f, DownloadDetailsDTO.class);
-                                // Ensure that previously partially downloaded files get their downloads 
-                                // reattempted by making them available for download again and removing 
+                                // Ensure that previously partially downloaded files get their downloads
+                                // reattempted by making them available for download again and removing
                                 // any partial files that already exist for it
                                 String previousFileLocation = dd.getFileLocation();
                                 dd.setFileLocation(null);
@@ -320,7 +320,7 @@ public class JsonPersistentQueueDAOImpl implements PersistentQueueDAO {
         //if we reached here it was not found
         return null;
     }
-    
+
     @Override
     public void shutdown() {
         closed.set(true);
