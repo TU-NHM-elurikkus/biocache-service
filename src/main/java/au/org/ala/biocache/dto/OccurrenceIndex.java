@@ -91,6 +91,9 @@ public class OccurrenceIndex {
     @Field("user_assertions") String hasUserAssertions;
     @Field("species_group") String[] speciesGroups;
     @Field("individual_count") String individualCount;
+    @Field("sex") String sex;
+    @Field("life_stage") String lifeStage;
+    @Field("behavior") String behavior;
     @Field("image_url") String image;
     @Field("all_image_url") String[] images;
     @Field("geospatial_kosher") String geospatialKosher;
@@ -266,6 +269,9 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "user_assertions", hasUserAssertions);
         addToMapIfNotNull(map, "species_group", arrToString(speciesGroups));
         addToMapIfNotNull(map, "individual_count", individualCount);
+        addToMapIfNotNull(map, "sex", sex);
+        addToMapIfNotNull(map, "life_stage", lifeStage);
+        addToMapIfNotNull(map, "behavior", behavior);
         addToMapIfNotNull(map, "image_url", image);
         addToMapIfNotNull(map, "geospatial_kosher", geospatialKosher);
         addToMapIfNotNull(map, "taxonomic_kosher", taxonomicKosher);
@@ -349,6 +355,9 @@ public class OccurrenceIndex {
         map.put("user_assertions", "hasUserAssertions");
         map.put("species_group", "speciesGroups");
         map.put("individual_count", "individualCount");
+        map.put("sex", "sex");
+        map.put("life_stage", "lifeStage");
+        map.put("behavior", "behavior");
         map.put("image_url", "image");
         map.put("geospatial_kosher", "geospatialKosher");
         map.put("taxonomic_kosher", "taxonomicKosher");
@@ -835,6 +844,30 @@ public class OccurrenceIndex {
 
     public void setIndividualCount(String individualCount) {
         this.individualCount = individualCount;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setLifeStage(String lifeStage) {
+        this.lifeStage = lifeStage;
+    }
+
+    public String getLifeStage() {
+        return lifeStage;
+    }
+
+    public void setBehavior(String behavior) {
+        this.behavior = behavior;
+    }
+
+    public String getBehavior() {
+        return behavior;
     }
 
     public String getImage() {
