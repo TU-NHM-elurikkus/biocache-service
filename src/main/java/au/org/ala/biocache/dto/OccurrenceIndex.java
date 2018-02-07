@@ -152,97 +152,101 @@ public class OccurrenceIndex {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public String[] getImageUrls(){
+    public String[] getImageUrls() {
         return imageUrls;
     }
 
-    public String getLargeImageUrl(){
+    public String getLargeImageUrl() {
         return largeImageUrl;
     }
 
-    public void setImageUrls(String[] urls){
+    public void setImageUrls(String[] urls) {
         this.imageUrls = urls;
     }
 
-    public String getSmallImageUrl(){
+    public String getSmallImageUrl() {
         return smallImageUrl;
     }
 
-    public String getThumbnailUrl(){
+    public String getThumbnailUrl() {
         return thumbnailUrl;
     }
 
-    private void addToMapIfNotNull(Map<String,String> map, String key, String value){
-        if(value != null && value != ""){
-            map.put(key,value);
+    private void addToMapIfNotNull(Map<String, String> map, String key, String value) {
+        if (value != null && value != "") {
+            map.put(key, value);
         }
     }
 
-    private String safeDblToString(Double d){
-        if(d != null) return d.toString();
+    private String safeDblToString(Double d) {
+        if (d != null) {
+            return d.toString();
+        }
         return null;
     }
 
-    private String safeIntToString(Integer d){
-        if(d != null) return d.toString();
+    private String safeIntToString(Integer d) {
+        if (d != null) {
+            return d.toString();
+        }
         return null;
     }
 
-    private String arrToString(String[] arr){
-        try{
-            if(arr != null) {
+    private String arrToString(String[] arr) {
+        try {
+            if (arr != null) {
                 ObjectMapper o = new ObjectMapper();
                 return o.writeValueAsString(arr);
             }
-        } catch (Exception e) {}
+        } catch (Exception e) { }
         return null;
     }
 
     @JsonIgnore
-    public Map<String,String> toMap() {
+    public Map<String, String> toMap() {
         String sdate = null;
-        if(eventDate != null) {
+        if (eventDate != null) {
             sdate = DateFormatUtils.format(eventDate, "yyyy-MM-dd");
         }
         String sdateEnd = null;
-        if(eventDateEnd != null) {
+        if (eventDateEnd != null) {
             sdate = DateFormatUtils.format(eventDateEnd, "yyyy-MM-dd");
         }
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String, String> map = new HashMap<String, String>();
         addToMapIfNotNull(map, "id", uuid);
-        addToMapIfNotNull(map, "occurrence_id",occurrenceID);
-        addToMapIfNotNull(map, "data_hub_uid",arrToString(dataHubUid));
-        addToMapIfNotNull(map, "data_hub" ,dataHub);
+        addToMapIfNotNull(map, "occurrence_id", occurrenceID);
+        addToMapIfNotNull(map, "data_hub_uid", arrToString(dataHubUid));
+        addToMapIfNotNull(map, "data_hub", dataHub);
         addToMapIfNotNull(map, "institution_uid", institutionUid);
         addToMapIfNotNull(map, "institution_code", raw_institutionCode);
         addToMapIfNotNull(map, "institution_name", institutionName);
         addToMapIfNotNull(map, "collection_uid", collectionUid);
         addToMapIfNotNull(map, "collection_code", raw_collectionCode);
-        addToMapIfNotNull(map, "collection_name",collectionName);
-        addToMapIfNotNull(map, "catalogue_number",raw_catalogNumber);
-        addToMapIfNotNull(map, "taxon_concept_lsid",taxonConceptID);
+        addToMapIfNotNull(map, "collection_name", collectionName);
+        addToMapIfNotNull(map, "catalogue_number", raw_catalogNumber);
+        addToMapIfNotNull(map, "taxon_concept_lsid", taxonConceptID);
         addToMapIfNotNull(map, "occurrence_date", sdate);
         addToMapIfNotNull(map, "occurrence_date_end_dt", sdateEnd);
-        addToMapIfNotNull(map, "taxon_name",scientificName);
-        addToMapIfNotNull(map, "common_name",vernacularName);
-        addToMapIfNotNull(map, "rank",taxonRank);
-        addToMapIfNotNull(map, "rank_id",safeIntToString(taxonRankID));
+        addToMapIfNotNull(map, "taxon_name", scientificName);
+        addToMapIfNotNull(map, "common_name", vernacularName);
+        addToMapIfNotNull(map, "rank", taxonRank);
+        addToMapIfNotNull(map, "rank_id", safeIntToString(taxonRankID));
         addToMapIfNotNull(map, "country_code", raw_countryCode);
         addToMapIfNotNull(map, "country", country);
         addToMapIfNotNull(map, "county", county);
         addToMapIfNotNull(map, "municipality", municipality);
         addToMapIfNotNull(map, "locality", locality);
-        addToMapIfNotNull(map, "kingdom",kingdom);
+        addToMapIfNotNull(map, "kingdom", kingdom);
         addToMapIfNotNull(map, "phylum", phylum);
         addToMapIfNotNull(map, "class", classs);
         addToMapIfNotNull(map, "order", order);
         addToMapIfNotNull(map, "family", family);
-        addToMapIfNotNull(map, "genus",genus);
-        addToMapIfNotNull(map, "genus_guid",genusGuid);
+        addToMapIfNotNull(map, "genus", genus);
+        addToMapIfNotNull(map, "genus_guid", genusGuid);
         addToMapIfNotNull(map, "species", species);
         addToMapIfNotNull(map, "species_guid", speciesGuid);
         addToMapIfNotNull(map, "subspecies", subspecies);
@@ -297,38 +301,38 @@ public class OccurrenceIndex {
     }
 
     @JsonIgnore
-    public Map<String,String> indexToJsonMap() {
-        Map<String,String> map = new HashMap<String,String>();
+    public Map<String, String> indexToJsonMap() {
+        Map<String, String> map = new HashMap<String, String>();
         map.put("id", "uuid");
         map.put("occurrence_id", "occurrenceID");
-        map.put("data_hub_uid","dataHubUid");
-        map.put("data_hub" ,"dataHub");
+        map.put("data_hub_uid", "dataHubUid");
+        map.put("data_hub", "dataHub");
         map.put("institution_uid", "institutionUid");
         map.put("institution_code", "raw_institutionCode");
         map.put("institution_name", "institutionName");
         map.put("collection_uid", "collectionUid");
         map.put("collection_code", "raw_collectionCode");
-        map.put("collection_name","collectionName");
-        map.put("catalogue_number","raw_catalogNumber");
-        map.put("taxon_concept_lsid","taxonConceptID");
+        map.put("collection_name", "collectionName");
+        map.put("catalogue_number", "raw_catalogNumber");
+        map.put("taxon_concept_lsid", "taxonConceptID");
         map.put("occurrence_date", "eventDate");
         map.put("occurrence_date_end_dt", "eventDateEnd");
-        map.put("taxon_name","scientificName");
-        map.put("common_name","vernacularName");
-        map.put("rank","taxonRank");
-        map.put("rank_id","taxonRankID");
+        map.put("taxon_name", "scientificName");
+        map.put("common_name", "vernacularName");
+        map.put("rank", "taxonRank");
+        map.put("rank_id", "taxonRankID");
         map.put("country_code", "raw_countryCode");
         map.put("country", "country");
         map.put("county", "county");
         map.put("municipality", "municipality");
         map.put("locality", "locality");
-        map.put("kingdom","kingdom");
+        map.put("kingdom", "kingdom");
         map.put("phylum", "phylum");
         map.put("class", "classs");
-        map.put("order","order");
-        map.put("family","family");
-        map.put("genus","genus");
-        map.put("genus_guid","genusGuid");
+        map.put("order", "order");
+        map.put("family", "family");
+        map.put("genus", "genus");
+        map.put("genus_guid", "genusGuid");
         map.put("species", "species");
         map.put("species_guid", "speciesGuid");
         map.put("subspecies", "subspecies");
@@ -337,12 +341,12 @@ public class OccurrenceIndex {
         map.put("latitude", "decimalLatitude");
         map.put("longitude", "decimalLongitude");
         map.put("year", "year");
-        map.put("month","month");
+        map.put("month", "month");
         map.put("basis_of_record", "basisOfRecord");
         map.put("type_status", "typeStatus");
         map.put("location_remarks", "raw_locationRemarks");
         map.put("occurrence_remarks", "raw_occurrenceRemarks");
-        map.put("lft","left");
+        map.put("lft", "left");
         map.put("rgt", "right");
         map.put("ibra", "ibra");
         map.put("imcra", "imcra");
@@ -373,8 +377,8 @@ public class OccurrenceIndex {
         map.put("point-0.0001", "point00001");
         map.put("names_and_lsid", "namesLsid");
         map.put("multimedia", "multimedia");
-        map.put("collector","collector");
-        map.put("collectors","collectors");
+        map.put("collector", "collector");
+        map.put("collectors", "collectors");
         map.put("record_number", "recordNumber");
         map.put("occurrence_details", "occurrenceDetails");
         map.put("rights", "rights");
@@ -542,11 +546,11 @@ public class OccurrenceIndex {
         this.raw_countryCode = raw_countryCode;
     }
 
-    public String getCountry(){
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country){
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -878,11 +882,11 @@ public class OccurrenceIndex {
         this.image = image;
     }
 
-    public String[] getImages(){
+    public String[] getImages() {
         return images;
     }
 
-    public void setImages(String[] images){
+    public void setImages(String[] images) {
         this.images = images;
     }
 
