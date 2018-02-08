@@ -91,7 +91,7 @@ public class OccurrenceIndex {
     @Field("user_assertions") String hasUserAssertions;
     @Field("species_group") String[] speciesGroups;
     @Field("individual_count") String individualCount;
-    @Field("sex") String sex;
+    @Field("raw_sex") String sex;
     @Field("life_stage") String lifeStage;
     @Field("behavior") String behavior;
     @Field("image_url") String image;
@@ -273,7 +273,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "user_assertions", hasUserAssertions);
         addToMapIfNotNull(map, "species_group", arrToString(speciesGroups));
         addToMapIfNotNull(map, "individual_count", individualCount);
-        addToMapIfNotNull(map, "sex", sex);
+        addToMapIfNotNull(map, "raw_sex", sex);
         addToMapIfNotNull(map, "life_stage", lifeStage);
         addToMapIfNotNull(map, "behavior", behavior);
         addToMapIfNotNull(map, "image_url", image);
@@ -359,7 +359,7 @@ public class OccurrenceIndex {
         map.put("user_assertions", "hasUserAssertions");
         map.put("species_group", "speciesGroups");
         map.put("individual_count", "individualCount");
-        map.put("sex", "sex");
+        map.put("raw_sex", "sex");
         map.put("life_stage", "lifeStage");
         map.put("behavior", "behavior");
         map.put("image_url", "image");
