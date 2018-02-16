@@ -14,16 +14,16 @@
  ***************************************************************************/
 package au.org.ala.biocache.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.beans.Field;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.beans.Field;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * A DTO representing an result from the search indexes.
@@ -100,6 +100,7 @@ public class OccurrenceIndex {
     @Field("taxonomic_kosher") String taxonomicKosher;
     @Field("collector") String collector;
     @Field("collectors") String[] collectors;
+    @Field("species_list_uid") String[] speciesListUid;
     //extra raw record fields
     @Field("raw_taxon_name") String raw_scientificName;
     @Field("raw_basis_of_record") String raw_basisOfRecord;
@@ -293,6 +294,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "multimedia", arrToString(multimedia));
         addToMapIfNotNull(map, "collector", collector);
         addToMapIfNotNull(map, "collectors", arrToString(collectors));
+        addToMapIfNotNull(map, "species_list_uid", arrToString(speciesListUid));
         addToMapIfNotNull(map, "record_number", recordNumber);
         addToMapIfNotNull(map, "occurrence_details", occurrenceDetails);
         addToMapIfNotNull(map, "rights", rights);
@@ -379,6 +381,7 @@ public class OccurrenceIndex {
         map.put("multimedia", "multimedia");
         map.put("collector", "collector");
         map.put("collectors", "collectors");
+        map.put("species_list_uid", "speciesListUid");
         map.put("record_number", "recordNumber");
         map.put("occurrence_details", "occurrenceDetails");
         map.put("rights", "rights");
@@ -1052,6 +1055,15 @@ public class OccurrenceIndex {
      */
     public void setCollectors(String[] collectors) {
         this.collectors = collectors;
+    }
+
+
+    public String[] getSpeciesListUid() {
+        return speciesListUid;
+    }
+
+    public void setSpeciesListUid(String[] speciesListUid) {
+        this.speciesListUid = speciesListUid;
     }
 
     /**
