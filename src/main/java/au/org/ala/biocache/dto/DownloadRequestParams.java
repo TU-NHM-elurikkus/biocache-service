@@ -15,9 +15,9 @@
 
 package au.org.ala.biocache.dto;
 
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import org.springframework.beans.factory.annotation.Value;
 
 import au.org.ala.biocache.validate.LogType;
 
