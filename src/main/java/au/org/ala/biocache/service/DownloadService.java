@@ -621,9 +621,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                     }
                 }
 
-                logger.warn(fieldsRequested);
-                logger.warn(headerOutput);
-
                 if (fieldsRequested != null && headerOutput != null) {
                     // ignore first fieldsRequested and headerOutput record
                     for (int i = 1; i < fieldsRequested.length; i++) {

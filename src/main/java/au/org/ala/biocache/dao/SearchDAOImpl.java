@@ -3235,15 +3235,15 @@ public class SearchDAOImpl implements SearchDAO {
 
     /**
      * Gets the details about the SOLR fields using the LukeRequestHandler:
-     * See http://wiki.apache.org/solr/LukeRequestHandler  for more information
+     * See http://wiki.apache.org/solr/LukeRequestHandler for more information
      */
-    public Set<IndexFieldDTO> getIndexFieldDetails(String... fields) throws Exception{
+    public Set<IndexFieldDTO> getIndexFieldDetails(String... fields) throws Exception {
         ModifiableSolrParams params = new ModifiableSolrParams();
         params.set("qt", "/admin/luke");
 
         params.set("tr", "luke.xsl");
         if(fields != null){
-            params.set("fl" ,fields);
+            params.set("fl", fields);
             params.set("numTerms", "1");
         }
         else {
@@ -3325,7 +3325,7 @@ public class SearchDAOImpl implements SearchDAO {
     }
 
     @Override
-    public Set<IndexFieldDTO> getIndexedFields() throws Exception{
+    public Set<IndexFieldDTO> getIndexedFields() throws Exception {
         return getIndexedFields(false);
     }
 
