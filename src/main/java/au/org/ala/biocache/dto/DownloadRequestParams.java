@@ -15,10 +15,12 @@
 
 package au.org.ala.biocache.dto;
 
-import au.org.ala.biocache.validate.LogType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import au.org.ala.biocache.validate.LogType;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Data Transfer Object to represent the request parameters required to download
@@ -32,13 +34,16 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     protected String reason = "";
     protected String file = "data";
     /** CSV list of fields that should be downloaded.  If el or cl will need to map to appropriate column name */
-    protected String fields = "uuid,catalogNumber,taxonConceptID.p,scientificName,vernacularName,scientificName.p,taxonRank.p,"+
-    "vernacularName.p,kingdom.p,phylum.p,classs.p,order.p,family.p,genus.p,species.p,subspecies.p,institutionCode,collectionCode" +
-    ",locality,decimalLatitude,decimalLongitude,geodeticDatum,decimalLatitude.p,decimalLongitude.p,coordinateUncertaintyInMeters.p,country.p,cl1048,cl21,stateProvince.p," +
-    "cl959,minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p,maximumDepthInMeters.p,recordedBy,year.p,month.p," +
-    "eventDate.p,basisOfRecord,basisOfRecord.p,sex,outlierForLayers.p," +
-    "taxonomicIssue.p,geospatiallyKosher";
+    protected String fields = "uuid,catalogNumber,taxonConceptID.p,scientificName,vernacularName,scientificName.p," +
+    "taxonRank.p,vernacularName.p,kingdom.p,phylum.p,classs.p,order.p,family.p,genus.p,species.p,subspecies.p," +
+    "institutionCode,collectionCode,locality,decimalLatitude,decimalLongitude,geodeticDatum,decimalLatitude.p," +
+    "decimalLongitude.p,coordinateUncertaintyInMeters.p,country.p,stateProvince.p," +
+    "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p,maximumDepthInMeters.p," +
+    "recordedBy,year.p,month.p,eventDate.p,basisOfRecord,basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p," +
+    "geospatiallyKosher";
+
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
+    @Value("${download.extra.fields: ''}")
     protected String extra = "";
     /** the CSV list of issue types to include in the download, defaults to all. Also supports none. */
     protected String qa="all";
