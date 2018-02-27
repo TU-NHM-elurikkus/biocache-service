@@ -20,7 +20,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import au.org.ala.biocache.validate.LogType;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Data Transfer Object to represent the request parameters required to download
@@ -40,10 +39,10 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     "decimalLongitude.p,coordinateUncertaintyInMeters.p,country.p,stateProvince.p," +
     "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p,maximumDepthInMeters.p," +
     "recordedBy,year.p,month.p,eventDate.p,basisOfRecord,basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p," +
-    "geospatiallyKosher";
+    "geospatiallyKosher,cl1007,cl1012,sex,behavior,life_stage";
 
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
-    @Value("${download.extra.fields:cl1007,cl1012,sex,behavior,life_stage}")
+    @Value("${download.extra.fields}")
     protected String extra = "";
     /** the CSV list of issue types to include in the download, defaults to all. Also supports none. */
     protected String qa="all";
