@@ -43,7 +43,7 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     "geospatiallyKosher";
 
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
-    @Value("${download.extra.fields: ''}")
+    @Value("${download.extra.fields:cl1007,cl1012,sex,behavior,life_stage}")
     protected String extra = "";
     /** the CSV list of issue types to include in the download, defaults to all. Also supports none. */
     protected String qa="all";
