@@ -26,7 +26,7 @@ import java.util.*;
 
 /**
  * Stores the download fields whose values can be overridden in
- * a properties file.  Sourced from layers-service and message.properties
+ * a properties file. Sourced from layers-service and message.properties
  *
  * @author "Natasha Carter <Natasha.Carter@csiro.au>"
  */

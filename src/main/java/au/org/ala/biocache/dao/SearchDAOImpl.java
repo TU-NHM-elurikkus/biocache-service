@@ -890,17 +890,17 @@ public class SearchDAOImpl implements SearchDAO {
             if (downloadFields == null) {
                 //default to include everything
                 java.util.List<String> mappedNames = new java.util.LinkedList<String>();
-                for (int i = 0; i < requestedFields.length; i++) mappedNames.add(requestedFields[i]);
+                for (int i = 0; i < requestedFields.length; i++) {
+                    mappedNames.add(requestedFields[i]);
+                }
 
                 indexedFields = new List[]{mappedNames, new java.util.LinkedList<String>(), mappedNames, mappedNames};
             } else {
                 indexedFields = downloadFields.getIndexFields(requestedFields, downloadParams.getDwcHeaders());
             }
-            if(logger.isDebugEnabled()) {
-                logger.debug("Fields included in download: " +indexedFields[0]);
-                logger.debug("Fields excluded from download: "+indexedFields[1]);
-                logger.debug("The headers in downloads: "+indexedFields[2]);
-            }
+            logger.debug("Fields included in download: " + indexedFields[0]);
+            logger.debug("Fields excluded from download: " + indexedFields[1]);
+            logger.debug("The headers in downloads: " + indexedFields[2]);
 
             //set the fields to the ones that are available in the index
             String[] fields = indexedFields[0].toArray(new String[]{});
