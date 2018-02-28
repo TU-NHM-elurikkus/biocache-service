@@ -13,7 +13,7 @@
     <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
         <param name="File" value="${catalina.base}/logs/biocache-service.log"/>
         <param name="Append" value="true"/>
-        <param name="Threshold" value="ERROR"/>
+        <param name="Threshold" value="DEBUG"/>
         <param name="MaxFileSize" value="200MB"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d [%c{5}] %m%n"/>
@@ -81,7 +81,7 @@
         <priority value="ERROR"/>
     </category>
     <root>
-        <priority value ="INFO" />
+        <priority value ="DEBUG" />
         <!-- <appender-ref ref="CONSOLE"/> -->
         <appender-ref ref="FILE"/>
         <appender-ref ref="ASYNC" />

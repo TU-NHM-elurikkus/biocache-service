@@ -42,10 +42,10 @@ public class DownloadFields {
     public DownloadFields(Set<IndexFieldDTO> indexFields, AbstractMessageSource messageSource){
         this.messageSource = messageSource;
 
-        //initialise the properties
+        // initialise the properties
         try {
             indexFieldMaps = new TreeMap<String,IndexFieldDTO>();
-            for(IndexFieldDTO field: indexFields){
+            for(IndexFieldDTO field: indexFields) {
                 indexFieldMaps.put(field.getName(), field);
             }
 
@@ -56,7 +56,7 @@ public class DownloadFields {
     }
 
     private void updateLayerNames() {
-        //avoid a delay here
+        // avoid a delay here
         Thread t = new Thread() {
             public void run() {
                 Properties newDownloadProperties = new Properties();
@@ -78,10 +78,10 @@ public class DownloadFields {
         };
 
         if (layerProperties == null || layerProperties.size() == 0) {
-            //wait
+            // wait
             t.run();
         } else {
-            //do not wait
+            // do not wait
             t.start();
         }
     }
@@ -137,7 +137,7 @@ public class DownloadFields {
         java.util.List<String> unmappedNames = new java.util.LinkedList<String>();
         java.util.List<String> originalName = new java.util.LinkedList<String>();
         java.util.Map<String, String> storageFieldMap = Store.getStorageFieldMap();
-        for(String value : values){
+        for(String value : values) {
             // check to see if it is the the
             String indexName = storageFieldMap.containsKey(value) ? storageFieldMap.get(value) : value;
             // now check to see if this index field is stored

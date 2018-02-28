@@ -320,9 +320,9 @@ public class SearchDAOImpl implements SearchDAO {
                         dao.init();
                         result = server = dao.solrServer();
                         queryMethod = result instanceof EmbeddedSolrServer? SolrRequest.METHOD.GET:SolrRequest.METHOD.POST;
-                        if(logger.isDebugEnabled()) {
-                            logger.debug("The server " + result.getClass());
-                        }
+
+                        logger.debug("The server " + result.getClass());
+
                         //CAUSING THE HANG....
                         downloadFields = new DownloadFields(getIndexedFields(), messageSource);
                     } catch (Exception ex) {
@@ -337,9 +337,9 @@ public class SearchDAOImpl implements SearchDAO {
     public Set<String> getAuthIndexFields(){
         if(authIndexFields == null){
             //set up the hash set of the fields that need to have the authentication service substitute
-            if(logger.isDebugEnabled()) {
-                logger.debug("Auth substitution fields to use: " + authServiceFields);
-            }
+
+            logger.debug("Auth substitution fields to use: " + authServiceFields);
+
             authIndexFields = new java.util.HashSet<String>();
             CollectionUtils.mergeArrayIntoCollection(authServiceFields.split(","), authIndexFields);
         }
@@ -368,13 +368,13 @@ public class SearchDAOImpl implements SearchDAO {
     public List<FieldResultDTO> getEndemicSpecies(SpatialSearchRequestParams requestParams) throws Exception{
         ExecutorService nextExecutor = getEndemicThreadPoolExecutor();
         // 1)get a list of species that are in the WKT
-        if(logger.isDebugEnabled()) {
-            logger.debug("Starting to get Endemic Species...");
-        }
+
+        logger.debug("Starting to get Endemic Species...");
+
         List<FieldResultDTO> list1 = getValuesForFacet(requestParams);//new ArrayList(Arrays.asList(getValuesForFacets(requestParams)));
-        if(logger.isDebugEnabled()) {
-            logger.debug("Retrieved species within area...(" + list1.size() + ")");
-        }
+
+        logger.debug("Retrieved species within area...(" + list1.size() + ")");
+
         // 2)get a list of species that occur in the inverse WKT
 
         String reverseQuery = SpatialUtils.getWKTQuery(spatialField, requestParams.getWkt(), true);//"-geohash:\"Intersects(" +wkt + ")\"";
@@ -536,9 +536,7 @@ public class SearchDAOImpl implements SearchDAO {
                 }
             }
         }
-        if(logger.isDebugEnabled()) {
-            logger.debug("Determined final endemic list (" + list1.size() + ")...");
-        }
+        logger.debug("Determined final endemic list (" + list1.size() + ")...");
         return list1;
     }
 
@@ -636,14 +634,12 @@ public class SearchDAOImpl implements SearchDAO {
     public int writeSpeciesCountByCircleToStream(SpatialSearchRequestParams searchParams, String speciesGroup, ServletOutputStream out) throws Exception {
 
         //get the species counts:
-        if(logger.isDebugEnabled()) {
-            logger.debug("Writing CSV file for species count by circle");
-        }
+        logger.debug("Writing CSV file for species count by circle");
+
         searchParams.setPageSize(-1);
         List<TaxaCountDTO> species = findAllSpeciesByCircleAreaAndHigherTaxa(searchParams, speciesGroup);
-        if(logger.isDebugEnabled()) {
-            logger.debug("There are " + species.size() + "records being downloaded");
-        }
+        logger.debug("There are " + species.size() + "records being downloaded");
+
         try(CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(new CloseShieldOutputStream(out), StandardCharsets.UTF_8), '\t', '"');) {
             csvWriter.writeNext(new String[]{
                         "Taxon ID",
@@ -697,9 +693,8 @@ public class SearchDAOImpl implements SearchDAO {
         boolean shouldLookup = lookupName && (searchParams.getFacets()[0].contains("_guid")||searchParams.getFacets()[0].contains("_lsid"));
 
         QueryResponse qr = runSolrQuery(solrQuery, searchParams);
-        if(logger.isDebugEnabled()) {
-            logger.debug("Retrieved facet results from server...");
-        }
+        logger.debug("Retrieved facet results from server...");
+
         if (qr.getResults().getNumFound() > 0) {
             FacetField ff = qr.getFacetField(searchParams.getFacets()[0]);
 
@@ -1674,7 +1669,7 @@ public class SearchDAOImpl implements SearchDAO {
                     map.put(name, limit);
             }
         }
-        if(logger.isDebugEnabled() && map.size()>0) {
+        if(map.size()>0) {
             logger.debug("Downloading with the following limits: " + map);
         }
     }
@@ -1856,9 +1851,7 @@ public class SearchDAOImpl implements SearchDAO {
                                 }
                             }
                         } catch (Exception e) {
-                            if(logger.isDebugEnabled()) {
-                                logger.debug(e.getMessage(),e);
-                            }
+                            logger.debug(e.getMessage(), e);
                         }
                     }
 
@@ -1944,9 +1937,8 @@ public class SearchDAOImpl implements SearchDAO {
         // format query so lsid searches are properly escaped, etc
         formatSearchQuery(requestParams);
         String queryString = buildSpatialQueryString(requestParams);
-        if(logger.isDebugEnabled()) {
-            logger.debug("The species count query " + queryString);
-        }
+        logger.debug("The species count query " + queryString);
+
         List<String> fqList = new ArrayList<String>();
         //only add the FQ's if they are not the default values
         if(requestParams.getFq().length>0 && (requestParams.getFq()[0]).length()>0){
@@ -1991,9 +1983,8 @@ public class SearchDAOImpl implements SearchDAO {
      * Calculates the breakdown of the supplied query based on the supplied params
      */
     public TaxaRankCountDTO calculateBreakdown(BreakdownRequestParams queryParams) throws Exception {
-        if(logger.isDebugEnabled()) {
-            logger.debug("Attempting to find the counts for " + queryParams);
-        }
+        logger.debug("Attempting to find the counts for " + queryParams);
+
         TaxaRankCountDTO trDTO = null;
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQueryType("standard");
@@ -2168,9 +2159,8 @@ public class SearchDAOImpl implements SearchDAO {
                 }
                 String[] parts = fq.split(":", 2); // separate query field from query text
                 if(parts.length>1){
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("fq split into: " + parts.length + " parts: " + parts[0] + " & " + parts[1]);
-                    }
+                    logger.debug("fq split into: " + parts.length + " parts: " + parts[0] + " & " + parts[1]);
+
                     String prefix = null;
                     String suffix = null;
                     // don't escape range or '(multiple terms)' queries
@@ -2217,9 +2207,8 @@ public class SearchDAOImpl implements SearchDAO {
         solrQuery.setRows(requestParams.getPageSize());
         solrQuery.setStart(requestParams.getStart());
         solrQuery.setSortField(requestParams.getSort(), ORDER.valueOf(requestParams.getDir()));
-        if(logger.isDebugEnabled()) {
-            logger.debug("runSolrQuery: " + solrQuery.toString());
-        }
+        logger.debug("runSolrQuery: " + solrQuery.toString());
+
         QueryResponse qr = query(solrQuery, queryMethod); // can throw exception
         if(logger.isDebugEnabled()) {
             logger.debug("runSolrQuery: " + solrQuery.toString() + " qtime:" + qr.getQTime());
@@ -2707,9 +2696,9 @@ public class SearchDAOImpl implements SearchDAO {
                 queryString.setLength(0);
                 while (matcher.find()) {
                     String value = matcher.group();
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("escaping lsid urns  " + value );
-                    }
+
+                    logger.debug("escaping lsid urns  " + value );
+
                     matcher.appendReplacement(queryString,prepareSolrStringForReplacement(value));
                 }
                 matcher.appendTail(queryString);
@@ -2721,10 +2710,8 @@ public class SearchDAOImpl implements SearchDAO {
                 queryString.setLength(0);
                 while (matcher.find()) {
                     String value = matcher.group();
+                    logger.debug("escaping lsid http uris  " + value );
 
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("escaping lsid http uris  " + value );
-                    }
                     matcher.appendReplacement(queryString,prepareSolrStringForReplacement(value));
                 }
                 matcher.appendTail(queryString);
@@ -2736,9 +2723,8 @@ public class SearchDAOImpl implements SearchDAO {
                 if(matcher.find()){
                     String spatial = matcher.group();
                     SpatialSearchRequestParams subQuery = new SpatialSearchRequestParams();
-                    if(logger.isDebugEnabled()) {
-                        logger.debug("region Start : " + matcher.regionStart() + " start :  "+ matcher.start() + " spatial length " + spatial.length() + " query length " + query.length());
-                    }
+                    logger.debug("region Start : " + matcher.regionStart() + " start :  "+ matcher.start() + " spatial length " + spatial.length() + " query length " + query.length());
+
                     //format the search query of the remaining text only
                     subQuery.setQ(query.substring(matcher.start() + spatial.length(), query.length()));
                     //format the remaining query
@@ -2824,10 +2810,9 @@ public class SearchDAOImpl implements SearchDAO {
                 displayString = formatDisplayStringWithI18n(displayString);
 
                 searchParams.setFormattedQuery(queryString.toString());
-                if(logger.isDebugEnabled()) {
-                    logger.debug("formattedQuery = " + queryString);
-                    logger.debug("displayString = " + displayString);
-                }
+                logger.debug("formattedQuery = " + queryString);
+                logger.debug("displayString = " + displayString);
+
                 searchParams.setDisplayString(displayString);
             }
 
@@ -2902,9 +2887,8 @@ public class SearchDAOImpl implements SearchDAO {
             return formatted;
 
         } catch (Exception e){
-            if(logger.isDebugEnabled()) {
-                logger.debug(e.getMessage(), e);
-            }
+            logger.debug(e.getMessage(), e);
+
             return displayText;
         }
     }
@@ -3065,9 +3049,8 @@ public class SearchDAOImpl implements SearchDAO {
                         details = new StatsIndexFieldDTO(stats.get(field), type);
                         rangeFieldCache.put(field, details);
                     } else {
-                        if(logger.isDebugEnabled()) {
-                            logger.debug("Unable to locate field:  " + field);
-                        }
+                        logger.debug("Unable to locate field:  " + field);
+
                         return null;
                     }
                 }
@@ -3109,17 +3092,15 @@ public class SearchDAOImpl implements SearchDAO {
         solrQuery.setFacetSort(sortField);
         for (String facet : facetFields) {
             solrQuery.addFacetField(facet);
-            if(logger.isDebugEnabled()) {
-                logger.debug("adding facetField: " + facet);
-            }
+            logger.debug("adding facetField: " + facet);
+
         }
         //set the facet starting point based on the paging information
         solrQuery.setFacetMinCount(1);
         solrQuery.setFacetLimit(pageSize); // unlimited = -1 | pageSize
         solrQuery.add("facet.offset", Integer.toString(startIndex));
-        if(logger.isDebugEnabled()) {
-            logger.debug("getSpeciesCount query :" + solrQuery.getQuery());
-        }
+        logger.debug("getSpeciesCount query :" + solrQuery.getQuery());
+
         QueryResponse qr = runSolrQuery(solrQuery, null, 1, 0, "score", sortDirection);
         if(logger.isInfoEnabled()) {
             logger.info("SOLR query: " + solrQuery.getQuery() + "; total hits: " + qr.getResults().getNumFound());
@@ -3128,9 +3109,8 @@ public class SearchDAOImpl implements SearchDAO {
         java.util.regex.Pattern p = java.util.regex.Pattern.compile("\\|");
 
         if (facets != null && facets.size() > 0) {
-            if(logger.isDebugEnabled()) {
-                logger.debug("Facets: " + facets.size() + "; facet #1: " + facets.get(0).getName());
-            }
+            logger.debug("Facets: " + facets.size() + "; facet #1: " + facets.get(0).getName());
+
             for (FacetField facet : facets) {
                 List<FacetField.Count> facetEntries = facet.getValues();
                 if ((facetEntries != null) && (facetEntries.size() > 0)) {
@@ -3152,9 +3132,8 @@ public class SearchDAOImpl implements SearchDAO {
                                         tcDTO.setRank(searchUtils.getTaxonSearch(tcDTO.getGuid())[1].split(":")[0]);
                                 }
                             } else {
-                                if(logger.isDebugEnabled()) {
-                                    logger.debug("The values length: " + values.length + " :" + name);
-                                }
+                                logger.debug("The values length: " + values.length + " :" + name);
+
                                 tcDTO = new TaxaCountDTO(name, fcount.getCount());
                             }
                             //speciesCounts.add(i, tcDTO);
@@ -3176,9 +3155,8 @@ public class SearchDAOImpl implements SearchDAO {
                                         tcDTO.setRank(searchUtils.getTaxonSearch(tcDTO.getGuid())[1].split(":")[0]);
                                 }
                             } else {
-                                if(logger.isDebugEnabled()) {
-                                    logger.debug("The values length: " + values.length + " :" + name);
-                                }
+                                logger.debug("The values length: " + values.length + " :" + name);
+
                                 tcDTO = new TaxaCountDTO(name, fcount.getCount());
                             }
                             //speciesCounts.add(i, tcDTO);
@@ -3591,9 +3569,9 @@ public class SearchDAOImpl implements SearchDAO {
                 solrQuery.setGetFieldStatistics(field);
             }
             QueryResponse qr = runSolrQuery(solrQuery, searchParams);
-            if(logger.isDebugEnabled()) {
-                logger.debug(qr.getFieldStatsInfo());
-            }
+
+            logger.debug(qr.getFieldStatsInfo());
+
             return qr.getFieldStatsInfo();
 
         } catch (SolrServerException ex) {
@@ -3749,9 +3727,9 @@ public class SearchDAOImpl implements SearchDAO {
         //add the context information
         List<String> facetFields = new ArrayList<String>();
         facetFields.add(NAMES_AND_LSID);
-        if(logger.isDebugEnabled()) {
-            logger.debug("The species count query " + requestParams.getFormattedQuery());
-        }
+
+        logger.debug("The species count query " + requestParams.getFormattedQuery());
+
         List<String> fqList = new ArrayList<String>();
         //only add the FQ's if they are not the default values
         if(requestParams.getFq().length>0 && (requestParams.getFq()[0]).length()>0) {
@@ -3804,9 +3782,9 @@ public class SearchDAOImpl implements SearchDAO {
             if(lsid != null && count!= null)
                 counts.put(lsid,  count);
         }
-        if(logger.isDebugEnabled()) {
-            logger.debug(facetQueries);
-        }
+
+        logger.debug(facetQueries);
+
         return counts;
     }
 
