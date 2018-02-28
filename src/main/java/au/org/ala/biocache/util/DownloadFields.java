@@ -110,7 +110,7 @@ public class DownloadFields {
      * @param value
      * @return
      */
-    private String generateTitle(String value, boolean useSuffix){
+    private String generateTitle(String value, boolean useSuffix) {
         String suffix = "";
         if(value.endsWith(".p")){
             suffix = " - Processed";
@@ -138,9 +138,9 @@ public class DownloadFields {
         java.util.List<String> originalName = new java.util.LinkedList<String>();
         java.util.Map<String, String> storageFieldMap = Store.getStorageFieldMap();
         for(String value : values){
-            //check to see if it is the the
+            // check to see if it is the the
             String indexName = storageFieldMap.containsKey(value) ? storageFieldMap.get(value) : value;
-            //now check to see if this index field is stored
+            // now check to see if this index field is stored
             IndexFieldDTO field = indexFieldMaps.get(indexName);
             if((field != null && field.isStored()) || value.startsWith("sensitive")){
                 mappedNames.add(indexName);

@@ -39,19 +39,19 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     "decimalLongitude.p,coordinateUncertaintyInMeters.p,country.p,stateProvince.p," +
     "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p,maximumDepthInMeters.p," +
     "recordedBy,year.p,month.p,eventDate.p,basisOfRecord,basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p," +
-    "geospatiallyKosher,cl1007,cl1012,sex,behavior,lifeStage";
+    "geospatiallyKosher,cl1007,cl1012,sex,behavior,life_stage";
 
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
     @Value("${download.extra.fields}")
     protected String extra = "";
     /** the CSV list of issue types to include in the download, defaults to all. Also supports none. */
-    protected String qa="all";
+    protected String qa = "all";
     /** The CSV separator to use */
-    protected Character sep=',';
-    /** The CSV escape character to use*/
-    protected Character esc='"';
+    protected Character sep = ',';
+    /** The CSV escape character to use */
+    protected Character esc = '"';
     /** The header is to use darwin core headers (from messages.properties) */
-    protected Boolean dwcHeaders=false;
+    protected Boolean dwcHeaders = false;
     /** Include all available misc fields. For Cassandra downloads only. */
     protected Boolean includeMisc = false;
 
@@ -61,7 +61,7 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     protected Integer sourceTypeId = null;
     //The file type for the download file."shp" or "csv"
     @Pattern(regexp="(csv|shp|tsv)")
-    protected String fileType="csv";
+    protected String fileType = "csv";
 
     /**
      * Custom toString method to produce a String to be used as the request parameters
