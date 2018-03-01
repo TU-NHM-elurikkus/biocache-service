@@ -81,7 +81,7 @@ public class SpatialUtils {
                 text = newOne.toText();
 
                 //The WKTWriter used to create the text from the geometry places extra spaces between coordinates and between the type
-                //System.out.println(newOne.toText());
+                //logger.debug(newOne.toText());
 
             }
             return text.replaceAll("POLYGON ","POLYGON").replaceAll("MULTIPOLYGON ", "MULTIPOLYGON").replaceAll(", ",",");//.replaceAll(" ", ":");
@@ -94,16 +94,16 @@ public class SpatialUtils {
   }
 
   public static void main(String[] args){
-      System.out.println(getInverseWKT("POLYGON((140 -37,151 -37,151 -26, 140.1310 -26, 140 -37))"));
-      System.out.println(convertToDegrees(5f));
-      System.out.println(convertToDegrees(1f));
-      System.out.println(convertToDegrees(10f));
-      System.out.println(degreesLatPerKm(-37, 140));
+      logger.debug(getInverseWKT("POLYGON((140 -37,151 -37,151 -26, 140.1310 -26, 140 -37))"));
+      logger.debug(convertToDegrees(5f));
+      logger.debug(convertToDegrees(1f));
+      logger.debug(convertToDegrees(10f));
+      logger.debug(degreesLatPerKm(-37, 140));
       String wkt ="GEOMETRYCOLLECTION(POLYGON((142.79455566406 -33.134332591089,143.03076171875 -33.134332591089,143.03076171875 -32.940923212969,142.79455566406 -32.940923212969,142.79455566406 -33.134332591089)),MULTIPOLYGON(((143.96459960936 -32.763258819119,144.28320312499 -32.763258819119,144.28320312499 -32.494938181635,143.96459960936 -32.494938181635,143.96459960936 -32.763258819119)),((144.15136718749 -31.881290617098,144.53588867187 -31.881290617098,144.53588867187 -31.58228046593,144.15136718749 -31.58228046593,144.15136718749 -31.881290617098))))";
                              //MULTIPOLYGON (((142.79455566406 -33.134332591089,142.79455566406 -32.940923212969,143.03076171875 -32.940923212969,143.03076171875 -33.134332591089, 142.79455566406 -33.134332591089)),            ((143.96459960936 -32.763258819119,143.96459960936 -32.494938181635, 144.28320312499 -32.494938181635, 144.28320312499 -32.763258819119, 143.96459960936 -32.763258819119)), ((144.15136718749 -31.881290617098, 144.15136718749 -31.58228046593, 144.53588867187 -31.58228046593, 144.53588867187 -31.881290617098, 144.15136718749 -31.881290617098)))
-      System.out.println(getWKTQuery("geohash", wkt, false));
-      System.out.println(getWKTQuery("geohash", wkt, true));
-      System.out.println(getInverseWKT(wkt));
+      logger.debug(getWKTQuery("geohash", wkt, false));
+      logger.debug(getWKTQuery("geohash", wkt, true));
+      logger.debug(getInverseWKT(wkt));
 
   }
 

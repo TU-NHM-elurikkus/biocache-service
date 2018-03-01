@@ -34,12 +34,14 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
     protected String file = "data";
     /** CSV list of fields that should be downloaded.  If el or cl will need to map to appropriate column name */
     protected String fields = "uuid,catalogNumber,taxonConceptID.p,scientificName,vernacularName,scientificName.p," +
-    "taxonRank.p,vernacularName.p,kingdom.p,phylum.p,classs.p,order.p,family.p,genus.p,species.p,subspecies.p," +
-    "institutionCode,collectionCode,locality,decimalLatitude,decimalLongitude,geodeticDatum,decimalLatitude.p," +
-    "decimalLongitude.p,coordinateUncertaintyInMeters.p,country.p,stateProvince.p," +
-    "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p,maximumDepthInMeters.p," +
-    "recordedBy,year.p,month.p,eventDate.p,basisOfRecord,basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p," +
-    "geospatiallyKosher,cl1007,cl1012,sex,behavior,life_stage";
+                              "taxonRank.p,vernacularName.p,kingdom.p,phylum.p,classs.p,order.p,family.p,genus.p," +
+                              "species.p,subspecies.p,institutionCode,collectionCode,locality,decimalLatitude," +
+                              "decimalLongitude,geodeticDatum,decimalLatitude.p,decimalLongitude.p," +
+                              "coordinateUncertaintyInMeters.p,country.p,stateProvince.p," +
+                              "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p," +
+                              "maximumDepthInMeters.p,recordedBy,year.p,month.p,eventDate.p,basisOfRecord," +
+                              "basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p,geospatiallyKosher,cl1007,cl1012," +
+                              "sex,behavior,life_stage";
 
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
     @Value("${download.extra.fields}")

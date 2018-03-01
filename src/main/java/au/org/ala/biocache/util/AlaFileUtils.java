@@ -117,11 +117,11 @@ public class AlaFileUtils {
     }
 //
 //    public static void main(String[] args){
-//        System.out.println(reduceNameByVowels("zeroCoordinates", 10));
-//        System.out.println(reduceNameByVowels("unknownCountry", 10));
-//        System.out.println(reduceNameByVowels("resourceTaxonomicScopeMismatch", 10));
+//        logger.debug(reduceNameByVowels("zeroCoordinates", 10));
+//        logger.debug(reduceNameByVowels("unknownCountry", 10));
+//        logger.debug(reduceNameByVowels("resourceTaxonomicScopeMismatch", 10));
 //        String[] header = new String[]{"zeroCoordinates","resourceTaxonomicScopeMismatch","unknownCountry", "unknownCountryOrState","zeroCoordinates"};
-//        System.out.println(generateShapeHeader(header));
+//        logger.debug(generateShapeHeader(header));
 //    }
 
     /**

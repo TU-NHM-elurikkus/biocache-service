@@ -146,7 +146,6 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
             try{
                 //String jsonString="";
                 Map searchDTOList = restTemplate.postForObject(url, guids, Map.class);
-                //System.out.println(test);
                 results = (List<Map<String,String>>)searchDTOList.get("searchDTOList");
             } catch (Exception ex) {
                 logger.error("Requested URI: " + url);
@@ -308,14 +307,14 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
     }
 
     @Override
-    public String[] getHeaderDetails(String field,boolean includeCounts, boolean includeSynonyms){
-        if(baseHeader == null){
+    public String[] getHeaderDetails(String field,boolean includeCounts, boolean includeSynonyms) {
+        if(baseHeader == null) {
             //initialise all the headers
             initHeaders();
         }
         String[] startArray = baseHeader;
-        if(includeCounts){
-            if(includeSynonyms){
+        if(includeCounts) {
+            if(includeSynonyms) {
                 startArray = countSynonymHeader;
             } else{
                 startArray = countBaseHeader;
@@ -323,7 +322,7 @@ public class SpeciesLookupRestService implements SpeciesLookupService {
         } else if(includeSynonyms){
             startArray = synonymHeader;
         }
-        return (String[])ArrayUtils.add(startArray, 0, messageSource.getMessage("facet."+field, null, field,null));
+        return (String[])ArrayUtils.add(startArray, 0, messageSource.getMessage("facet." + field, null, field,null));
     }
 
     /**
