@@ -194,20 +194,20 @@ public class HeatMap {
      */
     private BufferedImage doColorize() {
 
-        //System.out.println("doColorize()");
+        logger.debug("doColorize()");
         int[] image_bytes = colorImage.getRGB(0, 0, colorImage.getWidth(), colorImage.getHeight(), null, 0, colorImage.getWidth());
 
         int[] image_bytes2 = monochromeImage.getRGB(0, 0, monochromeImage.getWidth(), monochromeImage.getHeight(), null, 0, monochromeImage.getWidth());
 
-        //System.out.println("imagebytes.1: " + image_bytes.length);
-        //System.out.println("imagebytes.2: " + image_bytes2.length);
+        logger.debug("imagebytes.1: " + image_bytes.length);
+        logger.debug("imagebytes.2: " + image_bytes2.length);
 
         for (int i = 0; i < image_bytes2.length; i++) {
             //System.out.print(image_bytes2[i] + " --> ");
             int pos = image_bytes2[i] & 0x000000ff;
             //System.out.print("at " + pos * 2 + " ==> ");
             image_bytes2[i] = image_bytes[pos * 2] & 0x99ffffff;
-            //System.out.println(image_bytes2[i]);
+            logger.debug(image_bytes2[i]);
         }
 
         /* write bytes to image */
@@ -260,17 +260,17 @@ public class HeatMap {
      */
     private Point translate(double x, double y) {
         try {
-            //System.out.println("translating: " + x + ", " + y);
+            logger.debug("translating: " + x + ", " + y);
             // normalize points into range (0 - 1)...
             x = (x - minX) / (maxX - minX);
             y = (y - minY) / (maxY - minY);
 
-            //System.out.println("normalised: " + x + ", " + y);
+            logger.debug("normalised: " + x + ", " + y);
             // ...and the map into our image size...
             x = (x * backgroundImage.getWidth());
             y = ((1 - y) * backgroundImage.getHeight());
 
-            //System.out.println("pixeled: " + x + ", " + y);
+            logger.debug("pixeled: " + x + ", " + y);
             return new Point(new Double(x).intValue(), new Double(y).intValue());
         } catch (Exception e) {
             logger.error("Exception with translating " + e.getMessage(), e);
@@ -310,7 +310,7 @@ public class HeatMap {
                         //
                         //rgba = (((short)rgba) & 0x000000ff) << 24;
                         rgba = (rgba) | (rgba << 8) | (rgba << 16) | 0xff000000;
-                        //System.out.println("rgba: " + Integer.toHexString(rgba));
+                        logger.debug("rgba: " + Integer.toHexString(rgba));
 
                         monochromeImage.setRGB(mi, mj, rgba);
                     }
@@ -332,9 +332,6 @@ public class HeatMap {
 
         int width = backgroundImage.getWidth();
         int height = backgroundImage.getHeight();
-        //System.out.println("bounding box: " + minX + "," + minY + "," + maxX + "," + maxY);
-        //System.out.println("Adding " + (v.length / 2) + " points to base image...");
-        //System.out.println("Adding to base image...");
         int dPoints[][] = new int[width][height];
         for (int i = 0; i < points.length; i += 2) {
             double cx = points[i];

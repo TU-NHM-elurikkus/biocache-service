@@ -33,9 +33,8 @@ public class PagingTest extends TestCase {
             int counter = 0;
 
             public boolean consume(FullRecord fullrecord) {
-                //System.out.println("GUID: "+ fullrecord.getO().getUuid());
                 counter++;
-                if(counter>10){
+                if(counter > 10){
                     return false;
                 }
                 return true;

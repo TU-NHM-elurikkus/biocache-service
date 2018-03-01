@@ -129,7 +129,7 @@ public class DownloadFields {
      * @param values
      * @return
      */
-    public List<String>[] getIndexFields(String[] values, boolean dwcHeaders){
+    public List<String>[] getIndexFields(String[] values, boolean dwcHeaders) {
         updateLayerNames();
 
         java.util.List<String> mappedNames = new java.util.LinkedList<String>();
@@ -137,12 +137,13 @@ public class DownloadFields {
         java.util.List<String> unmappedNames = new java.util.LinkedList<String>();
         java.util.List<String> originalName = new java.util.LinkedList<String>();
         java.util.Map<String, String> storageFieldMap = Store.getStorageFieldMap();
+
         for(String value : values) {
             // check to see if it is the the
-            String indexName = storageFieldMap.containsKey(value) ? storageFieldMap.get(value) : value;
+            String indexName = storageFieldMap.get(value) != null ? storageFieldMap.get(value) : value;
             // now check to see if this index field is stored
             IndexFieldDTO field = indexFieldMaps.get(indexName);
-            if((field != null && field.isStored()) || value.startsWith("sensitive")){
+            if((field != null && field.isStored()) || value.startsWith("sensitive")) {
                 mappedNames.add(indexName);
                 //only dwcHeader lookup is permitted when dwcHeaders == true
                 String v = dwcHeaders ? value : layerProperties.getProperty(value, messageSource.getMessage(value, null, generateTitle(value, true), Locale.getDefault()));
@@ -153,6 +154,6 @@ public class DownloadFields {
                 unmappedNames.add(indexName);
             }
         }
-        return new List[]{mappedNames,unmappedNames,headers,originalName};
+        return new List[]{mappedNames, unmappedNames, headers, originalName};
     }
 }

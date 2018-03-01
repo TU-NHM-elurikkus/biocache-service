@@ -783,7 +783,7 @@ class UploaderThread implements Runnable {
             //write the data to DB
             Integer percentComplete  = 0;
             while((currentLine = csvData.readNext()) != null){
-                //System.out.println("######## loading line: " + counter);
+                logger.debug("######## loading line: " + counter);
                 counter++;
                 addRecord(tempUid, datasetName, currentLine, headers, intList, floatList, stringList, dateList);
                 if(counter % 100 == 0){

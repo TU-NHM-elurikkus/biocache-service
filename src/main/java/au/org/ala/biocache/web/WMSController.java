@@ -2478,7 +2478,7 @@ public class WMSController {
                     y = (int) ((convertLatToPixel(lat) - pbbox[3]) * height_mult);
                 }
 
-                //System.out.println("Drawing an oval.....");
+                logger.debug("Drawing an oval.....");
                 imgObj.g.fillOval(x - vars.size, y - vars.size, pointWidth, pointWidth);
                 if (outlinePoints) {
                     imgObj.g.setPaint(oColour);

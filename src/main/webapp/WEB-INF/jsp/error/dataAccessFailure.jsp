@@ -63,7 +63,7 @@
                     Cookie[] cookies = request.getCookies();
                     if (cookies != null) {
                     for (int i = 0; i < cookies.length; i++) {
-                            //System.out.println(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
+                            logger.debug(cookies[i].getName() + "=[" + cookies[i].getValue() + "]");
                             }
                     }
 

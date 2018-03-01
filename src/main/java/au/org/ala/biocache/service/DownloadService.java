@@ -352,14 +352,13 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
      * @throws Exception
      */
     public void writeQueryToStream(DownloadDetailsDTO dd, DownloadRequestParams requestParams, String ip,
-            OutputStream out, boolean includeSensitive, boolean fromIndex, boolean limit, boolean zip)
-            throws Exception {
+                                   OutputStream out, boolean includeSensitive, boolean fromIndex, boolean limit,
+                                   boolean zip) throws Exception {
         afterInitialisation();
 
         String filename = requestParams.getFile();
         String originalParams = requestParams.toString();
-        // Use a zip output stream to include the data and citation together in
-        // the download
+        // Use a zip output stream to include the data and citation together in the download
         try(OptionalZipOutputStream sp = new OptionalZipOutputStream(
                 zip ? OptionalZipOutputStream.Type.zipped : OptionalZipOutputStream.Type.unzipped, new CloseShieldOutputStream(out));) {
             String suffix = requestParams.getFileType().equals("shp") ? "zip" : requestParams.getFileType();
@@ -460,9 +459,7 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                 }
                 sp.closeEntry();
             } else {
-                if(logger.isDebugEnabled()) {
-                    logger.debug("Not adding header. Enabled: " + headingsEnabled + " uids: " + uidStats);
-                }
+                logger.debug("Not adding header. Enabled: " + headingsEnabled + " uids: " + uidStats);
             }
 
             sp.flush();
@@ -594,7 +591,6 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
         if (headingsEnabled) {
             afterInitialisation();
             if (out == null) {
-                // throw new NullPointerException("keys and/or out is null!!");
                 logger.error("Unable to generate headings info: out is null!!");
                 return;
             }
@@ -613,51 +609,52 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                 String[] fieldsRequested = null;
                 String[] headerOutput = null;
                 for (Map.Entry<String, AtomicInteger> e : uidStats.entrySet()) {
-                    if (e.getValue().get() == -1) {
+                    int aNumber = e.getValue().get();
+                    if (aNumber == -1) {
                         // String fields requested
                         fieldsRequested = e.getKey().split(",");
-                    } else if (e.getValue().get() == -2) {
+                    } else if (aNumber == -2) {
                         headerOutput = e.getKey().split(",");
                     }
                 }
 
                 if (fieldsRequested != null && headerOutput != null) {
+                    logger.debug("fieldsRequested: " + String.join(",", fieldsRequested));
+                    logger.debug("headerOutput: " + String.join(",", headerOutput));
                     // ignore first fieldsRequested and headerOutput record
-                    for (int i = 1; i < fieldsRequested.length; i++) {
 
-                        // find indexedField by download name
+                    for (int i = 1; i < fieldsRequested.length; i++) {
+                        String requestedField = fieldsRequested[i];
+
                         IndexFieldDTO ifdto = null;
                         for (IndexFieldDTO f : indexedFields) {
                             // find a matching field
-                            if (fieldsRequested[i].equalsIgnoreCase(f.getDownloadName())) {
+                            if(requestedField.equalsIgnoreCase(f.getDownloadName())) {
+                                ifdto = f;
+                                break;
+                            } else if (requestedField.equalsIgnoreCase(f.getName())) {
                                 ifdto = f;
                                 break;
                             }
                         }
-                        // find indexedField by field name
-                        if (ifdto == null) {
-                            for (IndexFieldDTO f : indexedFields) {
-                                // find a matching field
-                                if (fieldsRequested[i].equalsIgnoreCase(f.getName())) {
-                                    ifdto = f;
-                                    break;
-                                }
-                            }
-                        }
 
                         if (ifdto != null) {
-                            writer.writeNext(new String[] { headerOutput[i], fieldsRequested[i],
-                                    ifdto.getDwcTerm() != null ? ifdto.getDwcTerm() : "",
-                                    ifdto.getName() != null ? ifdto.getName() : "",
-                                    ifdto.getDescription() != null ? ifdto.getDescription() : "",
-                                    ifdto.getDownloadName() != null ? ifdto.getDownloadName() : "",
-                                    ifdto.getDownloadDescription() != null ? ifdto.getDownloadDescription() : "",
-                                    ifdto.getInfo() != null ? ifdto.getInfo() : "" });
+                            writer.writeNext(new String[] {
+                                headerOutput[i],
+                                requestedField,
+                                ifdto.getDwcTerm() != null ? ifdto.getDwcTerm() : "",
+                                ifdto.getName() != null ? ifdto.getName() : "",
+                                ifdto.getDescription() != null ? ifdto.getDescription() : "",
+                                ifdto.getDownloadName() != null ? ifdto.getDownloadName() : "",
+                                ifdto.getDownloadDescription() != null ? ifdto.getDownloadDescription() : "",
+                                ifdto.getInfo() != null ? ifdto.getInfo() : ""
+                            });
                         } else {
                             // others, e.g. assertions
-                            String info = messageSource.getMessage("description." + fieldsRequested[i], null, "", null);
-                            writer.writeNext(new String[] { headerOutput[i], fieldsRequested[i], "", "", "", "", "",
-                                    info != null ? info : "" });
+                            String info = messageSource.getMessage("description." + requestedField, null, "", null);
+                            writer.writeNext(new String[] {
+                                headerOutput[i], requestedField, "", "", "", "", "", info != null ? info : ""
+                            });
                         }
                     }
                 }
@@ -665,8 +662,9 @@ public class DownloadService implements ApplicationListener<ContextClosedEvent> 
                 // misc headers
                 if (miscHeaders != null) {
                     for (int i = 0; i < miscHeaders.length; i++) {
-                        writer.writeNext(
-                                new String[] { miscHeaders[i], "", "", "", "", "", "Raw header from data provider." });
+                        writer.writeNext(new String[] {
+                            miscHeaders[i], "", "", "", "", "", "Raw header from data provider."
+                        });
                     }
                 }
 

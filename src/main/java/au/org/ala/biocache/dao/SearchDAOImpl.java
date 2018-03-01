@@ -106,10 +106,10 @@ public class SearchDAOImpl implements SearchDAO {
     public static final String OCCURRENCE_YEAR_INDEX_FIELD = "occurrence_year";
 
     //sensitive fields and their non-sensitive replacements
-    private static final String [] sensitiveCassandraHdr = {"decimalLongitude", "decimalLatitude", "verbatimLocality"};
-    private static final String [] sensitiveSOLRHdr = {"sensitive_longitude","sensitive_latitude","sensitive_locality"};
-    private static final String [] notSensitiveCassandraHdr = {"decimalLongitude.p", "decimalLatitude.p", "locality"};
-    private static final String [] notSensitiveSOLRHdr = {"longitude","latitude","locality"};
+    private static final String[] sensitiveCassandraHdr = {"decimalLongitude", "decimalLatitude", "verbatimLocality"};
+    private static final String[] sensitiveSOLRHdr = {"sensitive_longitude","sensitive_latitude","sensitive_locality"};
+    private static final String[] notSensitiveCassandraHdr = {"decimalLongitude.p", "decimalLatitude.p", "locality"};
+    private static final String[] notSensitiveSOLRHdr = {"longitude","latitude","locality"};
 
     /** SOLR server instance */
     protected volatile SolrServer server;
@@ -405,7 +405,7 @@ public class SearchDAOImpl implements SearchDAO {
             if(localterms ==1)
                 newfq = newfq+ " OR " + newfq; //cater for the situation where there is only one term.  We don't want the term to be escaped again
             localterms=0;
-            //System.out.println("FQ = " + newfq);
+            logger.debug("FQ = " + newfq);
             SpatialSearchRequestParams srp = new SpatialSearchRequestParams();
             BeanUtils.copyProperties(requestParams, srp);
             srp.setFq((String[])ArrayUtils.add(originalFqs, newfq));
@@ -843,8 +843,11 @@ public class SearchDAOImpl implements SearchDAO {
      * @throws Exception
      */
     public ConcurrentMap<String, AtomicInteger> writeResultsFromIndexToStream(final DownloadRequestParams downloadParams,
-                                                                         OutputStream out,
-                                                                         boolean includeSensitive, final DownloadDetailsDTO dd, boolean checkLimit) throws Exception {
+                                                                              OutputStream out,
+                                                                              boolean includeSensitive,
+                                                                              final DownloadDetailsDTO dd,
+                                                                              boolean checkLimit) throws Exception {
+
         ExecutorService nextExecutor = getSolrThreadPoolExecutor();
         long start = System.currentTimeMillis();
         final ConcurrentMap<String, AtomicInteger> uidStats = new ConcurrentHashMap<>();
@@ -871,26 +874,28 @@ public class SearchDAOImpl implements SearchDAO {
             }
 
             StringBuilder sb = new StringBuilder(dFields);
-            if(!downloadParams.getExtra().isEmpty()){
+            if(!downloadParams.getExtra().isEmpty()) {
                 sb.append(",").append(downloadParams.getExtra());
             }
 
             String[] requestedFields = sb.toString().split(",");
             List<String>[] indexedFields;
             if (downloadFields == null) {
-                //default to include everything
+                logger.debug("(downloadFields == null)");
+                // default to include everything
                 java.util.List<String> mappedNames = new java.util.LinkedList<String>();
-                for (int i = 0; i < requestedFields.length; i++) {
-                    mappedNames.add(requestedFields[i]);
+                for (String requestedField : requestedFields) {
+                    mappedNames.add(requestedField);
                 }
 
                 indexedFields = new List[]{mappedNames, new java.util.LinkedList<String>(), mappedNames, mappedNames};
             } else {
+                logger.debug("(downloadFields NOT null)");
                 indexedFields = downloadFields.getIndexFields(requestedFields, downloadParams.getDwcHeaders());
             }
-            logger.debug("Fields included in download: " + indexedFields[0]);
-            logger.debug("Fields excluded from download: " + indexedFields[1]);
-            logger.debug("The headers in downloads: " + indexedFields[2]);
+            logger.debug("Fields included in download: " + String.join(",", indexedFields[0]));
+            logger.debug("Fields excluded from download: " + String.join(",", indexedFields[1]));
+            logger.debug("The headers in downloads: " + String.join(",", indexedFields[2]));
 
             //set the fields to the ones that are available in the index
             String[] fields = indexedFields[0].toArray(new String[]{});
@@ -1404,13 +1409,14 @@ public class SearchDAOImpl implements SearchDAO {
 
                 titles = org.apache.commons.lang3.ArrayUtils.addAll(titles, sensitiveHdr[2].toArray(new String[]{}));
             }
-            String[] header = org.apache.commons.lang3.ArrayUtils.addAll(titles,qaTitles);
+            String[] header = org.apache.commons.lang3.ArrayUtils.addAll(titles, qaTitles);
             //Create the Writer that will be used to format the records
             //construct correct RecordWriter based on the supplied fileType
             final au.org.ala.biocache.RecordWriter rw = downloadParams.getFileType().equals("csv") ?
                     new CSVRecordWriter(out, header, downloadParams.getSep(), downloadParams.getEsc()) :
-                    (downloadParams.getFileType().equals("tsv") ? new TSVRecordWriter(out, header) :
-                            new ShapeFileRecordWriter(tmpShapefileDir, downloadParams.getFile(), out, (String[]) ArrayUtils.addAll(fields, qaFields)));
+                    (downloadParams.getFileType().equals("tsv") ?
+                        new TSVRecordWriter(out, header) :
+                        new ShapeFileRecordWriter(tmpShapefileDir, downloadParams.getFile(), out, (String[]) ArrayUtils.addAll(fields, qaFields)));
 
             try {
                 if(rw instanceof ShapeFileRecordWriter) {
@@ -1502,7 +1508,7 @@ public class SearchDAOImpl implements SearchDAO {
         solrQuery.setRows(limit ? MAX_DOWNLOAD_SIZE : -1);
         formatSearchQuery(downloadParams);
         solrQuery.setQuery(buildSpatialQueryString(downloadParams));
-        //Only the fields specified below will be included in the results from the SOLR Query
+        // Only the fields specified below will be included in the results from the SOLR Query
         solrQuery.setFields("row_key", "institution_uid", "collection_uid", "data_resource_uid", "data_provider_uid");
 
         int pageSize = downloadBatchSize;
@@ -2172,7 +2178,7 @@ public class SearchDAOImpl implements SearchDAO {
                         }
                     }
 
-                    //FIXME check for blank value and replace with constant
+                    // FIXME check for blank value and replace with constant
                     if(StringUtils.isEmpty(suffix)){
                         suffix = "Unknown";
                     }
@@ -2182,7 +2188,7 @@ public class SearchDAOImpl implements SearchDAO {
             }
         }
 
-        //include null facets
+        // include null facets
         solrQuery.setFacetMissing(true);
         solrQuery.setRows(requestParams.getPageSize());
         solrQuery.setStart(requestParams.getStart());
@@ -2192,7 +2198,6 @@ public class SearchDAOImpl implements SearchDAO {
         QueryResponse qr = query(solrQuery, queryMethod); // can throw exception
 
         logger.debug("runSolrQuery: " + solrQuery.toString() + " qtime:" + qr.getQTime());
-        logger.debug("matched records: " + qr.getResults().getNumFound());
 
         return qr;
     }
@@ -2434,7 +2439,7 @@ public class SearchDAOImpl implements SearchDAO {
     }
 
     protected void formatSearchQuery(SpatialSearchRequestParams searchParams) {
-        formatSearchQuery(searchParams,false);
+        formatSearchQuery(searchParams, false);
     }
 
     /**
@@ -2445,7 +2450,7 @@ public class SearchDAOImpl implements SearchDAO {
      * @param searchParams
      */
     public void formatSearchQuery(SpatialSearchRequestParams searchParams, boolean forceQueryFormat) {
-        //Only format the query if it doesn't already supply a formattedQuery.
+        // Only format the query if it doesn't already supply a formattedQuery.
         if(forceQueryFormat || StringUtils.isEmpty(searchParams.getFormattedQuery())){
             // set the query
             String query = searchParams.getQ();
@@ -2818,7 +2823,7 @@ public class SearchDAOImpl implements SearchDAO {
                 } else {
                     i18n = messageSource.getMessage("facet." + matchedIndexTerm, null, matchedIndexTerm, null);
                 }
-                //System.out.println("i18n for " + matchedIndexTerm + " = " + i18n);
+                logger.debug("i18n for " + matchedIndexTerm + " = " + i18n);
                 if (!matchedIndexTerm.equals(i18n)) {
 
                   int nextWhitespace = displayText.substring(mr.end()).indexOf(" ");
@@ -3299,7 +3304,6 @@ public class SearchDAOImpl implements SearchDAO {
      * @return
      */
     private  Set<IndexFieldDTO> parseLukeResponse(String str, boolean includeCounts) {
-
         //update index version
         Pattern indexVersion = Pattern.compile("(?:version=)([0-9]{1,})");
         try {
@@ -3322,9 +3326,9 @@ public class SearchDAOImpl implements SearchDAO {
 
         Map<String, String> indexToJsonMap = new OccurrenceIndex().indexToJsonMap();
 
-        for (String fieldStr : fieldsStr) {
-            if (fieldStr != null && !"".equals(fieldStr)) {
-                String[] fields = includeCounts?fieldStr.split("\\}\\},"):fieldStr.split("\\},");
+        for(String fieldStr : fieldsStr) {
+            if(!StringUtils.isEmpty(fieldStr)) {
+                String[] fields = includeCounts ? fieldStr.split("\\}\\},") : fieldStr.split("\\},");
 
                 for (String field : fields) {
                     formatIndexField(field, null, fieldList, typePattern, schemaPattern, indexToJsonMap, distinctPattern);
@@ -3332,7 +3336,7 @@ public class SearchDAOImpl implements SearchDAO {
             }
         }
 
-        //add CASSANDRA fields that are not indexed
+        // add CASSANDRA fields that are not indexed
         for (String cassandraField : Store.getStorageFieldMap().keySet()) {
             boolean found = false;
             //ignore fields with multiple items
@@ -3357,7 +3361,7 @@ public class SearchDAOImpl implements SearchDAO {
     private void formatIndexField(String indexField, String cassandraField, Set<IndexFieldDTO> fieldList, Pattern typePattern,
                                   Pattern schemaPattern, Map indexToJsonMap, Pattern distinctPattern) {
 
-        if (indexField != null && !"".equals(indexField)) {
+        if(!StringUtils.isEmpty(indexField)) {
             IndexFieldDTO f = new IndexFieldDTO();
 
             String fieldName = indexField.split("=")[0];
