@@ -41,7 +41,7 @@ public class DownloadRequestParams extends SpatialSearchRequestParams {
                               "minimumElevationInMeters.p,maximumElevationInMeters.p,minimumDepthInMeters.p," +
                               "maximumDepthInMeters.p,recordedBy,year.p,month.p,eventDate.p,basisOfRecord," +
                               "basisOfRecord.p,outlierForLayers.p,taxonomicIssue.p,geospatiallyKosher,cl1007,cl1012," +
-                              "sex,behavior,life_stage";
+                              "sex,behavior,life_stage,dynamicProperties";
 
     /** CSV list of extra fields to be added to the download - useful if wish to make use of default list */
     @Value("${download.extra.fields}")
