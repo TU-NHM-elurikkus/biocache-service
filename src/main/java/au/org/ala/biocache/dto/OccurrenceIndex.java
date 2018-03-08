@@ -94,6 +94,7 @@ public class OccurrenceIndex {
     @Field("raw_sex") String sex;
     @Field("life_stage") String lifeStage;
     @Field("behavior") String behavior;
+    @Field("breeding") String breeding;
     @Field("image_url") String image;
     @Field("all_image_url") String[] images;
     @Field("geospatial_kosher") String geospatialKosher;
@@ -277,6 +278,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "raw_sex", sex);
         addToMapIfNotNull(map, "life_stage", lifeStage);
         addToMapIfNotNull(map, "behavior", behavior);
+        addToMapIfNotNull(map, "breeding", breeding);
         addToMapIfNotNull(map, "image_url", image);
         addToMapIfNotNull(map, "geospatial_kosher", geospatialKosher);
         addToMapIfNotNull(map, "taxonomic_kosher", taxonomicKosher);
@@ -364,6 +366,7 @@ public class OccurrenceIndex {
         map.put("raw_sex", "sex");
         map.put("life_stage", "lifeStage");
         map.put("behavior", "behavior");
+        map.put("breeding", "breeding");
         map.put("image_url", "image");
         map.put("geospatial_kosher", "geospatialKosher");
         map.put("taxonomic_kosher", "taxonomicKosher");
@@ -875,6 +878,14 @@ public class OccurrenceIndex {
 
     public String getBehavior() {
         return behavior;
+    }
+
+    public void setBreeding(String breeding) {
+        this.breeding = breeding;
+    }
+
+    public String getBreeding() {
+        return breeding;
     }
 
     public String getImage() {
