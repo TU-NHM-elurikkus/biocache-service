@@ -409,7 +409,9 @@ public class OccurrenceController extends AbstractSecureController {
      * @throws Exception
      */
     @RequestMapping("occurrence/groups")
-    public @ResponseBody List<GroupFacetResultDTO> getOccurrenceGroupDetails(SpatialSearchRequestParams requestParams,
+    public
+    @ResponseBody
+    List<GroupFacetResultDTO> getOccurrenceGroupDetails(SpatialSearchRequestParams requestParams,
                                                         @RequestParam(value = "apiKey", required = true) String apiKey,
                                                         HttpServletResponse response) throws Exception {
         afterInitialisation();
