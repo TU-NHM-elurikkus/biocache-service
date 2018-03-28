@@ -589,7 +589,7 @@ public class SearchDAOImpl implements SearchDAO {
             //add context information
             updateQueryContext(searchParams);
             String queryString = buildSpatialQueryString(searchParams);
-            SolrQuery solrQuery = initSolrQuery(searchParams,true,extraParams); // general search settings
+            SolrQuery solrQuery = initSolrQuery(searchParams, true, extraParams); // general search settings
             solrQuery.setQuery(queryString);
 
             QueryResponse qr = runSolrQuery(solrQuery, searchParams);
@@ -1933,7 +1933,13 @@ public class SearchDAOImpl implements SearchDAO {
         if(requestParams.getFq().length>0 && (requestParams.getFq()[0]).length()>0){
             org.apache.commons.collections.CollectionUtils.addAll(fqList, requestParams.getFq());
         }
-        List<TaxaCountDTO> speciesWithCounts = getSpeciesCounts(queryString, fqList, CollectionUtils.arrayToList(requestParams.getFacets()), requestParams.getPageSize(), requestParams.getStart(), requestParams.getSort(), requestParams.getDir());
+        List<TaxaCountDTO> speciesWithCounts = getSpeciesCounts(queryString,
+                                                                fqList,
+                                                                CollectionUtils.arrayToList(requestParams.getFacets()),
+                                                                requestParams.getPageSize(),
+                                                                requestParams.getStart(),
+                                                                requestParams.getSort(),
+                                                                requestParams.getDir());
 
         return speciesWithCounts;
     }
@@ -2192,7 +2198,10 @@ public class SearchDAOImpl implements SearchDAO {
         solrQuery.setFacetMissing(true);
         solrQuery.setRows(requestParams.getPageSize());
         solrQuery.setStart(requestParams.getStart());
-        solrQuery.setSortField(requestParams.getSort(), ORDER.valueOf(requestParams.getDir()));
+
+        for(String sortField: requestParams.getSort().split(",")) {
+            solrQuery.addSortField(sortField, ORDER.valueOf(requestParams.getDir()));
+        }
         logger.debug("runSolrQuery: " + solrQuery.toString());
 
         QueryResponse qr = query(solrQuery, queryMethod); // can throw exception
@@ -2227,13 +2236,20 @@ public class SearchDAOImpl implements SearchDAO {
         //facet results
         searchResult.setTotalRecords(sdl.getNumFound());
         searchResult.setStartIndex(sdl.getStart());
-        searchResult.setPageSize(solrQuery.getRows()); //pageSize
+        searchResult.setPageSize(solrQuery.getRows()); // pageSize
         searchResult.setStatus("OK");
-        String[] solrSort = StringUtils.split(solrQuery.getSortField(), " "); // e.g. "taxon_name asc"
-        logger.debug("sortField post-split: " + StringUtils.join(solrSort, "|"));
 
-        searchResult.setSort(solrSort[0]); // sortField
-        searchResult.setDir(solrSort[1]); // sortDirection
+        String solrSort = solrQuery.getSortField();
+        String[] solrSorts = StringUtils.split(solrSort, ",");
+        String sortDir = solrSorts[0].split(" ")[1]; // dir is assumed to be the same for all fields
+        if(sortDir == "asc") {
+            solrSort = solrSort.replaceAll(" asc", "");
+        } else {
+            solrSort = solrSort.replaceAll(" desc", "");
+        }
+        searchResult.setSort(solrSort);
+        searchResult.setDir(sortDir);
+
         searchResult.setQuery(params.getUrlParams()); //this needs to be the original URL>>>>
         searchResult.setOccurrences(results);
 
@@ -2243,7 +2259,7 @@ public class SearchDAOImpl implements SearchDAO {
         if(facetQueries != null && !facetQueries.isEmpty()) {
             Map<String, String> rangeMap = rangeBasedFacets.getRangeMap("uncertainty");
             List<FieldResultDTO> fqr = new ArrayList<FieldResultDTO>();
-            for(String value: facetQueries.keySet()){
+            for(String value: facetQueries.keySet()) {
                 if(facetQueries.get(value)>0)
                     fqr.add(new FieldResultDTO(rangeMap.get(value), facetQueries.get(value),value));
             }
