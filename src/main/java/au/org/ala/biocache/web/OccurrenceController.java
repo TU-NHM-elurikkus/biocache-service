@@ -647,7 +647,7 @@ public class OccurrenceController extends AbstractSecureController {
         // handle empty param values, e.g. &sort=&dir=
         SearchUtils.setDefaultParams(requestParams);
         Map<String,String[]> map = request != null ? SearchUtils.getExtraParams(request.getParameterMap()) : null;
-        if(map != null){
+        if(map != null) {
             map.remove("apiKey");
         }
         logger.debug("occurrence search params = " + requestParams + " extra params = " + map);
