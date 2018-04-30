@@ -197,7 +197,7 @@ public class FacetThemes {
                 new Facet("type_status","index",null,null,null),
                 new Facet("multimedia","count",null,null,null),
                 new Facet("collector","index",null,null,null),
-                new Facet("occurrence_status_s","index",null,null,null))
+                new Facet("occurrence_status","index",null,null,null))
         );
 
         allThemes.add(new FacetTheme("Attribution",
