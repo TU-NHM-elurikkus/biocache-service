@@ -4,3 +4,8 @@ biocache-service [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/b
 Occurrence &amp; mapping webservices.
 
 Theses services are documented here http://api.ala.org.au/apps/biocache
+
+Build
+```console
+mvn clean package -am -DskipTests=true
+```
