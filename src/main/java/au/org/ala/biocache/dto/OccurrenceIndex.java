@@ -132,6 +132,7 @@ public class OccurrenceIndex {
     @Field("*_dt") Map<String, Object> miscDateProperties;
 
     @Field("cl1014") String cl1014;
+    @Field("occurrence_status") String occurrenceStatus;
 
     List<Map<String, Object>> imageMetadata;
 
@@ -305,6 +306,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "rights", rights);
         addToMapIfNotNull(map, "photographer_s", photographer);
         addToMapIfNotNull(map, "cl1014", cl1014);
+        addToMapIfNotNull(map, "occurrence_status", occurrenceStatus);
         return map;
     }
 
@@ -394,6 +396,7 @@ public class OccurrenceIndex {
         map.put("rights", "rights");
         map.put("photographer_s", "photographer");
         map.put("cl1014", "cl1014");
+        map.put("occurrence_status", "occurrenceStatus");
         return map;
     }
 
@@ -1184,5 +1187,13 @@ public class OccurrenceIndex {
 
     public String getCl1014() {
         return cl1014;
+    }
+
+    public String getOccurrenceStatus() {
+        return occurrenceStatus;
+    }
+
+    public String setOccurrenceStatus(String occurrenceStatus) {
+        this.occurrenceStatus = occurrenceStatus;
     }
 }
