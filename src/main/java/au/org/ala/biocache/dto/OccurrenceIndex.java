@@ -131,7 +131,7 @@ public class OccurrenceIndex {
     @Field("*_d") Map<String, Object> miscDoubleProperties;
     @Field("*_dt") Map<String, Object> miscDateProperties;
 
-    @Field("cl1014") String cl1014;
+    @Field("cl1008") String cl1008;
     @Field("occurrence_status") String occurrenceStatus;
     @Field("organism_quantity") String organismQuantity;
 
@@ -306,7 +306,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "occurrence_details", occurrenceDetails);
         addToMapIfNotNull(map, "rights", rights);
         addToMapIfNotNull(map, "photographer_s", photographer);
-        addToMapIfNotNull(map, "cl1014", cl1014);
+        addToMapIfNotNull(map, "cl1008", cl1008);
         addToMapIfNotNull(map, "occurrence_status", occurrenceStatus);
         addToMapIfNotNull(map, "organism_quantity", organismQuantity);
         return map;
@@ -397,7 +397,7 @@ public class OccurrenceIndex {
         map.put("occurrence_details", "occurrenceDetails");
         map.put("rights", "rights");
         map.put("photographer_s", "photographer");
-        map.put("cl1014", "cl1014");
+        map.put("cl1008", "cl1008");
         map.put("occurrence_status", "occurrenceStatus");
         map.put("organism_quantity", "organismQuantity");
         return map;
@@ -1184,12 +1184,12 @@ public class OccurrenceIndex {
         this.miscDateProperties = miscDateProperties;
     }
 
-    public void setCl1014(String cl1014) {
-        this.cl1014 = cl1014;
+    public void setCl1008(String cl1008) {
+        this.cl1008 = cl1008;
     }
 
-    public String getCl1014() {
-        return cl1014;
+    public String getCl1008() {
+        return cl1008;
     }
 
     public String getOccurrenceStatus() {
