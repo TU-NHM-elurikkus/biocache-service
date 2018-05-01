@@ -133,6 +133,7 @@ public class OccurrenceIndex {
 
     @Field("cl1014") String cl1014;
     @Field("occurrence_status") String occurrenceStatus;
+    @Field("organism_quantity") String organismQuantity;
 
     List<Map<String, Object>> imageMetadata;
 
@@ -307,6 +308,7 @@ public class OccurrenceIndex {
         addToMapIfNotNull(map, "photographer_s", photographer);
         addToMapIfNotNull(map, "cl1014", cl1014);
         addToMapIfNotNull(map, "occurrence_status", occurrenceStatus);
+        addToMapIfNotNull(map, "organism_quantity", organismQuantity);
         return map;
     }
 
@@ -397,6 +399,7 @@ public class OccurrenceIndex {
         map.put("photographer_s", "photographer");
         map.put("cl1014", "cl1014");
         map.put("occurrence_status", "occurrenceStatus");
+        map.put("organism_quantity", "organismQuantity");
         return map;
     }
 
@@ -1195,5 +1198,13 @@ public class OccurrenceIndex {
 
     public void setOccurrenceStatus(String occurrenceStatus) {
         this.occurrenceStatus = occurrenceStatus;
+    }
+
+    public String getOrganismQuantity() {
+        return organismQuantity;
+    }
+
+    public void setOrganismQuantity(String organismQuantity) {
+        this.organismQuantity = organismQuantity;
     }
 }
