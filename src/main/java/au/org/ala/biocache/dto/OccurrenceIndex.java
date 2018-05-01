@@ -1193,7 +1193,7 @@ public class OccurrenceIndex {
         return occurrenceStatus;
     }
 
-    public String setOccurrenceStatus(String occurrenceStatus) {
+    public void setOccurrenceStatus(String occurrenceStatus) {
         this.occurrenceStatus = occurrenceStatus;
     }
 }
