@@ -1360,7 +1360,7 @@ public class OccurrenceController extends AbstractSecureController {
 
         occ.setUserAssertions(assertionUtils.getUserAssertions(occ));
 
-        //retrieve details of the media files
+        // retrieve details of the media files
         List<MediaDTO> soundDtos = getSoundDtos(occ);
         if(!soundDtos.isEmpty()){
             occ.setSounds(soundDtos);
@@ -1371,7 +1371,7 @@ public class OccurrenceController extends AbstractSecureController {
         String im = request.getParameter("im");
         setupImageUrls(occ, im == null || !im.equalsIgnoreCase("false"));
 
-        //fix media store URLs
+        // fix media store URLs
         Config.mediaStore().convertPathsToUrls(occ.getRaw(), biocacheMediaUrl);
         Config.mediaStore().convertPathsToUrls(occ.getProcessed(), biocacheMediaUrl);
 
@@ -1460,20 +1460,19 @@ public class OccurrenceController extends AbstractSecureController {
             List<MediaDTO> ml = new ArrayList<MediaDTO>();
 
             Map<String, Map> metadata = new HashMap();
-            if (lookupImageMetadata) {
-                try {
-                    String uuid = dto.getProcessed().getUuid();
-                    List<Map<String, Object>> list = imageMetadataService.getImageMetadataForOccurrences(Arrays.asList(new String[]{uuid})).get(uuid);
-                    if (list != null) {
-                        for (Map m : list) {
-                            metadata.put(String.valueOf(m.get("imageId")), m);
-                        }
+            try {
+                String uuid = dto.getProcessed().getUuid();
+                List<Map<String, Object>> list = imageMetadataService.getImageMetadataForOccurrences(Arrays.asList(new String[]{uuid})).get(uuid);
+                if (list != null) {
+                    for (Map m : list) {
+                        metadata.put(String.valueOf(m.get("imageId")), m);
                     }
-                } catch (Exception e) {
                 }
+            } catch (Exception e) {
+                logger.debug("Error getting metadata for uuid: "+ uuid);
             }
 
-            for(String fileNameOrID: images){
+            for(String fileNameOrID: images) {
                 try {
                     MediaDTO m = new MediaDTO();
                     Map<String, String> urls = Config.mediaStore().getImageFormats(fileNameOrID);
