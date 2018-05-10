@@ -1469,7 +1469,6 @@ public class OccurrenceController extends AbstractSecureController {
                     }
                 }
             } catch (Exception e) {
-                logger.debug("Error getting metadata for uuid: "+ uuid);
             }
 
             for(String fileNameOrID: images) {
