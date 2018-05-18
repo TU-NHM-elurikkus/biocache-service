@@ -1360,8 +1360,13 @@ public class OccurrenceController extends AbstractSecureController {
 
         // retrieve details of the media files
         List<MediaDTO> soundDtos = getSoundDtos(occ);
-        if(!soundDtos.isEmpty()){
+        if(!soundDtos.isEmpty()) {
             occ.setSounds(soundDtos);
+        }
+
+        List<MediaDTO> videoDtos = getVideoDtos(occ);
+        if(!videoDtos.isEmpty()) {
+            occ.setVideo(videoDtos);
         }
 
         //ADD THE DIFFERENT IMAGE FORMATS...thumb,small,large,raw
@@ -1480,18 +1485,6 @@ public class OccurrenceController extends AbstractSecureController {
         String[] images = dto.getProcessed().getOccurrence().getImages();
         if(images != null && images.length > 0){
             List<MediaDTO> ml = new ArrayList<MediaDTO>();
-
-            // Map<String, Map> metadata = new HashMap();
-            // try {
-            //     String uuid = dto.getProcessed().getUuid();
-            //     List<Map<String, Object>> list = imageMetadataService.getImageMetadataForOccurrences(Arrays.asList(new String[]{uuid})).get(uuid);
-            //     if (list != null) {
-            //         for (Map m : list) {
-            //             metadata.put(String.valueOf(m.get("imageId")), m);
-            //         }
-            //     }
-            // } catch (Exception e) {
-            // }
 
             for(String fileNameOrID: images) {
                 try {
