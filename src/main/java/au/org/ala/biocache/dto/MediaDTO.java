@@ -29,7 +29,7 @@ public class MediaDTO {
     protected String metadataUrl;
     protected Map metadata;
 
-    protected Map<String,String> alternativeFormats = new HashMap<String,String>();
+    protected Map<String, String> alternativeFormats = new HashMap<String, String>();
 
     public Map<String, String> getAlternativeFormats() {
         return alternativeFormats;
