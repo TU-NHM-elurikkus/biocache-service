@@ -1366,7 +1366,7 @@ public class OccurrenceController extends AbstractSecureController {
 
         List<MediaDTO> videoDtos = getVideoDtos(occ);
         if(!videoDtos.isEmpty()) {
-            occ.setVideo(videoDtos);
+            occ.setVideos(videoDtos);
         }
 
         //ADD THE DIFFERENT IMAGE FORMATS...thumb,small,large,raw
