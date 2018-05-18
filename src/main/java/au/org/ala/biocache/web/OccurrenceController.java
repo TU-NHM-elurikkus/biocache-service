@@ -617,7 +617,7 @@ public class OccurrenceController extends AbstractSecureController {
         }
 
         //searchUtils.updateSpatial(requestParams);
-        searchResult = searchDAO.findByFulltextSpatialQuery(requestParams,null);
+        searchResult = searchDAO.findByFulltextSpatialQuery(requestParams, null);
         model.addAttribute("searchResult", searchResult);
 
         if(logger.isDebugEnabled()){
@@ -653,22 +653,22 @@ public class OccurrenceController extends AbstractSecureController {
         logger.debug("occurrence search params = " + requestParams + " extra params = " + map);
 
         SearchResultDTO srtdto = null;
-        if(apiKey == null){
+        if(apiKey == null) {
             srtdto = searchDAO.findByFulltextSpatialQuery(requestParams, map);
         } else {
             srtdto = occurrenceSearchSensitive(requestParams, apiKey, request, response);
         }
 
-        if(srtdto.getTotalRecords() > 0 && lookupImageMetadata){
+        if(srtdto.getTotalRecords() > 0 && lookupImageMetadata) {
             //use the image service API & grab the list of IDs
             List<String> occurrenceIDs = new ArrayList<String>();
-            for(OccurrenceIndex oi : srtdto.getOccurrences()){
+            for(OccurrenceIndex oi : srtdto.getOccurrences()) {
                 occurrenceIDs.add(oi.getUuid());
             }
 
             Map<String, List<Map<String, Object>>> imageMap = imageMetadataService.getImageMetadataForOccurrences(occurrenceIDs);
 
-            for(OccurrenceIndex oi : srtdto.getOccurrences()){
+            for(OccurrenceIndex oi : srtdto.getOccurrences()) {
                 //lookup metadata
                 List<Map<String, Object>> imageMetadata = imageMap.get(oi.getUuid());
                 oi.setImageMetadata(imageMetadata);
@@ -1004,7 +1004,7 @@ public class OccurrenceController extends AbstractSecureController {
                                           HttpServletRequest request) throws Exception{
         afterInitialisation();
 
-        if(result.hasErrors()){
+        if(result.hasErrors()) {
             logger.info("validation failed  " + result.getErrorCount() + " checks");
             logger.debug(result.toString());
             model.addAttribute("errorMessage", getValidationErrorMessage(result));
@@ -1030,8 +1030,7 @@ public class OccurrenceController extends AbstractSecureController {
         return null;
     }
 
-    public String occurrenceSensitiveDownload(
-                                              DownloadRequestParams requestParams,
+    public String occurrenceSensitiveDownload(DownloadRequestParams requestParams,
                                               String apiKey,
                                               String ip,
                                               boolean fromIndex,
@@ -1267,8 +1266,7 @@ public class OccurrenceController extends AbstractSecureController {
     /**
      * Occurrence record page
      *
-     * When user supplies a uuid that is not found search for a unique record
-     * with the supplied occurrence_id
+     * When user supplies a uuid that is not found search for a unique record with the supplied occurrence_id
      *
      * Returns a SearchResultDTO when there is more than 1 record with the supplied UUID
      *
@@ -1276,14 +1274,14 @@ public class OccurrenceController extends AbstractSecureController {
      * @param apiKey
      * @throws Exception
      */
-    @RequestMapping(value = {"/occurrence/{uuid:.+}","/occurrences/{uuid:.+}", "/occurrence/{uuid:.+}.json", "/occurrences/{uuid:.+}.json"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/occurrence/{uuid:.+}", "/occurrences/{uuid:.+}", "/occurrence/{uuid:.+}.json", "/occurrences/{uuid:.+}.json"}, method = RequestMethod.GET)
     public @ResponseBody Object showOccurrence(@PathVariable("uuid") String uuid,
                                                @RequestParam(value="apiKey", required=false) String apiKey,
                                                @RequestParam(value="ip", required=false) String ip,
                                                HttpServletRequest request, HttpServletResponse response) throws Exception {
         afterInitialisation();
-        ip = ip == null?getIPAddress(request):ip;
-        if(apiKey != null){
+        ip = ip == null ? getIPAddress(request) : ip;
+        if(apiKey != null) {
             return showSensitiveOccurrence(uuid, apiKey, ip, request, response);
         }
         return getOccurrenceInformation(uuid, ip, request, false);
@@ -1303,23 +1301,23 @@ public class OccurrenceController extends AbstractSecureController {
     }
 
     private Object getOccurrenceInformation(String uuid, String ip, HttpServletRequest request, boolean includeSensitive) throws Exception{
-        logger.info("Retrieving occurrence record with guid: '" + uuid + "'");
+        logger.debug("Retrieving occurrence record with guid: '" + uuid + "'");
 
         FullRecord[] fullRecord = Store.getAllVersionsByUuid(uuid, includeSensitive);
         if(fullRecord == null){
             //get the rowKey for the supplied uuid in the index
-            //This is a workaround.  There seems to be an issue on Cassandra with retrieving uuids that start with e or f
+            //This is a workaround. There seems to be an issue on Cassandra with retrieving uuids that start with e or f
             SpatialSearchRequestParams srp = new SpatialSearchRequestParams();
             srp.setQ("id:" + uuid);
             srp.setPageSize(1);
             srp.setFacets(new String[]{});
             SearchResultDTO results = occurrenceSearch(srp);
-            if(results.getTotalRecords()>0) {
+            if(results.getTotalRecords() > 0) {
                 fullRecord = Store.getAllVersionsByUuid(results.getOccurrences().get(0).getUuid(), includeSensitive);
             }
         }
 
-        if(fullRecord == null){
+        if(fullRecord == null) {
             //check to see if we have an occurrence id
             SpatialSearchRequestParams srp = new SpatialSearchRequestParams();
             srp.setQ("occurrence_id:" + uuid);
@@ -1433,7 +1431,7 @@ public class OccurrenceController extends AbstractSecureController {
             logger.debug(StringUtils.join(error.getCodes(),"@#$^"));
             String code = (error.getCodes() != null && error.getCodes().length>0)? error.getCodes()[0]:null;
             logger.debug("The code in use:" + code);
-            sb.append(messageSource.getMessage(code, null, error.getDefaultMessage(),null)).append("<br/>");
+            sb.append(messageSource.getMessage(code, null, error.getDefaultMessage(), null)).append("<br/>");
         }
         return sb.toString();
     }
@@ -1441,17 +1439,41 @@ public class OccurrenceController extends AbstractSecureController {
     private List<MediaDTO> getSoundDtos(OccurrenceDTO occ) {
         String[] sounds = occ.getProcessed().getOccurrence().getSounds();
         List<MediaDTO> soundDtos = new ArrayList<MediaDTO>();
-        if(sounds != null && sounds.length > 0){
+        if(sounds != null && sounds.length > 0) {
             for(String soundFile: sounds){
                 MediaDTO m = new MediaDTO();
-                Map<String,String> mimeToUrl = Config.mediaStore().getSoundFormats(soundFile);
-                for(String mimeType: mimeToUrl.keySet()){
+                Map<String, String> metadataMap = Config.mediaStore().loadMetadata(soundFile);
+
+                Map<String, String> mimeToUrl = Config.mediaStore().getSoundFormats(soundFile);
+                for(String mimeType: mimeToUrl.keySet()) {
                     m.getAlternativeFormats().put(mimeType, mimeToUrl.get(mimeType));
                 }
+                m.setFilePath(soundFile);
+                m.setMetadata(metadataMap);
+
                 soundDtos.add(m);
             }
         }
         return soundDtos;
+    }
+
+    private List<MediaDTO> getVideoDtos(OccurrenceDTO occ) {
+        String[] videos = occ.getProcessed().getOccurrence().getVideos();
+        List<MediaDTO> videoDtos = new ArrayList<MediaDTO>();
+        if(videos != null && videos.length > 0) {
+            for(String videoFile: videos) {
+                MediaDTO m = new MediaDTO();
+                Map<String, String> metadataMap = Config.mediaStore().loadMetadata(videoFile);
+                String mimeType = metadataMap.get("format");
+
+                m.getAlternativeFormats().put(mimeType, Config.mediaStore().convertPathToUrl(videoFile));
+                m.setFilePath(videoFile);
+                m.setMetadata(metadataMap);
+
+                videoDtos.add(m);
+            }
+        }
+        return videoDtos;
     }
 
     private void setupImageUrls(OccurrenceDTO dto, boolean lookupImageMetadata) {
@@ -1459,17 +1481,17 @@ public class OccurrenceController extends AbstractSecureController {
         if(images != null && images.length > 0){
             List<MediaDTO> ml = new ArrayList<MediaDTO>();
 
-            Map<String, Map> metadata = new HashMap();
-            try {
-                String uuid = dto.getProcessed().getUuid();
-                List<Map<String, Object>> list = imageMetadataService.getImageMetadataForOccurrences(Arrays.asList(new String[]{uuid})).get(uuid);
-                if (list != null) {
-                    for (Map m : list) {
-                        metadata.put(String.valueOf(m.get("imageId")), m);
-                    }
-                }
-            } catch (Exception e) {
-            }
+            // Map<String, Map> metadata = new HashMap();
+            // try {
+            //     String uuid = dto.getProcessed().getUuid();
+            //     List<Map<String, Object>> list = imageMetadataService.getImageMetadataForOccurrences(Arrays.asList(new String[]{uuid})).get(uuid);
+            //     if (list != null) {
+            //         for (Map m : list) {
+            //             metadata.put(String.valueOf(m.get("imageId")), m);
+            //         }
+            //     }
+            // } catch (Exception e) {
+            // }
 
             for(String fileNameOrID: images) {
                 try {
@@ -1480,11 +1502,10 @@ public class OccurrenceController extends AbstractSecureController {
                     m.getAlternativeFormats().put("largeImageUrl", urls.get("large"));
                     m.getAlternativeFormats().put("imageUrl", urls.get("raw"));
                     m.setFilePath(fileNameOrID);
-                    m.setMetadataUrl(imageMetadataService.getUrlFor(fileNameOrID));
 
-                    if (metadata != null && metadata.get(fileNameOrID) != null) {
-                        m.setMetadata(metadata.get(fileNameOrID));
-                    }
+                    Map<String, String> metadataMap = Config.mediaStore().loadMetadata(fileNameOrID);
+                    m.setMetadata(metadataMap);
+
                     ml.add(m);
                 } catch (Exception ex) {
                     logger.warn("Unable to get image data for " + fileNameOrID + ": " + ex.getMessage());
