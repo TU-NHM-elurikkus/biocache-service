@@ -613,6 +613,7 @@ public class SearchDAOImpl implements SearchDAO {
 
             //now update the fq display map...
             searchResults.setActiveFacetMap(searchUtils.addFacetMap(searchParams.getFq(), searchParams.getQc(), getAuthIndexFields()));
+            searchResults.setFieldStats(qr.getFieldStatsInfo());
 
             logger.info("spatial search query: " + queryString);
         } catch (Exception ex) {
@@ -3005,6 +3006,7 @@ public class SearchDAOImpl implements SearchDAO {
                 solrQuery.add(key, values);
             }
         }
+
         return solrQuery;
     }
 

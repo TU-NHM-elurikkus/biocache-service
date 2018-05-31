@@ -15,6 +15,7 @@
 package au.org.ala.biocache.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.solr.client.solrj.response.FieldStatsInfo;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import java.util.Collection;
@@ -61,6 +62,8 @@ public class SearchResultDTO {
      * necessary to display on clients.
      */
     private Map<String,Facet> activeFacetMap;
+
+    private Map<String, FieldStatsInfo> fieldStats;
 
     /**
      * Constructor with 2 args
@@ -210,6 +213,14 @@ public class SearchResultDTO {
      */
     public void setActiveFacetMap(Map<String, Facet> activeFacetMap) {
         this.activeFacetMap = activeFacetMap;
+    }
+
+    public Map<String, FieldStatsInfo> getFieldStats() {
+        return fieldStats;
+    }
+
+    public void setFieldStats(Map<String, FieldStatsInfo> fieldStats) {
+        this.fieldStats = fieldStats;
     }
 
 }
