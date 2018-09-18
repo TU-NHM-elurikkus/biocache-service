@@ -90,7 +90,7 @@ public class OccurrenceIndex {
     @Field("assertions") String[] assertions;
     @Field("user_assertions") String hasUserAssertions;
     @Field("species_group") String[] speciesGroups;
-    @Field("individual_count") String individualCount;
+    @Field("individual_count") Integer individualCount;
     @Field("raw_sex") String sex;
     @Field("life_stage") String lifeStage;
     @Field("behavior") String behavior;
@@ -862,11 +862,11 @@ public class OccurrenceIndex {
         this.speciesGroups = speciesGroups;
     }
 
-    public String getIndividualCount() {
+    public Integer getIndividualCount() {
         return individualCount;
     }
 
-    public void setIndividualCount(String individualCount) {
+    public void setIndividualCount(Integer individualCount) {
         this.individualCount = individualCount;
     }
 
