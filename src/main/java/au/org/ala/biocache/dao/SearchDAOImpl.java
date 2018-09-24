@@ -319,7 +319,7 @@ public class SearchDAOImpl implements SearchDAO {
                             .getInstance(IndexDAO.class);
                         dao.init();
                         result = server = dao.solrServer();
-                        queryMethod = result instanceof EmbeddedSolrServer? SolrRequest.METHOD.GET:SolrRequest.METHOD.POST;
+                        queryMethod = SolrRequest.METHOD.GET;
 
                         logger.debug("The server " + result.getClass());
 
@@ -614,6 +614,8 @@ public class SearchDAOImpl implements SearchDAO {
             //now update the fq display map...
             searchResults.setActiveFacetMap(searchUtils.addFacetMap(searchParams.getFq(), searchParams.getQc(), getAuthIndexFields()));
             searchResults.setFieldStats(qr.getFieldStatsInfo());
+
+            searchResults.setFacetPivot(qr.getFacetPivot().get("collectors,species"));
 
             logger.info("spatial search query: " + queryString);
         } catch (Exception ex) {
@@ -2300,6 +2302,7 @@ public class SearchDAOImpl implements SearchDAO {
         searchResult.setFacetResults(facetResults);
         // The query result is stored in its original format so that all the information
         // returned is available later on if needed
+
         searchResult.setQr(qr);
         return searchResult;
     }
