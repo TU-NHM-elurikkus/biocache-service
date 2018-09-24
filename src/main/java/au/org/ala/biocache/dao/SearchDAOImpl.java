@@ -615,7 +615,9 @@ public class SearchDAOImpl implements SearchDAO {
             searchResults.setActiveFacetMap(searchUtils.addFacetMap(searchParams.getFq(), searchParams.getQc(), getAuthIndexFields()));
             searchResults.setFieldStats(qr.getFieldStatsInfo());
 
-            searchResults.setFacetPivot(qr.getFacetPivot().get("collectors,species"));
+            if(qr.getFacetPivot() != null) {
+                searchResults.setFacetPivot(qr.getFacetPivot().get("collectors,species"));
+            }
 
             logger.info("spatial search query: " + queryString);
         } catch (Exception ex) {
