@@ -15,8 +15,11 @@
 package au.org.ala.biocache.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.apache.solr.common.util.NamedList;
 import org.apache.solr.client.solrj.response.FieldStatsInfo;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.PivotField;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +64,8 @@ public class SearchResultDTO {
      * Stores a map a facets that have been applied to the query.  This will include details that a
      * necessary to display on clients.
      */
-    private Map<String,Facet> activeFacetMap;
+    private Map<String, Facet> activeFacetMap;
+    private List<PivotField> facetPivot;
 
     private Map<String, FieldStatsInfo> fieldStats;
 
@@ -213,6 +217,14 @@ public class SearchResultDTO {
      */
     public void setActiveFacetMap(Map<String, Facet> activeFacetMap) {
         this.activeFacetMap = activeFacetMap;
+    }
+
+    public List<PivotField> getFacetPivot() {
+        return facetPivot;
+    }
+
+    public void setFacetPivot(List<PivotField> facetPivot) {
+        this.facetPivot = facetPivot;
     }
 
     public Map<String, FieldStatsInfo> getFieldStats() {
