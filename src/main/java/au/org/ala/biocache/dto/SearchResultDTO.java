@@ -65,7 +65,7 @@ public class SearchResultDTO {
      * necessary to display on clients.
      */
     private Map<String, Facet> activeFacetMap;
-    private List<PivotField> facetPivot;
+    private NamedList<List<PivotField>> facetPivot;
 
     private Map<String, FieldStatsInfo> fieldStats;
 
@@ -219,11 +219,11 @@ public class SearchResultDTO {
         this.activeFacetMap = activeFacetMap;
     }
 
-    public List<PivotField> getFacetPivot() {
+    public NamedList<List<PivotField>> getFacetPivot() {
         return facetPivot;
     }
 
-    public void setFacetPivot(List<PivotField> facetPivot) {
+    public void setFacetPivot(NamedList<List<PivotField>> facetPivot) {
         this.facetPivot = facetPivot;
     }
 
