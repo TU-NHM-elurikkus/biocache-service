@@ -616,7 +616,13 @@ public class SearchDAOImpl implements SearchDAO {
             searchResults.setFieldStats(qr.getFieldStatsInfo());
 
             if(qr.getFacetPivot() != null) {
-                searchResults.setFacetPivot(qr.getFacetPivot());
+                Map<String, List<PivotField>> pivotMap = new HashMap<>();
+
+                for(Map.Entry<String, List<PivotField>> entry : qr.getFacetPivot()) {
+                    pivotMap.put(entry.getKey(), entry.getValue());
+                }
+
+                searchResults.setFacetPivot(pivotMap);
             }
 
             logger.info("spatial search query: " + queryString);
